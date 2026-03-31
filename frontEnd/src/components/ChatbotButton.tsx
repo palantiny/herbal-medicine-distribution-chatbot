@@ -61,7 +61,7 @@ export function ChatbotButton() {
     
     // Attempt to delete DB history for the current user
     try {
-      await fetch(`http://localhost:8000/api/v1/chat/${sessionId}/history?user_id=user`, {
+      await fetch(`/api/v1/chat/${sessionId}/history?user_id=user`, {
         method: 'DELETE',
       });
     } catch (e) {
@@ -139,12 +139,12 @@ export function ChatbotButton() {
 
     try {
       // 1. Prepare stream listener connection
-      const streamPromise = fetch(`http://localhost:8000/api/v1/chat/${sessionId}/stream`, {
+      const streamPromise = fetch(`/api/v1/chat/${sessionId}/stream`, {
         signal: abortController.signal,
       });
 
       // 2. Send POST message to backend queue
-      const postResponse = await fetch(`http://localhost:8000/api/v1/chat/${sessionId}/message`, {
+      const postResponse = await fetch(`/api/v1/chat/${sessionId}/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: backendPayloadMessage, user_id: 'user' }), // Send the intercepted message

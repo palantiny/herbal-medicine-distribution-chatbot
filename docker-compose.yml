@@ -1,4 +1,5 @@
-# Palantiny Chatbot Server - Docker Compose
+# Palantiny Docker Compose
+# chatbot_app (8000): 챗봇 서버 / web_app (8001): 웹사이트 서버
 # Mac Mini 로컬 서버용 (AWS 미사용)
 
 services:
@@ -79,9 +80,9 @@ services:
     command: >
       cypher-shell -a neo4j://palantiny_neo4j:7687 -u neo4j -p palantiny_secret -f /scripts/init_data.cypher
 
-  app:
+  chatbot_app:
     build: .
-    container_name: palantiny_app
+    container_name: palantiny_chatbot_app
     depends_on:
       postgres:
         condition: service_healthy
@@ -101,7 +102,19 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     ports:
       - "8000:8000"
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn app.chatbot_main:app --host 0.0.0.0 --port 8000
+
+  web_app:
+    build: .
+    container_name: palantiny_web_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://palantiny:palantiny_secret@postgres:5432/palantiny_db
+    ports:
+      - "8001:8001"
+    command: uvicorn app.web_main:app --host 0.0.0.0 --port 8001
 
   chat_worker:
     build: .
