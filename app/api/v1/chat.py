@@ -123,3 +123,20 @@ async def get_chat_stream(session_id: str, request: Request):
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.delete("/{session_id}/history")
+async def delete_chat_history(session_id: str, request: Request, user_id: str | None = None):
+    """
+    DELETE /api/v1/chat/{session_id}/history
+    주어진 세션(또는 사용자)의 채팅 기록을 삭제.
+    """
+    chat_repo = getattr(request.app.state, "chat_repo", None)
+    if not chat_repo:
+        raise HTTPException(status_code=500, detail="chat_repo not initialized")
+
+    parsed_user = user_id or _parse_user_id_from_session(session_id)
+    if hasattr(chat_repo, "clear_history"):
+        await chat_repo.clear_history(session_id, parsed_user)
+        return {"status": "deleted"}
+    return {"status": "skipped", "detail": "Repository does not support clearing"}

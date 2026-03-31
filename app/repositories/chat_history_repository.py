@@ -21,6 +21,10 @@ class ChatHistoryRepository(Protocol):
         """대화 한 턴 저장."""
         ...
 
+    async def clear_history(self, session_id: str, user_id: str) -> None:
+        """대화 기록 삭제."""
+        ...
+
 
 class MongoChatHistoryRepository:
     """MongoDB 기반 채팅 히스토리 저장소."""
@@ -64,6 +68,11 @@ class MongoChatHistoryRepository:
                 "created_at": datetime.utcnow(),
             }
         )
+
+    async def clear_history(self, session_id: str, user_id: str) -> None:
+        await self._ensure_connected()
+        query = {"user_id": user_id} if user_id else {"session_id": session_id}
+        await self._db[self._collection].delete_many(query)
 
     async def close(self):
         if self._client:

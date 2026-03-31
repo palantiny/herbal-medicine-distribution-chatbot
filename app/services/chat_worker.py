@@ -38,8 +38,8 @@ async def run_chat_worker(redis: Redis, chat_repo: Any) -> None:
             message = payload["message"]
 
             logger.info(
-                "Chat Worker processing: session_id=%s, user_id=%s",
-                session_id, user_id,
+                "Chat Worker processing: session_id=%s, user_id=%s, message=%s",
+                session_id, user_id, message,
             )
 
             try:

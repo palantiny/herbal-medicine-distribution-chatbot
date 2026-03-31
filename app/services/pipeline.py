@@ -195,10 +195,10 @@ async def stage1_router(state: PipelineState) -> PipelineState:
         state["stage1_route"] = route
         state["extracted_entities"] = parsed.get("extracted_entities", {})
     else:
-        # 파싱 실패 시 안전하게 CYPHER
         state["stage1_route"] = "CYPHER"
         state["extracted_entities"] = {}
 
+    logger.info("Stage1 route=%s, entities=%s", state["stage1_route"], state["extracted_entities"])
     return state
 
 
@@ -262,6 +262,7 @@ async def stage2_router(state: PipelineState) -> PipelineState:
     else:
         state["stage2_route"] = "SQL"
 
+    logger.info("Stage2 route=%s", state["stage2_route"])
     return state
 
 
@@ -357,6 +358,9 @@ async def _execute_sql_via_redis(message: str, redis: Redis) -> str:
         TEXT_TO_SQL_USER_TEMPLATE.format(message=message),
     )
     sql = sql.split("--")[0].strip()
+    # 복수 쿼리 방지: 세미콜론으로 구분된 경우 첫 번째 쿼리만 사용
+    sql = sql.split(";")[0].strip()
+    logger.info("Generated SQL: %s", sql)
 
     if not sql or not sql.upper().startswith("SELECT"):
         return "재고/단가 조회는 SELECT 쿼리만 가능합니다."
