@@ -40,9 +40,14 @@ class Settings(BaseSettings):
     CHAT_TASK_QUEUE: str = "chat_task_queue"
     CHAT_STREAM_PREFIX: str = "chat:stream:"
 
-    # MongoDB (ChatHistory)
-    MONGODB_URI: str = "mongodb://localhost:27017"
-    MONGODB_DB: str = "palantiny"
+    # DynamoDB (ChatHistory)
+    AWS_REGION_NAME: str = "ap-northeast-2"
+    AWS_ACCESS_KEY_ID: str = ""
+    AWS_SECRET_ACCESS_KEY: str = ""
+    DYNAMODB_TABLE_CHAT: str = "palantiny-chat-history"
+
+    # CORS
+    ALLOWED_ORIGINS: str = "*"
 
     # Neo4j (한약재 지식 그래프)
     NEO4J_URI: str = "bolt://localhost:7687"

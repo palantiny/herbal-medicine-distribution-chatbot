@@ -21,8 +21,8 @@ pandas>=2.0.0
 # LLM API (OpenAI, Mock 모드 대비; o1 등은 max_completion_tokens 필요)
 openai>=1.40.0
 
-# MongoDB (비동기)
-motor>=3.3.0
+# AWS DynamoDB (비동기)
+aioboto3>=13.0.0
 
 # 토큰 카운트 (128k context 관리)
 tiktoken>=0.5.0
