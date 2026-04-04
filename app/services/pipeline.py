@@ -14,7 +14,6 @@ Stage 3: LLM 3 — 최종 합성 답변 (Synthesizer)
 """
 import json
 import logging
-import re
 from typing import Any, TypedDict
 from uuid import uuid4
 
@@ -128,13 +127,22 @@ async def _call_llm_stream(
 
 
 def _parse_json(text: str) -> dict | None:
-    """LLM 출력에서 JSON 파싱."""
-    match = re.search(r"\{[^{}]*\}", text, re.DOTALL)
-    if match:
-        try:
-            return json.loads(match.group())
-        except json.JSONDecodeError:
-            pass
+    """LLM 출력에서 JSON 파싱 (중첩 JSON 지원)."""
+    # 가장 바깥쪽 {...} 블록 추출
+    start = text.find("{")
+    if start == -1:
+        return None
+    depth = 0
+    for i, ch in enumerate(text[start:], start):
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                try:
+                    return json.loads(text[start:i + 1])
+                except json.JSONDecodeError:
+                    return None
     return None
 
 

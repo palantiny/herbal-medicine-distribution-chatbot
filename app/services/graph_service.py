@@ -45,16 +45,23 @@ async def _query_neo4j(herb_name: str) -> str | None:
         async with driver.session(database=settings.NEO4J_DATABASE) as session:
             result = await session.run(
                 """
-                MATCH (h:Herb {name: $name})
-                OPTIONAL MATCH (h)-[:RELATED_TO]-(related:Herb)
-                OPTIONAL MATCH (h)-[:ORIGINATES_FROM]->(o:Origin)
+                MATCH (h:Herb)
+                WHERE h.name = $name OR $name IN h.synonyms
+                OPTIONAL MATCH (h)-[:HAS_EFFICACY]->(e:Efficacy)
+                OPTIONAL MATCH (h)-[:HAS_TEMP]->(t:NatureTemp)
+                OPTIONAL MATCH (h)-[:HAS_TASTE]->(taste:NatureTaste)
+                OPTIONAL MATCH (h)-[:TREATS]->(s:Symptom)
+                OPTIONAL MATCH (h)-[:ACTS_ON]->(m:Meridian)
+                OPTIONAL MATCH (h)-[:CONTRAINDICATES]->(c:Herb)
                 RETURN h.name AS name,
-                       h.efficacy AS efficacy,
-                       h.description AS description,
-                       h.nature AS nature,
-                       h.flavor AS flavor,
-                       COLLECT(DISTINCT related.name) AS related_herbs,
-                       COLLECT(DISTINCT o.name) AS origins
+                       h.toxicity AS toxicity,
+                       h.synonyms AS synonyms,
+                       COLLECT(DISTINCT e.name) AS efficacies,
+                       COLLECT(DISTINCT t.name) AS natures,
+                       COLLECT(DISTINCT taste.name) AS tastes,
+                       COLLECT(DISTINCT s.name) AS symptoms,
+                       COLLECT(DISTINCT m.name) AS meridians,
+                       COLLECT(DISTINCT c.name) AS contraindications
                 """,
                 name=herb_name,
             )
@@ -64,20 +71,71 @@ async def _query_neo4j(herb_name: str) -> str | None:
                 return None
 
             lines = [f"한약재: {record['name']}"]
-            if record["efficacy"]:
-                lines.append(f"효능: {record['efficacy']}")
-            if record["nature"]:
-                lines.append(f"성질: {record['nature']}")
-            if record["flavor"]:
-                lines.append(f"맛: {record['flavor']}")
-            origins = [o for o in record["origins"] if o]
-            if origins:
-                lines.append(f"원산지: {', '.join(origins)}")
-            if record["description"]:
-                lines.append(f"설명: {record['description']}")
-            related = [r for r in record["related_herbs"] if r]
-            if related:
-                lines.append(f"관련 한약재: {', '.join(related)}")
+            synonyms = [s for s in (record["synonyms"] or []) if s and s != record["name"]]
+            if synonyms:
+                lines.append(f"이명: {', '.join(synonyms)}")
+            if record["toxicity"]:
+                lines.append(f"독성: {record['toxicity']}")
+            efficacies = [e for e in record["efficacies"] if e]
+            if efficacies:
+                lines.append(f"효능: {', '.join(efficacies)}")
+            natures = [n for n in record["natures"] if n]
+            if natures:
+                lines.append(f"성질: {', '.join(natures)}")
+            tastes = [t for t in record["tastes"] if t]
+            if tastes:
+                lines.append(f"맛: {', '.join(tastes)}")
+            meridians = [m for m in record["meridians"] if m]
+            if meridians:
+                lines.append(f"귀경: {', '.join(meridians)}")
+            symptoms = [s for s in record["symptoms"] if s]
+            if symptoms:
+                lines.append(f"치료 증상: {', '.join(symptoms)}")
+            contraindications = [c for c in record["contraindications"] if c]
+            if contraindications:
+                lines.append(f"금기: {', '.join(contraindications)}")
+
+            # 가격 정보 조회
+            price_result = await session.run(
+                """
+                MATCH (h:Herb)-[:HAS_PRODUCT]->(p:Product)-[:HAS_PRICE_HISTORY]->(pr:PriceRecord)
+                WHERE (h.name = $name OR $name IN h.synonyms)
+                WITH p, pr ORDER BY pr.month DESC
+                WITH p, COLLECT(pr)[0] AS latest
+                OPTIONAL MATCH (p)-[:MANUFACTURED_BY]->(mk:Maker)
+                OPTIONAL MATCH (p)-[:ORIGINATES_FROM]->(o:Origin)
+                RETURN p.product_id AS product_id,
+                       p.type AS type,
+                       p.pack_unit AS pack_unit,
+                       p.pack_price AS pack_price,
+                       p.box_qty AS box_qty,
+                       latest.month AS month,
+                       latest.price_per_geun AS price_per_geun,
+                       latest.status AS status,
+                       mk.name AS maker,
+                       o.name AS origin
+                ORDER BY p.product_id
+                """,
+                name=herb_name,
+            )
+            price_records = [r async for r in price_result]
+            if price_records:
+                lines.append("\n[가격 정보]")
+                for pr in price_records:
+                    if not pr["price_per_geun"]:
+                        continue
+                    parts = [f"  {pr['type'] or pr['product_id']}"]
+                    if pr["maker"]:
+                        parts.append(f"제조사={pr['maker']}")
+                    if pr["origin"]:
+                        parts.append(f"원산지={pr['origin']}")
+                    parts.append(f"근당={pr['price_per_geun']}원")
+                    if pr["pack_unit"] and pr["pack_price"]:
+                        parts.append(f"포장={pr['pack_unit']}g/{pr['pack_price']}원")
+                    if pr["month"]:
+                        parts.append(f"({pr['month']} 기준)")
+                    lines.append(", ".join(parts))
+
             return "\n".join(lines)
     except Exception as e:
         logger.exception("Neo4j 쿼리 실패: %s", e)
@@ -92,14 +150,12 @@ async def _search_neo4j_all(query: str) -> str | None:
 
     try:
         async with driver.session(database=settings.NEO4J_DATABASE) as session:
-            # 전체 약재 중 이름에 query 키워드가 포함된 것 검색
             result = await session.run(
                 """
                 MATCH (h:Herb)
-                WHERE h.name CONTAINS $keyword
-                OPTIONAL MATCH (h)-[:ORIGINATES_FROM]->(o:Origin)
-                RETURN h.name AS name, h.efficacy AS efficacy,
-                       COLLECT(DISTINCT o.name) AS origins
+                WHERE h.name CONTAINS $keyword OR ANY(s IN h.synonyms WHERE s CONTAINS $keyword)
+                OPTIONAL MATCH (h)-[:HAS_EFFICACY]->(e:Efficacy)
+                RETURN h.name AS name, COLLECT(DISTINCT e.name) AS efficacies
                 LIMIT 10
                 """,
                 keyword=query,
@@ -107,7 +163,6 @@ async def _search_neo4j_all(query: str) -> str | None:
             records = [r async for r in result]
 
             if not records:
-                # 전체 약재 목록 반환
                 result = await session.run(
                     "MATCH (h:Herb) RETURN h.name AS name ORDER BY h.name LIMIT 50"
                 )
@@ -118,9 +173,9 @@ async def _search_neo4j_all(query: str) -> str | None:
 
             lines = []
             for r in records:
-                origins = [o for o in r["origins"] if o]
-                origin_str = f", 원산지={', '.join(origins)}" if origins else ""
-                lines.append(f"{r['name']}: 효능={r['efficacy']}{origin_str}")
+                efficacies = [e for e in r["efficacies"] if e]
+                eff_str = f": 효능={', '.join(efficacies)}" if efficacies else ""
+                lines.append(f"{r['name']}{eff_str}")
             return "\n".join(lines)
     except Exception as e:
         logger.exception("Neo4j 전체 검색 실패: %s", e)
