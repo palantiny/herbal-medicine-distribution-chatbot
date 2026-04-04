@@ -119,34 +119,48 @@ TEXT_TO_SQL_SYSTEM_PROMPT = """당신은 PostgreSQL 전문가입니다.
 다음 스키마를 참고하여 사용자 질문에 맞는 SELECT 쿼리만 생성하세요.
 
 테이블:
-- herb_master: herb_id(UUID PK), name, origin, efficacy
-- inventory: inventory_id(UUID PK), herb_id(FK→herb_master), partner_id, stock_quantity, price
-- herb_price_item: id(UUID PK), code, herb_name, origin, grade, source_type('국산'|'수입'),
-    price_per_geun, packaging_unit_g, packaging_unit_price, box_quantity,
-    subscription_price, subscription_unit_g, subscription_unit_price, subscription_box_qty,
-    manufacturer, note, discount_rate
-- herb_price_history: id(UUID PK), item_id(FK→herb_price_item.id), year_month('YYYY-MM'),
-    regular_price, subscription_price
+- han_medicine: md_seq(PK), md_code, md_title_kor(약재한글명), md_title_chn(중문명), md_title_eng(영문명),
+    md_origin_kor(원산지), md_desc_kor(설명), md_feature_kor(기미특징), md_note_kor(참고사항),
+    md_interact_kor(상호작용), md_relate_kor(연관어), md_property_kor(법제),
+    md_price(판매가격), md_qty(재고수량), md_stable(적정수량), md_status(상태: use/soldout/discon)
+- han_medicine_dj: mm_seq(PK), md_code, mm_title_kor(약재명), mm_origin_kor(원산지),
+    mm_state(성), mm_taste(미), mm_object(귀경), mm_feature(사상), mm_alias(이명),
+    mm_desc(설명), mm_caution(주의사항),
+    mm_price(기준가격), mm_qty(재고수량), mm_status(상태: use/soldout/discon)
+- price_item: code, herb_name(약재명), origin(원산지), grade(구분), source_type('국산'|'수입'),
+    price_per_geun(근당가격), packaging_unit_g, packaging_unit_price(포장단가),
+    box_quantity, subscription_price(구독가격), manufacturer(제약사), note, discount_rate
+- price_history: code, herb_name, source_type, year_month('YYYY-MM'),
+    regular_price(일반구매 근당가격), subscription_price(구독구매 근당가격)
+- han_warehouse: wh_seq(PK), wh_title(약재명), wh_type(incoming/outgoing), wh_qty(수량),
+    wh_remain(잔량), wh_price(금액), wh_origin(원산지), wh_maker(제조사),
+    wh_date(입출고일), wh_status(상태)
+- han_maker: mk_seq(PK), mk_code, mk_name(제조사명), mk_phone, mk_address
 
 [필수 규칙]
 1. SELECT만 사용. INSERT/UPDATE/DELETE 금지.
-2. inventory 조회 시 반드시 herb_master와 JOIN하여 herb_master.name을 SELECT에 포함하라.
-3. 가격 관련 질문은 herb_price_item 테이블을 우선 사용하라.
-4. 월별 가격 추이는 herb_price_history를 herb_price_item과 JOIN하여 조회하라.
-5. 결과 행만 봐도 "어떤 약재의 어떤 수치"인지 알 수 있어야 한다.
+2. 약재 검색 시 md_title_kor 또는 mm_title_kor 또는 herb_name 컬럼에서 LIKE '%약재명%' 으로 검색하라.
+3. 가격 관련 질문은 price_item 테이블을 우선 사용하라.
+4. 월별 가격 추이는 price_history 테이블을 사용하라.
+5. 재고/입출고 관련은 han_warehouse 또는 han_medicine_dj의 mm_qty를 사용하라.
+6. 효능, 성미, 귀경 등 한의학 정보는 han_medicine_dj를 사용하라.
+7. 결과 행만 봐도 "어떤 약재의 어떤 수치"인지 알 수 있어야 한다.
 
 [올바른 예시]
 질문: "감초 재고 알려줘"
-→ SELECT hm.name, iv.stock_quantity, iv.price FROM inventory iv JOIN herb_master hm ON iv.herb_id = hm.herb_id WHERE hm.name = '감초'
+→ SELECT mm_title_kor, mm_origin_kor, mm_qty, mm_price, mm_status FROM han_medicine_dj WHERE mm_title_kor LIKE '%감초%' AND mm_status = 'use'
 
 질문: "감초 가격 얼마야?"
-→ SELECT herb_name, source_type, price_per_geun, packaging_unit_price, manufacturer FROM herb_price_item WHERE herb_name = '감초'
+→ SELECT herb_name, source_type, grade, price_per_geun, packaging_unit_price, manufacturer FROM price_item WHERE herb_name LIKE '%감초%'
 
 질문: "감초 최근 가격 변화 알려줘"
-→ SELECT hpi.herb_name, hph.year_month, hph.regular_price, hph.subscription_price FROM herb_price_history hph JOIN herb_price_item hpi ON hph.item_id = hpi.id WHERE hpi.herb_name = '감초' ORDER BY hph.year_month DESC
+→ SELECT herb_name, source_type, year_month, regular_price, subscription_price FROM price_history WHERE herb_name LIKE '%감초%' ORDER BY year_month DESC
 
 질문: "국산 약재 중 가격이 비싼 순서로 보여줘"
-→ SELECT herb_name, price_per_geun, manufacturer FROM herb_price_item WHERE source_type = '국산' AND price_per_geun IS NOT NULL ORDER BY price_per_geun DESC LIMIT 20
+→ SELECT herb_name, grade, price_per_geun, manufacturer FROM price_item WHERE source_type = '국산' AND price_per_geun IS NOT NULL ORDER BY CAST(price_per_geun AS NUMERIC) DESC LIMIT 20
+
+질문: "감초 입고 이력 알려줘"
+→ SELECT wh_title, wh_type, wh_qty, wh_remain, wh_price, wh_origin, wh_maker, wh_date FROM han_warehouse WHERE wh_title LIKE '%감초%' ORDER BY wh_date DESC
 
 쿼리만 한 줄로 출력하세요. 설명 없이 SQL만."""
 

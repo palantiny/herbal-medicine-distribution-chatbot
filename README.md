@@ -1,4 +1,4 @@
-# Palantiny (팔란티니) - 한약재 유통 B2B2C 챗봇 서버
+# Palantiny — 아키텍처 & 플로우 문서
 
 FastAPI 및 LangGraph 기반의 한약재 유통 자동화 챗봇 서버입니다. SSE(Server-Sent Events)를 활용한 실시간 스트리밍 응답과 지능적인 Caching 전략, Text-to-SQL 파이프라인을 특징으로 합니다.
 
@@ -44,7 +44,7 @@ OPENAI_API_KEY=sk-your-openai-api-key-here
 
 ### Step 2: Docker Compose로 전체 인프라 및 서버 기동
 
-터미널에서 프로젝트 폴더로 이동한 뒤:
+---
 
 ```bash
 docker-compose up -d --build
@@ -61,6 +61,18 @@ docker-compose up -d --build
 docker-compose exec app python -m scripts.seed_data
 docker-compose exec app python -m scripts.seed_herb_prices
 ```
+Request:  { "message": "인삼 효능이랑 재고 알려줘", "user_id": "test_001" }
+Response: { "status": "queued", "session_id": "test_001_123" }
+```
+
+내부 동작:
+1. `user_id` 파싱 (body 또는 session_id에서 추출)
+2. MongoDB에 user message 즉시 저장 (메시지 유실 방지)
+3. `LPUSH chat_task_queue ← {session_id, user_id, message}`
+
+### `GET /api/v1/chat/{session_id}/stream`
+
+Redis Pub/Sub 구독 → SSE 스트리밍.
 
 ### Step 4: 웹 프론트엔드에서 챗봇 테스트
 
@@ -83,8 +95,48 @@ docker-compose exec app python -m scripts.seed_herb_prices
 
 ---
 
-## 디렉토리 구조
+## 12. 설정 (`app/core/config.py`)
 
+| 키 | 기본값 | 설명 |
+|----|-------|------|
+| `DATABASE_URL` | `postgresql+asyncpg://...` | PostgreSQL 접속 |
+| `REDIS_URL` | `redis://localhost:6379/0` | Redis 접속 |
+| `MONGODB_URI` | `mongodb://localhost:27017` | MongoDB 접속 |
+| `OPENAI_API_KEY` | `""` | 빈 값이면 Mock 모드 |
+| `USE_MOCK_LLM` | `true` | Mock 모드 강제 |
+| `MOCK_MONGO` | `true` | 인메모리 ChatHistory |
+| `SQL_TASK_QUEUE` | `sql_task_queue` | SQL 작업 큐 키 |
+| `CHAT_TASK_QUEUE` | `chat_task_queue` | Chat 작업 큐 키 |
+| `CHAT_STREAM_PREFIX` | `chat:stream:` | Pub/Sub 채널 프리픽스 |
+| `CONTEXT_MAX_TOKENS` | `120000` | 히스토리 토큰 상한 |
+
+---
+
+## 13. 검증 방법
+
+```bash
+# 서버 실행
+USE_MOCK_LLM=true MOCK_MONGO=true uvicorn app.main:app --reload
+
+# 터미널 1: SSE 연결 (먼저)
+curl -N http://localhost:8000/api/v1/chat/test_001_123/stream
+
+# 터미널 2: 메시지 전송
+curl -X POST http://localhost:8000/api/v1/chat/test_001_123/message \
+  -H "Content-Type: application/json" \
+  -d '{"message": "인삼 효능이랑 재고 알려줘", "user_id": "test_001"}'
+
+# 터미널 2 즉시 응답:
+# {"status":"queued","session_id":"test_001_123"}
+
+# 터미널 1 SSE 이벤트:
+# data: {"type":"status","content":"질문 의도 분석 중..."}
+# data: {"type":"status","content":"복수 데이터 소스 병렬 조회 중... (GRAPH, DB_SQL)"}
+# data: {"type":"status","content":"데이터 검증 중..."}
+# data: {"type":"token","content":"안"}
+# data: {"type":"token","content":"녕"}
+# ...
+# data: {"type":"end","content":""}
 ```
 app/
 ├── api/          # FastAPI 라우터 (인증, 채팅, 캐시 API)

@@ -1,5 +1,5 @@
 """
-Cache 관리 API — Redis 캐시 상태 조회, 수동 무효화, 재적재
+Cache 관리 API — Redis 캐시 상태 조회, 수동 무효화
 """
 import logging
 
@@ -12,7 +12,6 @@ from app.services.cache_service import (
     get_herb_cache,
     invalidate_all_herb_cache,
     invalidate_herb_cache,
-    warm_cache,
 )
 
 logger = logging.getLogger(__name__)
@@ -29,12 +28,6 @@ class CacheStatsResponse(BaseModel):
     keyspace_hits: int
     keyspace_misses: int
     hit_rate: float
-
-
-class CacheWarmResponse(BaseModel):
-    """캐시 워밍 응답."""
-    cached_count: int
-    message: str
 
 
 class InvalidateRequest(BaseModel):
@@ -83,23 +76,11 @@ async def get_cache_stats():
 # ── GET /cache/{herb_name} ───────────────────────────
 @router.get("/{herb_name}")
 async def get_cached_herb(herb_name: str):
-    """특정 약재의 캐시 데이터 조회. Miss 시 DB fallback 후 캐시 적재."""
+    """특정 약재의 캐시 데이터 조회. Miss 시 DB fallback."""
     data = await get_herb_cache(herb_name)
     if data is None:
         raise HTTPException(status_code=404, detail=f"'{herb_name}' 데이터를 찾을 수 없습니다.")
     return {"herb_name": herb_name, "data": data, "source": "cache_or_db"}
-
-
-# ── POST /cache/warm ─────────────────────────────────
-@router.post("/warm", response_model=CacheWarmResponse)
-async def warm_cache_endpoint():
-    """캐시 전체 재적재 (Cache Warming)."""
-    try:
-        count = await warm_cache()
-        return CacheWarmResponse(cached_count=count, message=f"{count}개 약재 캐시 워밍 완료")
-    except Exception as e:
-        logger.exception("Cache warming 실패: %s", e)
-        raise HTTPException(status_code=500, detail=f"Cache warming 실패: {e}")
 
 
 # ── DELETE /cache/{herb_name} ────────────────────────
@@ -117,6 +98,6 @@ async def invalidate_single_herb(herb_name: str):
 # ── DELETE /cache ────────────────────────────────────
 @router.delete("")
 async def invalidate_all():
-    """herb:cache:* 전체 캐시 무효화."""
+    """herb:cache:* + herb:access:* 전체 캐시 무효화."""
     deleted = await invalidate_all_herb_cache()
     return {"deleted_count": deleted, "message": f"{deleted}개 캐시 키 전체 삭제됨"}
