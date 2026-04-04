@@ -1,6 +1,10 @@
 """
 3단계 순차 LLM 라우팅 파이프라인 (LangGraph 기반)
 
+대화 메모리(`chat_history`)는 MongoDB `MongoChatHistoryRepository`에서만 적재·조회되며
+(`app.services.chat_service` / `history_manager`), 본 파이프라인은 문자열만 소비합니다.
+Palantiny 커버리지 안내는 `palantiny.orchestration.coverage`에서 주입합니다.
+
 Stage 1: LLM 1 — Text-to-Cypher & 1차 라우팅
   → [DIRECT_ANSWER] 즉시 답변 → END
   → [CYPHER] Graph DB 조회 → Stage 2
@@ -25,6 +29,11 @@ from app.core.config import get_settings
 from app.services.cache_service import get_herb_cache, set_herb_cache, CACHE_PREFIX, DYNAMIC_TTL
 from app.services.graph_service import search_herb_graph
 from app.services.sql_worker import SQL_RESULT_PREFIX, SQL_TASK_QUEUE
+from palantiny.orchestration.coverage import (
+    build_coverage_block_stage2_graph_only,
+    build_coverage_block_stage3,
+)
+
 from app.utils.prompts import (
     STAGE1_DIRECT_ANSWER_SYSTEM_PROMPT,
     STAGE1_DIRECT_ANSWER_USER_TEMPLATE,
@@ -274,7 +283,9 @@ async def stage2_direct_answer(state: PipelineState) -> PipelineState:
     """Stage 2 → 직접 답변 (Early Exit). Graph 컨텍스트 기반 답변."""
     await _publish_status(state, "Graph 데이터 기반 답변 생성 중...")
 
-    user_content = STAGE2_DIRECT_ANSWER_USER_TEMPLATE.format(
+    # Palantiny: 이 경로는 SQL/캐시를 조회하지 않음 → LLM에 명시 (Mongo 히스토리는 그대로 사용)
+    coverage_prefix = build_coverage_block_stage2_graph_only()
+    user_content = coverage_prefix + STAGE2_DIRECT_ANSWER_USER_TEMPLATE.format(
         graph_context=state["graph_context"],
         chat_history=state["chat_history"],
         question=state["question"],
@@ -385,7 +396,12 @@ async def stage3_synthesizer(state: PipelineState) -> PipelineState:
     """Stage 3: 모든 컨텍스트 종합 → 최종 맞춤형 답변 생성."""
     await _publish_status(state, "3단계: 수집 데이터 종합 분석 및 최종 답변 생성 중...")
 
-    user_content = STAGE3_SYNTHESIZER_USER_TEMPLATE.format(
+    # Palantiny: 그래프만 있고 DB 비었음 / DB만 있고 그래프 미스 등 → [시스템 안내] 블록 주입
+    coverage_prefix = build_coverage_block_stage3(
+        state["graph_context"],
+        state["sql_redis_context"],
+    )
+    user_content = coverage_prefix + STAGE3_SYNTHESIZER_USER_TEMPLATE.format(
         graph_context=state["graph_context"],
         sql_redis_context=state["sql_redis_context"],
         chat_history=state["chat_history"],

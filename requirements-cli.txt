@@ -1,0 +1,7 @@
+# Palantiny 패키지 + 유지보수 CLI / 테스트 (기본 서버는 requirements.txt)
+# 설치: pip install -r requirements.txt -r requirements-cli.txt
+
+pydantic-settings>=2.1.0
+pytest>=8.0.0
+
+# Neo4j 드라이버·pandas는 서버 requirements.txt에 이미 포함된 경우가 많음.
