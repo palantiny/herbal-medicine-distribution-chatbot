@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/server2
+permissions:
+  - object: /home/ubuntu/server2
+    owner: ubuntu
+    group: ubuntu
+    type:
+      - directory
+      - file
+hooks:
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 600
+      runas: ubuntu
