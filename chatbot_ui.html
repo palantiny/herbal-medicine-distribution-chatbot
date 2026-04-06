@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +36,7 @@
             height: 90vh;
             background: var(--chat-bg);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -45,7 +46,10 @@
         /* Login Screen */
         .login-screen {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: white;
             z-index: 10;
             display: flex;
@@ -55,11 +59,17 @@
             padding: 40px;
             transition: opacity 0.4s ease;
         }
+
         .login-screen.hidden {
             opacity: 0;
             pointer-events: none;
         }
-        .login-screen h1 { margin-bottom: 30px; color: var(--primary); }
+
+        .login-screen h1 {
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
         .login-screen input {
             width: 100%;
             padding: 15px;
@@ -71,7 +81,11 @@
             outline: none;
             transition: border-color 0.2s;
         }
-        .login-screen input:focus { border-color: var(--primary); }
+
+        .login-screen input:focus {
+            border-color: var(--primary);
+        }
+
         .login-screen button {
             width: 100%;
             padding: 15px;
@@ -84,8 +98,16 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .login-screen button:hover { background: var(--primary-dark); }
-        .login-error { color: #E74C3C; margin-top: 10px; font-size: 14px; }
+
+        .login-screen button:hover {
+            background: var(--primary-dark);
+        }
+
+        .login-error {
+            color: #E74C3C;
+            margin-top: 10px;
+            font-size: 14px;
+        }
 
         /* Chat Screen */
         .header {
@@ -96,14 +118,28 @@
             align-items: center;
             justify-content: space-between;
         }
-        .header h2 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px;}
+
+        .header h2 {
+            margin: 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .status-dot {
-            width: 10px; height: 10px;
+            width: 10px;
+            height: 10px;
             background: #2ECC71;
             border-radius: 50%;
             display: inline-block;
         }
-        .status-text { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        .status-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
 
         .chat-box {
             flex: 1;
@@ -125,7 +161,18 @@
             position: relative;
             animation: fadeIn 0.3s ease;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         .message.user {
             background: var(--user-bubble);
@@ -133,12 +180,55 @@
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
+
         .message.assistant {
             background: var(--ai-bubble);
             color: var(--text-main);
             align-self: flex-start;
             border-bottom-left-radius: 4px;
             white-space: pre-wrap;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 16px 18px;
+            background: var(--ai-bubble);
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            width: fit-content;
+            align-self: flex-start;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .typing-indicator .dot {
+            width: 8px;
+            height: 8px;
+            background: #AAB2BD;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-indicator .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-indicator .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
         }
 
         .agent-status {
@@ -158,6 +248,7 @@
             display: flex;
             gap: 10px;
         }
+
         .input-area input {
             flex: 1;
             padding: 12px 15px;
@@ -167,7 +258,12 @@
             outline: none;
             background: #F8F9FA;
         }
-        .input-area input:focus { background: white; border-color: var(--primary); }
+
+        .input-area input:focus {
+            background: white;
+            border-color: var(--primary);
+        }
+
         .input-area button {
             background: var(--primary);
             color: white;
@@ -181,259 +277,316 @@
             align-items: center;
             transition: background 0.2s, transform 0.1s;
         }
-        .input-area button:hover { background: var(--primary-dark); }
-        .input-area button:active { transform: scale(0.95); }
-        .input-area button:disabled { background: #BDC3C7; cursor: not-allowed; }
-        
+
+        .input-area button:hover {
+            background: var(--primary-dark);
+        }
+
+        .input-area button:active {
+            transform: scale(0.95);
+        }
+
+        .input-area button:disabled {
+            background: #BDC3C7;
+            cursor: not-allowed;
+        }
+
         .loading-dots:after {
             content: '.';
             animation: dots 1.5s steps(5, end) infinite;
         }
-        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
+
+        @keyframes dots {
+
+            0%,
+            20% {
+                content: '.';
+            }
+
+            40% {
+                content: '..';
+            }
+
+            60% {
+                content: '...';
+            }
+
+            80%,
+            100% {
+                content: '';
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <h1>Palantiny</h1>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">한약재 B2B 챗봇 테스트 패널</p>
-        <input type="text" id="serverAddress" placeholder="서버 주소 (예: 192.168.0.10:8000)" value="">
-        <input type="text" id="partnerToken" placeholder="Partner Token" value="partner_demo_token_001">
-        <button id="loginBtn">연결하기</button>
-        <div class="login-error" id="loginError"></div>
-    </div>
+    <div class="container">
+        <!-- Login Screen -->
+        <div class="login-screen" id="loginScreen">
+            <h1>Palantiny</h1>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">한약재 B2B 챗봇 테스트 패널</p>
+            <input type="text" id="serverAddress" placeholder="서버 주소 (예: 192.168.0.10:8000)" value="">
+            <input type="text" id="partnerToken" placeholder="Partner Token" value="partner_demo_token_001">
+            <button id="loginBtn">연결하기</button>
+            <div class="login-error" id="loginError"></div>
+        </div>
 
-    <!-- Chat Screen -->
-    <div class="header">
-        <div>
-            <h2><span class="status-dot"></span> Palantiny Bot</h2>
-            <div class="status-text" id="connectionStatus">Connected to SSE Stream</div>
+        <!-- Chat Screen -->
+        <div class="header">
+            <div>
+                <h2><span class="status-dot"></span> Palantiny Bot</h2>
+                <div class="status-text" id="connectionStatus">Connected to SSE Stream</div>
+            </div>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="한약재 재고나 효능을 물어보세요..." autocomplete="off" disabled>
+            <button id="sendBtn" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor" />
+                </svg>
+            </button>
         </div>
     </div>
-    
-    <div class="chat-box" id="chatBox">
-        <!-- Messages will appear here -->
-    </div>
 
-    <div class="input-area">
-        <input type="text" id="messageInput" placeholder="한약재 재고나 효능을 물어보세요..." autocomplete="off" disabled>
-        <button id="sendBtn" disabled>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor"/>
-            </svg>
-        </button>
-    </div>
-</div>
+    <script>
+        let API_URL = "";
+        let currentSessionId = "";
+        let currentUser = "";
+        let eventSource = null;
+        let isWaitingForResponse = false;
 
-<script>
-    let API_URL = "";
-    let currentSessionId = "";
-    let currentUser = "";
-    let eventSource = null;
-    let isWaitingForResponse = false;
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const serverAddressInput = document.getElementById('serverAddress');
+        const partnerTokenInput = document.getElementById('partnerToken');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const chatBox = document.getElementById('chatBox');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const connectionStatus = document.getElementById('connectionStatus');
 
-    // DOM Elements
-    const loginScreen = document.getElementById('loginScreen');
-    const serverAddressInput = document.getElementById('serverAddress');
-    const partnerTokenInput = document.getElementById('partnerToken');
-    const loginBtn = document.getElementById('loginBtn');
-    const loginError = document.getElementById('loginError');
-    const chatBox = document.getElementById('chatBox');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const connectionStatus = document.getElementById('connectionStatus');
-
-    // 서버 주소 자동 채우기 (localStorage 또는 현재 호스트 기반)
-    (function initServerAddress() {
-        const saved = localStorage.getItem('palantiny_server');
-        if (saved) {
-            serverAddressInput.value = saved;
-        } else if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-            serverAddressInput.value = 'localhost:8000';
-        } else {
-            serverAddressInput.value = location.hostname + ':8000';
-        }
-    })();
-
-    // Login Logic
-    loginBtn.addEventListener('click', async () => {
-        const serverAddr = serverAddressInput.value.trim();
-        const token = partnerTokenInput.value.trim();
-        if(!serverAddr || !token) {
-            loginError.textContent = "서버 주소와 토큰을 모두 입력하세요.";
-            return;
-        }
-
-        // http:// 자동 추가
-        const base = serverAddr.startsWith('http') ? serverAddr : `http://${serverAddr}`;
-        API_URL = `${base}/api/v1`;
-        localStorage.setItem('palantiny_server', serverAddr);
-        
-        loginBtn.disabled = true;
-        loginBtn.textContent = "연결 중...";
-        loginError.textContent = "";
-
-        try {
-            const res = await fetch(`${API_URL}/auth/verify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ partner_token: token })
-            });
-            const data = await res.json();
-            
-            if(!res.ok) throw new Error(data.detail || "인증 실패");
-            
-            currentSessionId = data.session_id;
-            currentUser = data.user_id;
-            
-            // Hide login screen
-            loginScreen.classList.add('hidden');
-            
-            // Load history
-            if (data.recent_history && data.recent_history.length > 0) {
-                renderHistory(data.recent_history);
+        // 서버 주소 자동 채우기 (localStorage 또는 현재 호스트 기반)
+        (function initServerAddress() {
+            const saved = localStorage.getItem('palantiny_server');
+            if (saved) {
+                serverAddressInput.value = saved;
+            } else if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                serverAddressInput.value = 'localhost:8000';
             } else {
-                addMessage("assistant", "안녕하세요! 팔란티니 챗봇입니다. 어떤 한약재 정보나 재고가 궁금하신가요?");
+                serverAddressInput.value = location.hostname + ':8000';
+            }
+        })();
+
+        // Login Logic
+        loginBtn.addEventListener('click', async () => {
+            const serverAddr = serverAddressInput.value.trim();
+            const token = partnerTokenInput.value.trim();
+            if (!serverAddr || !token) {
+                loginError.textContent = "서버 주소와 토큰을 모두 입력하세요.";
+                return;
             }
 
-            // Connect SSE
-            connectSSE();
-            
-            messageInput.disabled = false;
+            // http:// 자동 추가
+            const base = serverAddr.startsWith('http') ? serverAddr : `http://${serverAddr}`;
+            API_URL = `${base}/api/v1`;
+            localStorage.setItem('palantiny_server', serverAddr);
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = "연결 중...";
+            loginError.textContent = "";
+
+            try {
+                const res = await fetch(`${API_URL}/auth/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ partner_token: token })
+                });
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.detail || "인증 실패");
+
+                currentSessionId = data.session_id;
+                currentUser = data.user_id;
+
+                // Hide login screen
+                loginScreen.classList.add('hidden');
+
+                // Load history
+                if (data.recent_history && data.recent_history.length > 0) {
+                    renderHistory(data.recent_history);
+                } else {
+                    addMessage("assistant", "안녕하세요! 팔란티니 챗봇입니다. 어떤 한약재 정보나 재고가 궁금하신가요?");
+                }
+
+                // Connect SSE
+                connectSSE();
+
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                messageInput.focus();
+
+            } catch (err) {
+                loginError.textContent = err.message;
+                loginBtn.disabled = false;
+                loginBtn.textContent = "연결하기";
+            }
+        });
+
+        // Render History
+        function renderHistory(history) {
+            history.forEach(msg => {
+                addMessage(msg.role, msg.content, true);
+            });
+            scrollToBottom();
+        }
+
+        // Add Message to DOM
+        function addMessage(role, text, skipScroll = false) {
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            div.textContent = text;
+            chatBox.appendChild(div);
+            if (!skipScroll) scrollToBottom();
+            return div;
+        }
+
+        function addStatusMessage(text) {
+            let statusDiv = document.getElementById('current-status');
+            if (!statusDiv) {
+                statusDiv = document.createElement('div');
+                statusDiv.id = 'current-status';
+                statusDiv.className = 'agent-status';
+                chatBox.appendChild(statusDiv);
+            }
+            statusDiv.innerHTML = `⚡ ${text}<span class="loading-dots"></span>`;
+            if (typingIndicatorDiv) {
+                chatBox.appendChild(typingIndicatorDiv); // Move typing indicator below status
+            }
+            scrollToBottom();
+        }
+
+        function removeStatusMessage() {
+            const statusDiv = document.getElementById('current-status');
+            if (statusDiv) statusDiv.remove();
+        }
+
+        let typingIndicatorDiv = null;
+
+        function showTypingIndicator() {
+            if (typingIndicatorDiv) return;
+            typingIndicatorDiv = document.createElement('div');
+            typingIndicatorDiv.className = 'typing-indicator';
+            typingIndicatorDiv.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            chatBox.appendChild(typingIndicatorDiv);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            if (typingIndicatorDiv) {
+                typingIndicatorDiv.remove();
+                typingIndicatorDiv = null;
+            }
+        }
+
+        function scrollToBottom() {
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Connect SSE Stream
+        function connectSSE() {
+            if (eventSource) eventSource.close();
+
+            eventSource = new EventSource(`${API_URL}/chat/${currentSessionId}/stream`);
+
+            eventSource.onopen = () => {
+                connectionStatus.textContent = "🟢 스트리밍 연결됨";
+                connectionStatus.style.color = "#2ECC71";
+            };
+
+            let currentAssistantMsgDiv = null;
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+
+                if (data.type === "status") {
+                    addStatusMessage(data.content);
+                }
+                else if (data.type === "token") {
+                    removeStatusMessage();
+                    removeTypingIndicator();
+                    if (!currentAssistantMsgDiv) {
+                        currentAssistantMsgDiv = addMessage("assistant", "");
+                    }
+                    currentAssistantMsgDiv.textContent += data.content;
+                    scrollToBottom();
+                }
+                else if (data.type === "error") {
+                    removeStatusMessage();
+                    removeTypingIndicator();
+                    addMessage("assistant", "❌ 에러 발생: " + data.content);
+                    currentAssistantMsgDiv = null;
+                    resetInput();
+                }
+                else if (data.type === "end") {
+                    removeStatusMessage();
+                    removeTypingIndicator();
+                    currentAssistantMsgDiv = null; // Reset for next message
+                    resetInput();
+                }
+            };
+
+            eventSource.onerror = (err) => {
+                console.error("SSE Error:", err);
+                connectionStatus.textContent = "🔴 스트리밍 끊김. 재연결 중...";
+                connectionStatus.style.color = "#E74C3C";
+                // EventSource auto-reconnects by default
+            };
+        }
+
+        // Send Message
+        async function sendMessage() {
+            if (isWaitingForResponse) return;
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            addMessage("user", text);
+            messageInput.value = "";
+            isWaitingForResponse = true;
+            sendBtn.disabled = true;
+            showTypingIndicator();
+
+            try {
+                await fetch(`${API_URL}/chat/${currentSessionId}/message`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, user_id: currentUser })
+                });
+                // The response comes via SSE
+            } catch (err) {
+                addMessage("assistant", "❌ 전송 실패: " + err.message);
+                resetInput();
+            }
+        }
+
+        function resetInput() {
+            isWaitingForResponse = false;
             sendBtn.disabled = false;
             messageInput.focus();
-
-        } catch (err) {
-            loginError.textContent = err.message;
-            loginBtn.disabled = false;
-            loginBtn.textContent = "연결하기";
         }
-    });
 
-    // Render History
-    function renderHistory(history) {
-        history.forEach(msg => {
-            addMessage(msg.role, msg.content, true);
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
         });
-        scrollToBottom();
-    }
 
-    // Add Message to DOM
-    function addMessage(role, text, skipScroll = false) {
-        const div = document.createElement('div');
-        div.className = `message ${role}`;
-        div.textContent = text;
-        chatBox.appendChild(div);
-        if(!skipScroll) scrollToBottom();
-        return div;
-    }
-
-    function addStatusMessage(text) {
-        let statusDiv = document.getElementById('current-status');
-        if(!statusDiv) {
-            statusDiv = document.createElement('div');
-            statusDiv.id = 'current-status';
-            statusDiv.className = 'agent-status';
-            chatBox.appendChild(statusDiv);
-        }
-        statusDiv.innerHTML = `⚡ ${text}<span class="loading-dots"></span>`;
-        scrollToBottom();
-    }
-
-    function removeStatusMessage() {
-        const statusDiv = document.getElementById('current-status');
-        if(statusDiv) statusDiv.remove();
-    }
-
-    function scrollToBottom() {
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    // Connect SSE Stream
-    function connectSSE() {
-        if(eventSource) eventSource.close();
-        
-        eventSource = new EventSource(`${API_URL}/chat/${currentSessionId}/stream`);
-        
-        eventSource.onopen = () => {
-            connectionStatus.textContent = "🟢 스트리밍 연결됨";
-            connectionStatus.style.color = "#2ECC71";
-        };
-        
-        let currentAssistantMsgDiv = null;
-
-        eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            
-            if (data.type === "status") {
-                addStatusMessage(data.content);
-            } 
-            else if (data.type === "token") {
-                removeStatusMessage();
-                if (!currentAssistantMsgDiv) {
-                    currentAssistantMsgDiv = addMessage("assistant", "");
-                }
-                currentAssistantMsgDiv.textContent += data.content;
-                scrollToBottom();
-            } 
-            else if (data.type === "error") {
-                removeStatusMessage();
-                addMessage("assistant", "❌ 에러 발생: " + data.content);
-                currentAssistantMsgDiv = null;
-                resetInput();
-            }
-            else if (data.type === "end") {
-                removeStatusMessage();
-                currentAssistantMsgDiv = null; // Reset for next message
-                resetInput();
-            }
-        };
-
-        eventSource.onerror = (err) => {
-            console.error("SSE Error:", err);
-            connectionStatus.textContent = "🔴 스트리밍 끊김. 재연결 중...";
-            connectionStatus.style.color = "#E74C3C";
-            // EventSource auto-reconnects by default
-        };
-    }
-
-    // Send Message
-    async function sendMessage() {
-        if(isWaitingForResponse) return;
-        const text = messageInput.value.trim();
-        if(!text) return;
-
-        addMessage("user", text);
-        messageInput.value = "";
-        isWaitingForResponse = true;
-        sendBtn.disabled = true;
-
-        try {
-            await fetch(`${API_URL}/chat/${currentSessionId}/message`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text, user_id: currentUser })
-            });
-            // The response comes via SSE
-        } catch(err) {
-            addMessage("assistant", "❌ 전송 실패: " + err.message);
-            resetInput();
-        }
-    }
-
-    function resetInput() {
-        isWaitingForResponse = false;
-        sendBtn.disabled = false;
-        messageInput.focus();
-    }
-
-    sendBtn.addEventListener('click', sendMessage);
-    messageInput.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') sendMessage();
-    });
-
-</script>
+    </script>
 </body>
+
 </html>

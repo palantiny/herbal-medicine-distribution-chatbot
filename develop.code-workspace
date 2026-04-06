@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "server1",
+			"path": "../../../문서/Palantiny/server1"
+		},
+		{
+			"name": "server2",
+			"path": "."
+		},
+		{
+			"name": "cypher",
+			"path": "../../../Downloads/cypher"
+		}
+	],
+	"settings": {}
+}

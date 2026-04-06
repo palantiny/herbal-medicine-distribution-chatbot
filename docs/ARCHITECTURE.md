@@ -332,4 +332,4 @@ curl -X POST http://localhost:8000/api/v1/chat/test_001_123/message \
 | POST에서 user message 저장 | 워커 처리 전 입력 영속화 → 메시지 유실 방지 |
 | chat_worker.py 별도 파일 | sql_worker.py 패턴 일관성 |
 | asyncio.gather fan-out | 복수 라우트 병렬 실행으로 지연 최소화 |
-| Mock 모드 전면 지원 | 외부 의존성 없이 개발/테스트 가능 |
+| Mock 모드 전면 지원 | 외부 의존성 없이 개발/테스트 가능 |.
