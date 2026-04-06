@@ -32,7 +32,7 @@ jobs:
 
           aws ssm wait command-executed \
             --command-id "$COMMAND_ID" \
-            --instance-id ${{ secrets.EC2_INSTANCE_ID }}
+            --instance-id ${{ secrets.EC2_INSTANCE_ID }} || true
 
           echo "=== Deploy Log ==="
           aws ssm get-command-invocation \
