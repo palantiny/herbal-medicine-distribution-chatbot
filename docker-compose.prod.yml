@@ -102,20 +102,6 @@ services:
     restart: unless-stopped
     command: uvicorn app.chatbot_main:app --host 0.0.0.0 --port 8000
 
-  web_app:
-    build: .
-    container_name: palantiny_web_app
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      APP_ENV: production
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-    ports:
-      - "8001:8001"
-    restart: unless-stopped
-    command: uvicorn app.web_main:app --host 0.0.0.0 --port 8001
 
   chat_worker:
     build: .
