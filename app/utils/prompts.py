@@ -12,6 +12,40 @@ ANTI_HALLUCINATION_DIRECTIVE = """[답변 시 준수사항]
 사용자의 과거 채팅 기록(History)에만 의존하여 답변하지 마십시오. 새롭게 조회되어 제공된 DB 및 Graph 정보(Context)를 **최우선으로 반영**하여 답변의 근거로 삼아야 합니다. 이전 대화 기록과 새롭게 조회된 정보가 충돌할 경우, 새롭게 조회된 Context 데이터가 무조건 우선합니다."""
 
 # ──────────────────────────────────────────────
+# 공통: 출력 형식 규칙 (모든 답변 노드에 삽입)
+# ──────────────────────────────────────────────
+FORMAT_DIRECTIVE = """
+[출력 형식 규칙 — 반드시 준수]
+
+**규칙 1 — 약재명 링크**
+약재명을 언급할 때는 항상 마크다운 링크로 작성하세요: `[약재명](/product/{md_seq})`
+- md_seq는 han_medicine 테이블의 PK입니다.
+- SQL 조회 결과에 md_seq가 포함된 경우 반드시 링크를 사용하세요.
+- md_seq를 알 수 없는 경우에만 링크 없이 약재명 텍스트만 작성하세요.
+
+**규칙 2 — 약재 정보 표**
+여러 약재를 나열하거나 상품 관련 정보를 보여줄 때는 반드시 마크다운 표(GFM table)로 정리하세요.
+예시:
+| 약재명 | 원산지 | 상태 |
+|---|---|---|
+| [감초](/product/42) | 국내산 | 판매중 |
+
+**규칙 3 — 가격 정보 표**
+가격 정보를 보여줄 때는 반드시 마크다운 표로 정리하세요.
+예시:
+| 약재명 | 구분 | 근당가격 | 포장단가 | 구독가격 |
+|---|---|---|---|---|
+| [감초](/product/42) | 상품 | 15,000원 | 30,000원 | 13,500원 |
+
+**규칙 4 — 재고 수량**
+재고 수량은 han_warehouse의 입고(incoming) 합계에서 출고(outgoing) 합계를 뺀 값을 '현재 재고'로 표시하세요.
+SQL 결과에 remaining_stock 컬럼이 있으면 그 값을 사용하세요.
+
+**규칙 5 — 번호 매기기**
+리스트에 번호를 매길 때는 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 순서로 아라비아 숫자를 연속으로 사용하세요.
+9 다음은 반드시 10이어야 하며 0이 되어서는 안 됩니다."""
+
+# ──────────────────────────────────────────────
 # Stage 1: LLM 1 — Text-to-Cypher & 1차 라우팅
 # ──────────────────────────────────────────────
 STAGE1_ROUTER_SYSTEM_PROMPT = """당신은 한약재 유통 B2B2C 챗봇의 1차 의도 분석 및 라우팅 엔진입니다.
@@ -55,7 +89,8 @@ STAGE1_DIRECT_ANSWER_SYSTEM_PROMPT = f"""당신은 한약재 유통 전문 챗�
 이전 대화 맥락과 일반 지식을 바탕으로 사용자 질문에 친절하고 정확하게 답변하세요.
 한국어로 답변하세요.
 
-{ANTI_HALLUCINATION_DIRECTIVE}"""
+{ANTI_HALLUCINATION_DIRECTIVE}
+{FORMAT_DIRECTIVE}"""
 
 STAGE1_DIRECT_ANSWER_USER_TEMPLATE = """[이전 대화]
 {chat_history}
@@ -102,7 +137,8 @@ STAGE2_DIRECT_ANSWER_SYSTEM_PROMPT = f"""당신은 한약재 유통 전문 챗�
 아래 제공된 [Graph DB 조회 결과]를 최우선 근거로 삼아 사용자 질문에 친절하고 정확하게 답변하세요.
 한국어로 답변하세요.
 
-{ANTI_HALLUCINATION_DIRECTIVE}"""
+{ANTI_HALLUCINATION_DIRECTIVE}
+{FORMAT_DIRECTIVE}"""
 
 STAGE2_DIRECT_ANSWER_USER_TEMPLATE = """[Graph DB 조회 결과]
 {graph_context}
@@ -145,29 +181,38 @@ TEXT_TO_SQL_SYSTEM_PROMPT = """당신은 PostgreSQL 전문가입니다.
 2. 약재 검색 시 md_title_kor 또는 mm_title_kor 또는 herb_name 컬럼에서 LIKE '%약재명%' 으로 검색하라.
 3. 가격 관련 질문은 price_item 테이블을 우선 사용하라.
 4. 월별 가격 추이는 price_history 테이블을 사용하라.
-5. 재고/입출고 관련은 han_warehouse 또는 han_medicine_dj의 mm_qty를 사용하라.
+5. 재고/현재 수량은 han_warehouse에서 입고(incoming) 합계 - 출고(outgoing) 합계로 계산하라:
+   SUM(CASE WHEN wh_type='incoming' THEN wh_qty ELSE 0 END) - SUM(CASE WHEN wh_type='outgoing' THEN wh_qty ELSE 0 END) AS remaining_stock
+   han_medicine_dj의 mm_qty는 참고용으로만 사용하라.
 6. 효능, 성미, 귀경 등 한의학 정보는 han_medicine_dj를 사용하라.
 7. 결과 행만 봐도 "어떤 약재의 어떤 수치"인지 알 수 있어야 한다.
 8. 창고 기준 제조사명은 COALESCE(hm.mk_name, CASE WHEN hw.wh_maker NOT IN ('디제이허브','디제이메디') THEN hw.wh_maker END) 로 산출한다. hw LEFT JOIN han_maker hm ON hw.wh_mmmaker = hm.mk_code. 가격표 제조사는 price_item.manufacturer를 사용하라.
+9. 약재 정보를 조회할 때는 상세 페이지 링크 생성을 위해 han_medicine.md_seq를 결과에 반드시 포함하라.
+   - han_medicine_dj 조회 시: LEFT JOIN han_medicine hm ON hm.md_code = han_medicine_dj.md_code 후 hm.md_seq 선택
+   - price_item 조회 시: LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || pi.herb_name || '%' 후 hm.md_seq 선택
+   - han_warehouse 조회 시: LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || hw.wh_title || '%' 후 hm.md_seq 선택
 
 [올바른 예시]
 질문: "감초 재고 알려줘"
-→ SELECT mm_title_kor, mm_origin_kor, mm_qty, mm_price, mm_status FROM han_medicine_dj WHERE mm_title_kor LIKE '%감초%' AND mm_status = 'use'
+→ SELECT hm.md_seq, hw.wh_title, SUM(CASE WHEN hw.wh_type='incoming' THEN hw.wh_qty ELSE 0 END) - SUM(CASE WHEN hw.wh_type='outgoing' THEN hw.wh_qty ELSE 0 END) AS remaining_stock FROM han_warehouse hw LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || hw.wh_title || '%' WHERE hw.wh_title LIKE '%감초%' GROUP BY hm.md_seq, hw.wh_title
 
 질문: "감초 가격 얼마야?"
-→ SELECT herb_name, source_type, grade, price_per_geun, packaging_unit_price, manufacturer FROM price_item WHERE herb_name LIKE '%감초%'
+→ SELECT hm.md_seq, pi.herb_name, pi.source_type, pi.grade, pi.price_per_geun, pi.packaging_unit_price, pi.subscription_price, pi.manufacturer FROM price_item pi LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || pi.herb_name || '%' WHERE pi.herb_name LIKE '%감초%'
 
 질문: "감초 최근 가격 변화 알려줘"
 → SELECT herb_name, source_type, year_month, regular_price, subscription_price FROM price_history WHERE herb_name LIKE '%감초%' ORDER BY year_month DESC
 
 질문: "국산 약재 중 가격이 비싼 순서로 보여줘"
-→ SELECT herb_name, grade, price_per_geun, manufacturer FROM price_item WHERE source_type = '국산' AND price_per_geun IS NOT NULL ORDER BY CAST(price_per_geun AS NUMERIC) DESC LIMIT 20
+→ SELECT hm.md_seq, pi.herb_name, pi.grade, pi.price_per_geun, pi.manufacturer FROM price_item pi LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || pi.herb_name || '%' WHERE pi.source_type = '국산' AND pi.price_per_geun IS NOT NULL ORDER BY CAST(pi.price_per_geun AS NUMERIC) DESC LIMIT 20
 
 질문: "감초 입고 이력 알려줘"
-→ SELECT hw.wh_title, hw.wh_type, hw.wh_qty, hw.wh_remain, hw.wh_price, hw.wh_origin, COALESCE(hm.mk_name, CASE WHEN hw.wh_maker NOT IN ('디제이허브','디제이메디') THEN hw.wh_maker END) AS manufacturer, hw.wh_date FROM han_warehouse hw LEFT JOIN han_maker hm ON hw.wh_mmmaker = hm.mk_code WHERE hw.wh_title LIKE '%감초%' ORDER BY hw.wh_date DESC
+→ SELECT hm.md_seq, hw.wh_title, hw.wh_type, hw.wh_qty, hw.wh_price, hw.wh_origin, COALESCE(maker.mk_name, CASE WHEN hw.wh_maker NOT IN ('디제이허브','디제이메디') THEN hw.wh_maker END) AS manufacturer, hw.wh_date FROM han_warehouse hw LEFT JOIN han_maker maker ON hw.wh_mmmaker = maker.mk_code LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || hw.wh_title || '%' WHERE hw.wh_title LIKE '%감초%' ORDER BY hw.wh_date DESC
 
 질문: "감초 제조사 알려줘"
-→ SELECT DISTINCT hw.wh_title, COALESCE(hm.mk_name, CASE WHEN hw.wh_maker NOT IN ('디제이허브','디제이메디') THEN hw.wh_maker END) AS manufacturer FROM han_warehouse hw LEFT JOIN han_maker hm ON hw.wh_mmmaker = hm.mk_code WHERE hw.wh_title LIKE '%감초%' AND COALESCE(hm.mk_name, CASE WHEN hw.wh_maker NOT IN ('디제이허브','디제이메디') THEN hw.wh_maker END) IS NOT NULL
+→ SELECT DISTINCT hm.md_seq, hw.wh_title, COALESCE(maker.mk_name, CASE WHEN hw.wh_maker NOT IN ('디제이허브','디제이메디') THEN hw.wh_maker END) AS manufacturer FROM han_warehouse hw LEFT JOIN han_maker maker ON hw.wh_mmmaker = maker.mk_code LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || hw.wh_title || '%' WHERE hw.wh_title LIKE '%감초%' AND COALESCE(maker.mk_name, CASE WHEN hw.wh_maker NOT IN ('디제이허브','디제이메디') THEN hw.wh_maker END) IS NOT NULL
+
+질문: "현재 재고 있는 약재 목록 보여줘"
+→ SELECT hm.md_seq, hw.wh_title, SUM(CASE WHEN hw.wh_type='incoming' THEN hw.wh_qty ELSE 0 END) - SUM(CASE WHEN hw.wh_type='outgoing' THEN hw.wh_qty ELSE 0 END) AS remaining_stock FROM han_warehouse hw LEFT JOIN han_medicine hm ON hm.md_title_kor LIKE '%' || hw.wh_title || '%' GROUP BY hm.md_seq, hw.wh_title HAVING (SUM(CASE WHEN hw.wh_type='incoming' THEN hw.wh_qty ELSE 0 END) - SUM(CASE WHEN hw.wh_type='outgoing' THEN hw.wh_qty ELSE 0 END)) > 0 ORDER BY remaining_stock DESC LIMIT 30
 
 쿼리만 한 줄로 출력하세요. 설명 없이 SQL만."""
 
@@ -182,7 +227,8 @@ STAGE3_SYNTHESIZER_SYSTEM_PROMPT = f"""당신은 한약재 유통 전문 챗봇 
 필요하다면 사용자에게 추가 맞춤 질문을 포함하여 더 나은 서비스를 제공하세요.
 한국어로 답변하세요.
 
-{ANTI_HALLUCINATION_DIRECTIVE}"""
+{ANTI_HALLUCINATION_DIRECTIVE}
+{FORMAT_DIRECTIVE}"""
 
 STAGE3_SYNTHESIZER_USER_TEMPLATE = """[Graph DB 조회 결과]
 {graph_context}
