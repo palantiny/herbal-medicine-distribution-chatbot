@@ -54,6 +54,10 @@ class Settings(BaseSettings):
     NEO4J_USERNAME: str = "neo4j"
     NEO4J_PASSWORD: str = "palantiny_secret"
     NEO4J_DATABASE: str = "neo4j"
+    NEO4J_QUERY_PARALLEL_MAX: int = 5
+
+    # Stage1 그래프 탐색 (LLM1 루프) 상한
+    STAGE1_GRAPH_MAX_ROUNDS: int = 5
 
     # 128k context 제한 (토큰 단위)
     CONTEXT_MAX_TOKENS: int = 120_000
