@@ -124,7 +124,7 @@ async def _query_neo4j(herb_name: str) -> str | None:
                 for pr in price_records:
                     if not pr["price_per_geun"]:
                         continue
-                    parts = [f"  {pr['type'] or pr['product_id']}"]
+                    parts = [f"  [product_id={pr['product_id']}] {pr['type'] or ''}"]
                     if pr["maker"]:
                         parts.append(f"제조사={pr['maker']}")
                     if pr["origin"]:
