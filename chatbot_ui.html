@@ -404,13 +404,13 @@
         const sendBtn = document.getElementById('sendBtn');
         const connectionStatus = document.getElementById('connectionStatus');
 
-        // 서버 주소 자동 채우기 (localStorage 또는 현재 호스트 기반)
+        // 서버 주소 자동 채우기 (localStorage 또는 file:// 로컬 호스트 기반)
         (function initServerAddress() {
             const saved = localStorage.getItem('palantiny_server');
             if (saved) {
                 serverAddressInput.value = saved;
-            } else if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-                serverAddressInput.value = 'localhost:8000';
+            } else if (!location.hostname || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                serverAddressInput.value = '127.0.0.1:8000'; // 로컬 테스트용 백엔드 기본 주소
             } else {
                 serverAddressInput.value = location.hostname + ':8000';
             }

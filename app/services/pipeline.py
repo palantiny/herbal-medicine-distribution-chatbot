@@ -211,8 +211,8 @@ def _router_fallback(reason: str) -> RouterOutput:
 
 
 async def stage1_router(state: PipelineState) -> PipelineState:
-    """Stage1: LLM1 라우터 (Graph Context 반영)."""
-    await _publish_status(state, "1단계: 질문 의도 분석 중...")
+    """Stage 1: 1차 라우팅 — 직접 답변 vs Cypher(Graph DB) 조회 결정."""
+    await _publish_status(state, "질문을 이해하고 있어요...")
 
     parsed = await _call_stage1_router_llm(
         state["chat_history"],
