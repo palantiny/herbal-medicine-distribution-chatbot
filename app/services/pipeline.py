@@ -70,7 +70,7 @@ async def _call_llm_text(system_prompt: str, user_content: str) -> str:
 
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
@@ -80,6 +80,48 @@ async def _call_llm_text(system_prompt: str, user_content: str) -> str:
         return (response.choices[0].message.content or "").strip()
     except Exception as e:
         logger.exception("LLM text error: %s", e)
+        return ""
+
+
+async def _call_llm_thinking(question: str, graph_context: str, sql_context: str) -> str:
+    """답변 전 thinking 생성 (non-streaming). 사용자에게 사고 과정을 보여주기 위한 용도."""
+    try:
+        from openai import AsyncOpenAI
+
+        context_parts = []
+        if graph_context and graph_context.strip() and graph_context.strip() != "(없음)":
+            context_parts.append(f"[Graph DB 조회 결과]\n{graph_context[:800]}")
+        if sql_context and sql_context.strip() and sql_context.strip() != "(SQL/RDB 조회 없음)":
+            context_parts.append(f"[DB 조회 결과]\n{sql_context[:400]}")
+        context_str = "\n\n".join(context_parts) if context_parts else "(조회된 데이터 없음)"
+
+        client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+        response = await client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "당신은 한약재 유통 챗봇입니다. "
+                        "사용자 질문과 수집된 데이터를 보고, 어떻게 답변할지 간략히 생각하세요. "
+                        "3~5문장으로 간결하게 한국어로 작성하세요. "
+                        "답변 자체를 쓰지 말고, 분석 과정과 답변 전략만 작성하세요."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        f"[사용자 질문]\n{question}\n\n"
+                        f"[수집된 데이터 요약]\n{context_str}"
+                    ),
+                },
+            ],
+            temperature=0.3,
+            max_tokens=200,
+        )
+        return (response.choices[0].message.content or "").strip()
+    except Exception as e:
+        logger.warning("Thinking LLM error: %s", e)
         return ""
 
 
@@ -99,7 +141,7 @@ async def _call_stage1_router_llm(
             question=question,
         )
         response = await client.beta.chat.completions.parse(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": STAGE1_ROUTER_SYSTEM_PROMPT},
                 {"role": "user", "content": user_content},
@@ -130,7 +172,7 @@ async def _call_llm_stream(
 
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         stream = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
@@ -250,6 +292,12 @@ async def stage1_direct_from_router(state: PipelineState) -> PipelineState:
     dr = (state.get("last_router_output") or {}).get("direct_response") or ""
     redis: Redis = state["redis"]
     channel = state["channel"]
+
+    # thinking 발행
+    thinking = await _call_llm_thinking(state["question"], "", "")
+    if thinking:
+        payload = json.dumps({"type": "thinking", "content": thinking}, ensure_ascii=False)
+        await redis.publish(channel, payload)
 
     if dr.strip():
         for ch in dr:
@@ -408,11 +456,21 @@ async def _execute_sql_via_redis(message: str, redis: Redis) -> str:
 
 
 async def stage3_synthesizer(state: PipelineState) -> PipelineState:
-    await _publish_status(state, "3단계: 수집 데이터 종합 분석 및 최종 답변 생성 중...")
+    await _publish_status(state, "수집한 정보를 종합해 답변을 작성하고 있어요...")
 
     sql_ctx = state.get("sql_redis_context") or ""
     if not sql_ctx.strip():
         sql_ctx = "(SQL/RDB 조회 없음)"
+
+    # thinking 발행 (답변 스트리밍 시작 전)
+    thinking = await _call_llm_thinking(
+        state["question"],
+        state["graph_context"] or "",
+        sql_ctx,
+    )
+    if thinking:
+        payload = json.dumps({"type": "thinking", "content": thinking}, ensure_ascii=False)
+        await state["redis"].publish(state["channel"], payload)
 
     user_content = STAGE3_SYNTHESIZER_USER_TEMPLATE.format(
         graph_context=state["graph_context"] or "(없음)",
