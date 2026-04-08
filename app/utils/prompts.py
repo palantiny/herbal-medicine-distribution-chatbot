@@ -84,24 +84,27 @@ STAGE1_ROUTER_SYSTEM_PROMPT = """당신은 한약재 유통 플랫폼 '팔란티
 - CALL_LLM2_SQL: 사용자의 질문에 **'재고'** 확인이나 **'입출고 내역'** 조회가 포함되어 있어 PostgreSQL 조회가 반드시 필요한 경우. (단, 특정 약재의 재고를 묻는다면 해당 약재의 정확한 ID나 정보를 먼저 알아야 하므로 SEARCH_GRAPH를 먼저 수행한 후, 다음 턴에 CALL_LLM2_SQL을 호출하세요.)
 - GENERATE_FINAL_ANSWER: [Graph Context] (그리고 필요시 LLM2가 수집한 SQL Context)에 질문에 답하기 위한 정보가 모두 모여서, 더 이상의 탐색 없이 최종 답변 생성기로 제어권을 넘길 때.
 
-[실행 가능한 11가지 탐색 템플릿 (target_intents)]
+[실행 가능한 12가지 탐색 템플릿 (target_intents)]
 **한의학 온톨로지 경로 (1-hop)**
-1. SEARCH_TEMP: (Herb)-[HAS_TEMP]->(NatureTemp)
-2. SEARCH_TASTE: (Herb)-[HAS_TASTE]->(NatureTaste)
-3. SEARCH_MERIDIAN: (Herb)-[ACTS_ON]->(Meridian)
-4. SEARCH_EFFICACY: (Herb)-[HAS_EFFICACY]->(Efficacy)
-5. SEARCH_SYMPTOM: (Herb)-[TREATS]->(Symptom)
-6. SEARCH_FORMULA_CONTAINS: (Formula)-[CONTAINS]->(Herb)
-7. SEARCH_CONTRAINDICATION: (Herb)-[CONTRAINDICATES]->(Herb)
+1. SEARCH_TEMP: (Herb)-[HAS_TEMP]->(NatureTemp) — 약재의 성질(한·열·온·량·평) 또는 특정 성질의 약재 목록
+2. SEARCH_TASTE: (Herb)-[HAS_TASTE]->(NatureTaste) — 약재의 맛(고·감·신·함·산) 또는 특정 맛의 약재 목록
+3. SEARCH_MERIDIAN: (Herb)-[ACTS_ON]->(Meridian) — 약재의 귀경(심·간·비·폐·신 등) 또는 특정 경락에 작용하는 약재 목록
+4. SEARCH_EFFICACY: (Herb)-[HAS_EFFICACY]->(Efficacy) — 약재의 효능 또는 특정 효능의 약재 목록
+5. SEARCH_SYMPTOM: (Herb)-[TREATS]->(Symptom) — 약재가 치료하는 증상 또는 특정 증상에 쓰이는 약재 목록
+6. SEARCH_FORMULA_CONTAINS: (Formula)-[CONTAINS]->(Herb) — 처방에 포함된 약재 또는 특정 약재가 들어간 처방 목록
+7. SEARCH_CONTRAINDICATION: (Herb)-[CONTRAINDICATES]->(Herb) — 약재의 상극/금기 약재
+8. SEARCH_DOSAGE_FORM: (Herb)-[CAN_PREPARED_AS]->(DosageForm) — 약재가 어떤 제형(첩약/약재, 탕전, 탕전후 환, 산제/가루, 고제/연고, 보험약, 제환/조제 등)으로 조제 가능한지 또는 특정 제형으로 만들 수 있는 약재 목록
 
 **유통 및 가격 경로 (2-hop, 상품·가격·제조사·원산지를 한 번에 반환)**
-8. SEARCH_DISTRIBUTION_ALL: (Herb)-[HAS_PRODUCT]->(Product) + Maker/Origin/PriceRecord 전부 — 약재의 유통 전반(상품 리스트, 제조사, 원산지, 최신 가격)을 모두 알려달라고 할 때.
-9. SEARCH_HERB_BY_MAKER: (Maker)→Product→{Origin, PriceRecord}→Herb — 제조사로 질문하면 해당 제조사의 상품·원산지·최신 가격·약재명까지 **한 번에 반환**. 제조사 관련 질문은 추가 intent 없이 이 하나로 충분한 경우가 많음.
-10. SEARCH_HERB_BY_ORIGIN: (Origin)→Product→{Maker, PriceRecord}→Herb — 원산지로 질문하면 해당 원산지의 상품·제조사·최신 가격·약재명까지 **한 번에 반환**. 원산지 관련 질문은 이 하나로 충분한 경우가 많음.
-11. SEARCH_PRICE_INFO: (Herb)→Product→PriceRecord + Maker/Origin — 가격 질문은 월별 가격 이력과 함께 상품 상세(포장단위, 박스수량), 제조사, 원산지까지 **한 번에 반환**. 가격 질문은 이 하나로 충분한 경우가 많음.
+9. SEARCH_DISTRIBUTION_ALL: (Herb)-[HAS_PRODUCT]->(Product) + Maker/Origin/PriceRecord 전부 — 약재의 유통 전반(상품 리스트, 제조사, 원산지, 최신 가격)을 모두 알려달라고 할 때.
+10. SEARCH_HERB_BY_MAKER: (Maker)→Product→{Origin, PriceRecord}→Herb — 제조사로 질문하면 해당 제조사의 상품·원산지·최신 가격·약재명까지 **한 번에 반환**. 제조사 관련 질문은 추가 intent 없이 이 하나로 충분한 경우가 많음.
+11. SEARCH_HERB_BY_ORIGIN: (Origin)→Product→{Maker, PriceRecord}→Herb — 원산지로 질문하면 해당 원산지의 상품·제조사·최신 가격·약재명까지 **한 번에 반환**. 원산지 관련 질문은 이 하나로 충분한 경우가 많음.
+12. SEARCH_PRICE_INFO: (Herb)→Product→PriceRecord + Maker/Origin — 가격 질문은 월별 가격 이력과 함께 상품 상세(포장단위, 박스수량), 제조사, 원산지까지 **한 번에 반환**. 가격 질문은 이 하나로 충분한 경우가 많음.
 
 [추출 규칙]
 - 노드의 종류(node_type)와 이름(node_name)을 추출하세요.
+- 지원 node_type: Herb, Formula, NatureTemp, NatureTaste, Meridian, Efficacy, Symptom, DosageForm, Maker, Origin.
+- DosageForm 예시값: 첩약/약재, 탕전, 탕전후 환, 산제/가루, 고제/연고, 보험약, 제환/조제. 사용자가 "탕약", "가루약", "환약", "연고" 등 일상 표현을 쓰더라도 가장 가까운 DosageForm 값으로 정규화해서 추출하세요.
 """
 
 STAGE1_ROUTER_USER_TEMPLATE = """[이전 대화 맥락]

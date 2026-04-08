@@ -12,6 +12,7 @@ GraphIntent = Literal[
     "SEARCH_SYMPTOM",
     "SEARCH_FORMULA_CONTAINS",
     "SEARCH_CONTRAINDICATION",
+    "SEARCH_DOSAGE_FORM",
     "SEARCH_DISTRIBUTION_ALL",
     "SEARCH_HERB_BY_MAKER",
     "SEARCH_HERB_BY_ORIGIN",
@@ -37,10 +38,11 @@ class ExtractedNode(BaseModel):
         "Meridian",
         "Efficacy",
         "Symptom",
+        "DosageForm",
         "Maker",
         "Origin",
     ] = Field(description="추출된 노드의 종류")
-    node_name: str = Field(description="추출된 노드의 실제 이름 (예: 감초, 두통, 영천)")
+    node_name: str = Field(description="추출된 노드의 실제 이름 (예: 감초, 두통, 영천, 탕전)")
 
 
 class RouterOutput(BaseModel):

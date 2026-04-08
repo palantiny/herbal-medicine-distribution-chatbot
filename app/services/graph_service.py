@@ -27,6 +27,7 @@ _INTENT_ORDER: list[GraphIntent] = [
     "SEARCH_SYMPTOM",
     "SEARCH_FORMULA_CONTAINS",
     "SEARCH_CONTRAINDICATION",
+    "SEARCH_DOSAGE_FORM",
     "SEARCH_DISTRIBUTION_ALL",
     "SEARCH_HERB_BY_MAKER",
     "SEARCH_HERB_BY_ORIGIN",
@@ -379,6 +380,54 @@ async def _tpl_search_contraindication(driver: Any, nodes: list[ExtractedNode]) 
         return _format_herb_list(header, "상극/금기 약재", rec["contras"])
 
 
+async def _tpl_search_dosage_form(driver: Any, nodes: list[ExtractedNode]) -> str:
+    """
+    1-hop 지식 템플릿: (Herb)-[:CAN_PREPARED_AS]->(DosageForm)
+    - 약재 기준: 해당 약재가 어떤 제형으로 조제 가능한지 조회
+    - 제형 기준: 해당 제형으로 조제 가능한 약재 목록 조회
+    양쪽 브랜치 모두 약재별 product_id를 태그로 반환.
+    """
+    herb = _first_name(nodes, "Herb")
+    form = _first_name(nodes, "DosageForm")
+    async with driver.session(database=settings.NEO4J_DATABASE) as session:
+        if herb:
+            result = await session.run(
+                """
+                MATCH (h:Herb)-[:CAN_PREPARED_AS]->(df:DosageForm)
+                WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                RETURN h.name AS herb,
+                       collect(DISTINCT df.name) AS forms,
+                       collect(DISTINCT p.product_id) AS product_ids
+                """,
+                name=herb,
+            )
+            rec = await result.single()
+            if not rec or not rec["herb"]:
+                return f"약재 '{herb}'에 대한 제형(DosageForm) 정보가 없습니다."
+            forms = [x for x in (rec["forms"] or []) if x]
+            pids = [x for x in (rec["product_ids"] or []) if x]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            return f"약재: {rec['herb']}{pid_tag}\n조제 가능 제형: {', '.join(forms) if forms else '없음'}"
+        if form:
+            result = await session.run(
+                """
+                MATCH (h:Herb)-[:CAN_PREPARED_AS]->(df:DosageForm)
+                WHERE df.name = $fname
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                WITH df, h, collect(DISTINCT p.product_id) AS pids
+                RETURN df.name AS form,
+                       collect({name: h.name, pids: pids}) AS herbs
+                """,
+                fname=form,
+            )
+            rec = await result.single()
+            if not rec or not rec["form"]:
+                return f"제형 '{form}'에 해당하는 약재를 찾지 못했습니다."
+            return _format_herb_list(f"제형: {rec['form']}", "조제 가능 약재", rec["herbs"])
+        return "SEARCH_DOSAGE_FORM: Herb 또는 DosageForm 노드가 필요합니다."
+
+
 async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) -> str:
     herb = _first_name(nodes, "Herb")
     if not herb:
@@ -714,6 +763,8 @@ async def _dispatch_intent(intent: GraphIntent, nodes: list[ExtractedNode]) -> s
             return await _tpl_search_formula_contains(driver, nodes)
         if intent == "SEARCH_CONTRAINDICATION":
             return await _tpl_search_contraindication(driver, nodes)
+        if intent == "SEARCH_DOSAGE_FORM":
+            return await _tpl_search_dosage_form(driver, nodes)
         if intent == "SEARCH_DISTRIBUTION_ALL":
             return await _tpl_search_distribution_all(driver, nodes)
         if intent == "SEARCH_HERB_BY_MAKER":
