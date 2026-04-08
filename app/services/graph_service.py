@@ -323,7 +323,7 @@ async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) 
         if not rows:
             return f"약재 '{herb}'에 연결된 Product가 없습니다."
         for r in rows:
-            parts = [f"  상품ID={r['product_id']}", f"유형={r['type']}"]
+            parts = [f"  [product_id={r['product_id']}]", f"유형={r['type']}"]
             if r["maker"]:
                 parts.append(f"제조사={r['maker']}")
             if r["origin"]:
@@ -356,7 +356,7 @@ async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) 
             any_p = True
             extra = f", 제조사={r['maker']}" if r["maker"] else ""
             lines.append(
-                f"  {r['product_id']}: 근당 {r['price_per_geun']}원 ({r['month']}){extra}"
+                f"  [product_id={r['product_id']}]: 근당 {r['price_per_geun']}원 ({r['month']}){extra}"
             )
         if not any_p:
             lines.append("  (가격 이력 없음)")
@@ -463,7 +463,7 @@ async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str
             pack = f" 포장단위={r['pack_unit']}" if r["pack_unit"] else ""
             box = f" 박스수량={r['box_qty']}" if r["box_qty"] else ""
             lines.append(
-                f"  {r['product_id']} ({r['type']}): {r['month']} 근당 {r['price_per_geun']}원 "
+                f"  [product_id={r['product_id']}] ({r['type']}): {r['month']} 근당 {r['price_per_geun']}원 "
                 f"({r['status']}) 제조사={m}{pack}{box}"
             )
         return "\n".join(lines) if len(lines) > 1 else lines[0]
