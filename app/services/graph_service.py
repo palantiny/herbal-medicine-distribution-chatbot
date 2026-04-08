@@ -78,7 +78,10 @@ async def _tpl_search_temp(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:HAS_TEMP]->(t:NatureTemp)
                 WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
-                RETURN h.name AS herb, collect(DISTINCT t.name) AS temps
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                RETURN h.name AS herb,
+                       collect(DISTINCT t.name) AS temps,
+                       collect(DISTINCT p.product_id) AS product_ids
                 """,
                 name=herb,
             )
@@ -86,7 +89,9 @@ async def _tpl_search_temp(driver: Any, nodes: list[ExtractedNode]) -> str:
             if not rec or not rec["herb"]:
                 return f"약재 '{herb}'에 대한 성질(NatureTemp) 정보가 없습니다."
             temps = [x for x in (rec["temps"] or []) if x]
-            return f"약재: {rec['herb']}\n성질: {', '.join(temps) if temps else '없음'}"
+            pids = [x for x in (rec["product_ids"] or []) if x]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            return f"약재: {rec['herb']}{pid_tag}\n성질: {', '.join(temps) if temps else '없음'}"
         if nt:
             result = await session.run(
                 """
@@ -113,7 +118,10 @@ async def _tpl_search_taste(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:HAS_TASTE]->(t:NatureTaste)
                 WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
-                RETURN h.name AS herb, collect(DISTINCT t.name) AS tastes
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                RETURN h.name AS herb,
+                       collect(DISTINCT t.name) AS tastes,
+                       collect(DISTINCT p.product_id) AS product_ids
                 """,
                 name=herb,
             )
@@ -121,7 +129,9 @@ async def _tpl_search_taste(driver: Any, nodes: list[ExtractedNode]) -> str:
             if not rec or not rec["herb"]:
                 return f"약재 '{herb}'에 대한 맛(NatureTaste) 정보가 없습니다."
             tastes = [x for x in (rec["tastes"] or []) if x]
-            return f"약재: {rec['herb']}\n맛: {', '.join(tastes) if tastes else '없음'}"
+            pids = [x for x in (rec["product_ids"] or []) if x]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            return f"약재: {rec['herb']}{pid_tag}\n맛: {', '.join(tastes) if tastes else '없음'}"
         if taste:
             result = await session.run(
                 """
@@ -148,7 +158,10 @@ async def _tpl_search_meridian(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:ACTS_ON]->(m:Meridian)
                 WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
-                RETURN h.name AS herb, collect(DISTINCT m.name) AS meridians
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                RETURN h.name AS herb,
+                       collect(DISTINCT m.name) AS meridians,
+                       collect(DISTINCT p.product_id) AS product_ids
                 """,
                 name=herb,
             )
@@ -156,7 +169,9 @@ async def _tpl_search_meridian(driver: Any, nodes: list[ExtractedNode]) -> str:
             if not rec or not rec["herb"]:
                 return f"약재 '{herb}'에 대한 귀경(Meridian) 정보가 없습니다."
             ms = [x for x in (rec["meridians"] or []) if x]
-            return f"약재: {rec['herb']}\n귀경: {', '.join(ms) if ms else '없음'}"
+            pids = [x for x in (rec["product_ids"] or []) if x]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            return f"약재: {rec['herb']}{pid_tag}\n귀경: {', '.join(ms) if ms else '없음'}"
         if mer:
             result = await session.run(
                 """
@@ -183,7 +198,10 @@ async def _tpl_search_efficacy(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:HAS_EFFICACY]->(e:Efficacy)
                 WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
-                RETURN h.name AS herb, collect(DISTINCT e.name) AS efficacies
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                RETURN h.name AS herb,
+                       collect(DISTINCT e.name) AS efficacies,
+                       collect(DISTINCT p.product_id) AS product_ids
                 """,
                 name=herb,
             )
@@ -191,7 +209,9 @@ async def _tpl_search_efficacy(driver: Any, nodes: list[ExtractedNode]) -> str:
             if not rec or not rec["herb"]:
                 return f"약재 '{herb}'에 대한 효능 정보가 없습니다."
             es = [x for x in (rec["efficacies"] or []) if x]
-            return f"약재: {rec['herb']}\n효능: {', '.join(es) if es else '없음'}"
+            pids = [x for x in (rec["product_ids"] or []) if x]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            return f"약재: {rec['herb']}{pid_tag}\n효능: {', '.join(es) if es else '없음'}"
         if eff:
             result = await session.run(
                 """
@@ -218,7 +238,10 @@ async def _tpl_search_symptom(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:TREATS]->(s:Symptom)
                 WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
-                RETURN h.name AS herb, collect(DISTINCT s.name) AS symptoms
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                RETURN h.name AS herb,
+                       collect(DISTINCT s.name) AS symptoms,
+                       collect(DISTINCT p.product_id) AS product_ids
                 """,
                 name=herb,
             )
@@ -226,7 +249,9 @@ async def _tpl_search_symptom(driver: Any, nodes: list[ExtractedNode]) -> str:
             if not rec or not rec["herb"]:
                 return f"약재 '{herb}'에 대한 치료 증상 정보가 없습니다."
             ss = [x for x in (rec["symptoms"] or []) if x]
-            return f"약재: {rec['herb']}\n치료/관련 증상: {', '.join(ss) if ss else '없음'}"
+            pids = [x for x in (rec["product_ids"] or []) if x]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            return f"약재: {rec['herb']}{pid_tag}\n치료/관련 증상: {', '.join(ss) if ss else '없음'}"
         if sym:
             result = await session.run(
                 """
@@ -253,21 +278,34 @@ async def _tpl_search_formula_contains(driver: Any, nodes: list[ExtractedNode]) 
                 """
                 MATCH (f:Formula)-[:CONTAINS]->(h:Herb)
                 WHERE f.name = $fname
-                RETURN f.name AS formula, collect(DISTINCT h.name) AS herbs
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                WITH f, h, collect(DISTINCT p.product_id) AS pids
+                RETURN f.name AS formula,
+                       collect({name: h.name, pids: pids}) AS herbs
                 """,
                 fname=formula,
             )
             rec = await result.single()
             if not rec or not rec["formula"]:
                 return f"처방 '{formula}'를 찾지 못했습니다."
-            herbs = [x for x in (rec["herbs"] or []) if x]
-            return f"처방: {rec['formula']}\n포함 약재: {', '.join(herbs) if herbs else '없음'}"
+            herb_rows = [x for x in (rec["herbs"] or []) if x and x.get("name")]
+            if not herb_rows:
+                return f"처방: {rec['formula']}\n포함 약재: 없음"
+            herb_lines = []
+            for hr in herb_rows:
+                valid_pids = [pid for pid in (hr.get("pids") or []) if pid]
+                tag = f" [연결된 product_id: {', '.join(valid_pids)}]" if valid_pids else ""
+                herb_lines.append(f"{hr['name']}{tag}")
+            return f"처방: {rec['formula']}\n포함 약재:\n  - " + "\n  - ".join(herb_lines)
         if herb:
             result = await session.run(
                 """
                 MATCH (f:Formula)-[:CONTAINS]->(h:Herb)
                 WHERE h.name = $hname OR $hname IN coalesce(h.synonyms, [])
-                RETURN h.name AS herb, collect(DISTINCT f.name) AS formulas
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                RETURN h.name AS herb,
+                       collect(DISTINCT f.name) AS formulas,
+                       collect(DISTINCT p.product_id) AS product_ids
                 """,
                 hname=herb,
             )
@@ -275,7 +313,9 @@ async def _tpl_search_formula_contains(driver: Any, nodes: list[ExtractedNode]) 
             if not rec or not rec["herb"]:
                 return f"약재 '{herb}'가 포함된 처방을 찾지 못했습니다."
             fs = [x for x in (rec["formulas"] or []) if x]
-            return f"약재: {rec['herb']}\n포함된 처방: {', '.join(fs) if fs else '없음'}"
+            pids = [x for x in (rec["product_ids"] or []) if x]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            return f"약재: {rec['herb']}{pid_tag}\n포함된 처방: {', '.join(fs) if fs else '없음'}"
         return "SEARCH_FORMULA_CONTAINS: Formula 또는 Herb 노드가 필요합니다."
 
 
@@ -289,7 +329,10 @@ async def _tpl_search_contraindication(driver: Any, nodes: list[ExtractedNode]) 
             """
             MATCH (h:Herb)-[:CONTRAINDICATES]->(c:Herb)
             WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
-            RETURN h.name AS herb, collect(DISTINCT c.name) AS contra
+            OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+            RETURN h.name AS herb,
+                   collect(DISTINCT c.name) AS contra,
+                   collect(DISTINCT p.product_id) AS product_ids
             """,
             name=hname,
         )
@@ -297,7 +340,9 @@ async def _tpl_search_contraindication(driver: Any, nodes: list[ExtractedNode]) 
         if not rec or not rec["herb"]:
             return f"약재 '{hname}'에 대한 상극/금기 정보가 없습니다."
         cs = [x for x in (rec["contra"] or []) if x]
-        return f"약재: {rec['herb']}\n상극/금기 약재: {', '.join(cs) if cs else '없음'}"
+        pids = [x for x in (rec["product_ids"] or []) if x]
+        pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+        return f"약재: {rec['herb']}{pid_tag}\n상극/금기 약재: {', '.join(cs) if cs else '없음'}"
 
 
 async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) -> str:
