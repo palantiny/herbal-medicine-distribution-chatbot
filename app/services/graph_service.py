@@ -328,8 +328,12 @@ async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) 
                 parts.append(f"제조사={r['maker']}")
             if r["origin"]:
                 parts.append(f"원산지={r['origin']}")
-            if r["pack_unit"] and r["pack_price"]:
-                parts.append(f"포장={r['pack_unit']}/{r['pack_price']}원")
+            if r["pack_unit"]:
+                parts.append(f"포장단위={r['pack_unit']}")
+            if r["box_qty"]:
+                parts.append(f"박스수량={r['box_qty']}")
+            if r["pack_price"]:
+                parts.append(f"포장단가={r['pack_price']}원")
             lines.append(", ".join(parts))
         pr_result = await session.run(
             """
@@ -440,6 +444,7 @@ async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str
             WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
             OPTIONAL MATCH (p)-[:MANUFACTURED_BY]->(mk:Maker)
             RETURN p.product_id AS product_id, p.type AS type,
+                   p.pack_unit AS pack_unit, p.box_qty AS box_qty,
                    pr.month AS month, pr.price_per_geun AS price_per_geun, pr.status AS status,
                    mk.name AS maker
             ORDER BY p.product_id, pr.month DESC
@@ -455,9 +460,11 @@ async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str
             if r["price_per_geun"] is None:
                 continue
             m = r["maker"] or ""
+            pack = f" 포장단위={r['pack_unit']}" if r["pack_unit"] else ""
+            box = f" 박스수량={r['box_qty']}" if r["box_qty"] else ""
             lines.append(
                 f"  {r['product_id']} ({r['type']}): {r['month']} 근당 {r['price_per_geun']}원 "
-                f"({r['status']}) 제조사={m}"
+                f"({r['status']}) 제조사={m}{pack}{box}"
             )
         return "\n".join(lines) if len(lines) > 1 else lines[0]
 
