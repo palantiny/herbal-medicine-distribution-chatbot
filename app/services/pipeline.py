@@ -185,7 +185,7 @@ async def _publish_status(state: PipelineState, message: str) -> None:
 
 async def stage1_router(state: PipelineState) -> PipelineState:
     """Stage 1: 1차 라우팅 — 직접 답변 vs Cypher(Graph DB) 조회 결정."""
-    await _publish_status(state, "1단계: 질문 의도 분석 중...")
+    await _publish_status(state, "질문을 이해하고 있어요...")
 
     question = state["question"]
     chat_history = state["chat_history"]
@@ -217,7 +217,7 @@ def stage1_route_condition(state: PipelineState) -> str:
 
 async def stage1_direct_answer(state: PipelineState) -> PipelineState:
     """Stage 1 → 직접 답변 (Early Exit). 추가 조회 없이 즉시 답변."""
-    await _publish_status(state, "이전 대화 맥락으로 답변 생성 중...")
+    await _publish_status(state, "이전 대화 내용을 바탕으로 답변하고 있어요...")
 
     user_content = STAGE1_DIRECT_ANSWER_USER_TEMPLATE.format(
         chat_history=state["chat_history"],
@@ -235,7 +235,7 @@ async def stage1_direct_answer(state: PipelineState) -> PipelineState:
 
 async def stage1_execute_cypher(state: PipelineState) -> PipelineState:
     """Stage 1 → Cypher 실행: Graph DB(지식 그래프) 조회."""
-    await _publish_status(state, "한약재 지식 그래프 탐색 중...")
+    await _publish_status(state, "한약재 정보를 검색하고 있어요...")
 
     question = state["question"]
     extracted = state["extracted_entities"]
@@ -248,7 +248,7 @@ async def stage1_execute_cypher(state: PipelineState) -> PipelineState:
 
 async def stage2_router(state: PipelineState) -> PipelineState:
     """Stage 2: 2차 라우팅 — Graph 결과 기반 직접 답변 vs SQL 조회 결정."""
-    await _publish_status(state, "2단계: 추가 데이터 필요성 분석 중...")
+    await _publish_status(state, "추가로 확인할 정보가 있는지 살펴보고 있어요...")
 
     question = state["question"]
     chat_history = state["chat_history"]
@@ -280,7 +280,7 @@ def stage2_route_condition(state: PipelineState) -> str:
 
 async def stage2_direct_answer(state: PipelineState) -> PipelineState:
     """Stage 2 → 직접 답변 (Early Exit). Graph 컨텍스트 기반 답변."""
-    await _publish_status(state, "Graph 데이터 기반 답변 생성 중...")
+    await _publish_status(state, "찾은 정보를 바탕으로 답변하고 있어요...")
 
     user_content = STAGE2_DIRECT_ANSWER_USER_TEMPLATE.format(
         graph_context=state["graph_context"],
@@ -299,7 +299,7 @@ async def stage2_direct_answer(state: PipelineState) -> PipelineState:
 
 async def stage2_execute_sql(state: PipelineState) -> PipelineState:
     """Stage 2 → SQL 실행: Redis 캐시 우선 조회, Miss 시에만 SQL 실행."""
-    await _publish_status(state, "데이터 조회 중 (캐시 → DB 순서)...")
+    await _publish_status(state, "가격·재고 정보를 조회하고 있어요...")
 
     redis: Redis = state["redis"]
     question = state["question"]
@@ -403,7 +403,7 @@ async def _execute_sql_via_redis(message: str, redis: Redis) -> str:
 
 async def stage3_synthesizer(state: PipelineState) -> PipelineState:
     """Stage 3: 모든 컨텍스트 종합 → 최종 맞춤형 답변 생성."""
-    await _publish_status(state, "3단계: 수집 데이터 종합 분석 및 최종 답변 생성 중...")
+    await _publish_status(state, "수집한 정보를 종합해 답변을 작성하고 있어요...")
 
     user_content = STAGE3_SYNTHESIZER_USER_TEMPLATE.format(
         graph_context=state["graph_context"],
