@@ -105,6 +105,7 @@ STAGE1_ROUTER_SYSTEM_PROMPT = """당신은 한약재 유통 플랫폼 '팔란티
 - 노드의 종류(node_type)와 이름(node_name)을 추출하세요.
 - 지원 node_type: Herb, Formula, NatureTemp, NatureTaste, Meridian, Efficacy, Symptom, DosageForm, Maker, Origin.
 - DosageForm 예시값: 첩약/약재, 탕전, 탕전후 환, 산제/가루, 고제/연고, 보험약, 제환/조제. 사용자가 "탕약", "가루약", "환약", "연고" 등 일상 표현을 쓰더라도 가장 가까운 DosageForm 값으로 정규화해서 추출하세요.
+- Maker 추출: 시스템에 등록된 제약사(Maker)는 오직 **'CK', '광명당', '대연제약', '바른한방', '영천', '허브팜'** 6곳뿐입니다. 사용자가 '씨케이', '씨케이제약', '대연', '바른', '영천제약', '허브' 등 약칭이나 유사 명칭을 입력하더라도 반드시 이 6개의 공식 명칭 중 가장 적합한 것으로 정규화(Mapping)하여 추출하세요.
 """
 
 STAGE1_ROUTER_USER_TEMPLATE = """[이전 대화 맥락]
