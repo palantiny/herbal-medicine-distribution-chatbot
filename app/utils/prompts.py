@@ -1,8 +1,9 @@
 """
-Palantiny 프롬프트 템플릿 — 3단계 순차 LLM 파이프라인용
-Stage 1: Text-to-Cypher & 1차 라우팅
-Stage 2: Text-to-SQL & 2차 라우팅
+Palantiny 프롬프트 템플릿 — 파이프라인용
+Stage 1: LLM1 그래프 오케스트레이터 (구조화 RouterOutput) + 선택적 직접 답변
+Stage 2 (프롬프트만 보존): 과거 Graph+SQL 2차 라우터 — 현재 파이프라인 미사용
 Stage 3: 최종 답변 합성 (Synthesizer)
+Text-to-SQL: CALL_LLM2_SQL 경로에서 사용
 """
 
 # ──────────────────────────────────────────────
@@ -12,90 +13,60 @@ ANTI_HALLUCINATION_DIRECTIVE = """[답변 시 준수사항]
 사용자의 과거 채팅 기록(History)에만 의존하여 답변하지 마십시오. 새롭게 조회되어 제공된 DB 및 Graph 정보(Context)를 **최우선으로 반영**하여 답변의 근거로 삼아야 합니다. 이전 대화 기록과 새롭게 조회된 정보가 충돌할 경우, 새롭게 조회된 Context 데이터가 무조건 우선합니다."""
 
 # ──────────────────────────────────────────────
-# 공통: 출력 형식 규칙 (모든 답변 노드에 삽입)
+# Stage 1: LLM 1 — 그래프 오케스트레이터 (구조화 출력 RouterOutput)
 # ──────────────────────────────────────────────
-FORMAT_DIRECTIVE = """
-[출력 형식 규칙 — 반드시 준수]
+STAGE1_ROUTER_SYSTEM_PROMPT = """당신은 한약재 유통 플랫폼 '팔란티니'의 1차 AI 오케스트레이터입니다.
+사용자의 질문과 수집된 컨텍스트를 분석하여, 다음 행동을 결정하는 것이 당신의 유일한 역할입니다.
 
-**규칙 1 — 약재명 링크 (조건부)**
-가격 정보를 보여줄 때 **특정 단일 상품이 명확히 식별된 경우에만** 마크다운 링크를 사용하세요: `[약재명](/product/{product_id})`
-- product_id는 [Graph DB 조회 결과]의 [가격 정보] 섹션에 `[product_id=XXX]` 형식으로 포함되어 있습니다.
-- **단일 상품 특정 조건**: 사용자가 특정 약재명을 콕 집어 물어봤고, Graph DB 결과에서 해당 약재의 product_id가 명확히 식별된 경우.
-- **링크 생성 금지**: 여러 약재를 나열하는 목록(가격 비교, 재고 목록 등)에서는 링크를 사용하지 말고 약재명을 일반 텍스트로 작성하세요.
-- product_id를 알 수 없는 경우에도 링크 없이 텍스트만 작성하세요.
+[데이터베이스 역할 분리 (매우 중요)]
+우리 시스템은 두 종류의 데이터베이스를 사용하며, 각각 저장하는 정보가 다릅니다.
 
-**규칙 2 — 약재 정보 표**
-여러 약재를 나열하거나 상품 관련 정보를 보여줄 때는 반드시 마크다운 표(GFM table)로 정리하세요.
-예시:
-| 약재명 | 원산지 | 상태 |
-|---|---|---|
-| 감초 | 국내산 | 판매중 |
+1. Neo4j (지식 그래프): 약재의 지식과 정적 유통 정보
+- 포함 데이터: 약재명, 처방, 성질, 맛, 귀경, 효능, 증상, 상극, 상품단위, 제조사, 원산지, 가격이력(PriceRecord)
 
-**규칙 3 — 가격 정보 표**
-가격 정보를 보여줄 때는 반드시 아래 컬럼으로 마크다운 표를 작성하세요.
-컬럼 순서: 약재명 | 구분 | 근당가격 | 포장단위(g) | 박스수량 | 제약사
-- 약재명: 단일 상품 특정 시 링크([약재명](/product/XXX)), 목록 나열 시 일반 텍스트
-- 구분: grade 또는 type (예: 특품, 상품, 국산 등)
-- 근당가격: price_per_geun (원 단위 표시)
-- 포장단위(g): packaging_unit_g 또는 pack_unit
-- 박스수량: box_quantity 또는 box_qty
-- 제약사: manufacturer 또는 maker
-- 데이터 없는 컬럼은 `-`로 표시
+2. PostgreSQL (관계형 DB): 동적 트랜잭션 정보
+- 포함 데이터: 오직 **'재고(Inventory)'** 및 **'입출고 기록(Inbound/Outbound logs)'**만 존재함 (재고는 입출고 기록을 역산하여 파악).
 
-예시 (단일 상품):
-| 약재명 | 구분 | 근당가격 | 포장단위(g) | 박스수량 | 제약사 |
-|---|---|---|---|---|---|
-| [감초](/product/PROD001) | 특품 | 15,000원 | 600g | 12개 | 씨케이 |
+[행동 옵션 (route) - 반드시 아래 4가지 중 하나만 선택]
+- DIRECT_ANSWER: DB 조회가 전혀 필요 없는 단순 인사말이나 일상 대화일 경우. (direct_response 작성)
+- SEARCH_GRAPH: 질문에 답하기 위해 Neo4j 그래프 조회가 필요한 경우. (효능, 증상, 가격, 제조사 등 11가지 탐색 템플릿 중 하나를 target_intents에 지정)
+- CALL_LLM2_SQL: 사용자의 질문에 **'재고'** 확인이나 **'입출고 내역'** 조회가 포함되어 있어 PostgreSQL 조회가 반드시 필요한 경우. (단, 특정 약재의 재고를 묻는다면 해당 약재의 정확한 ID나 정보를 먼저 알아야 하므로 SEARCH_GRAPH를 먼저 수행한 후, 다음 턴에 CALL_LLM2_SQL을 호출하세요.)
+- GENERATE_FINAL_ANSWER: [Graph Context] (그리고 필요시 LLM2가 수집한 SQL Context)에 질문에 답하기 위한 정보가 모두 모여서, 더 이상의 탐색 없이 최종 답변 생성기로 제어권을 넘길 때.
 
-예시 (목록):
-| 약재명 | 구분 | 근당가격 | 포장단위(g) | 박스수량 | 제약사 |
-|---|---|---|---|---|---|
-| 감초 | 특품 | 15,000원 | 600g | 12개 | 씨케이 |
-| 대추 | 상품 | 8,000원 | 600g | - | - |
+[실행 가능한 11가지 탐색 템플릿 (target_intents)]
+**한의학 온톨로지 경로 (1-hop)**
+1. SEARCH_TEMP: (Herb)-[HAS_TEMP]->(NatureTemp)
+2. SEARCH_TASTE: (Herb)-[HAS_TASTE]->(NatureTaste)
+3. SEARCH_MERIDIAN: (Herb)-[ACTS_ON]->(Meridian)
+4. SEARCH_EFFICACY: (Herb)-[HAS_EFFICACY]->(Efficacy)
+5. SEARCH_SYMPTOM: (Herb)-[TREATS]->(Symptom)
+6. SEARCH_FORMULA_CONTAINS: (Formula)-[CONTAINS]->(Herb)
+7. SEARCH_CONTRAINDICATION: (Herb)-[CONTRAINDICATES]->(Herb)
 
-**규칙 4 — 재고 수량**
-재고 수량은 han_warehouse의 입고(incoming) 합계에서 출고(outgoing) 합계를 뺀 값을 '현재 재고'로 표시하세요.
-SQL 결과에 remaining_stock 컬럼이 있으면 그 값을 사용하세요.
+**유통 및 가격 경로 (2-hop)**
+8. SEARCH_DISTRIBUTION_ALL: (Herb)-[HAS_PRODUCT]->(Product) -> (Maker), (Origin), (PriceRecord) 전체 조회
+9. SEARCH_HERB_BY_MAKER: (Maker)<-[MANUFACTURED_BY]-(Product)<-[HAS_PRODUCT]-(Herb)
+10. SEARCH_HERB_BY_ORIGIN: (Origin)<-[ORIGINATES_FROM]-(Product)<-[HAS_PRODUCT]-(Herb)
+11. SEARCH_PRICE_INFO: (Herb)-[HAS_PRODUCT]->(Product)-[HAS_PRICE_HISTORY]->(PriceRecord)
 
-**규칙 5 — 번호 매기기**
-리스트에 번호를 매길 때는 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 순서로 아라비아 숫자를 연속으로 사용하세요.
-9 다음은 반드시 10이어야 하며 0이 되어서는 안 됩니다."""
-
-# ──────────────────────────────────────────────
-# Stage 1: LLM 1 — Text-to-Cypher & 1차 라우팅
-# ──────────────────────────────────────────────
-STAGE1_ROUTER_SYSTEM_PROMPT = """당신은 한약재 유통 B2B2C 챗봇의 1차 의도 분석 및 라우팅 엔진입니다.
-사용자의 채팅 기록과 질문을 분석하여 다음 중 하나의 라우팅 결정을 내리세요.
-
-## 라우팅 옵션
-- **DIRECT_ANSWER**: 이전 채팅 기록만으로 대답이 가능하거나 단순 인사/일상 질의인 경우. 추가 DB 조회가 불필요합니다.
-- **CYPHER**: 한약재의 효능, 원산지, 관계, 궁합 등 **관계형 지식 데이터** 파악이 필요한 경우. Graph DB 조회가 필요합니다.
-
-## 판단 기준
-1. 단순 인사("안녕하세요"), 감사 표현, 이전 대화 맥락에서 이미 답변된 내용 → DIRECT_ANSWER
-2. 한약재의 효능, 성질, 원산지, 다른 약재와의 관계/궁합 등 지식 질문 → CYPHER
-3. 재고, 가격, 수량 등 정형 데이터 질문이라 하더라도 우선 약재의 관계 파악이 필요하면 → CYPHER
-4. 애매한 경우 CYPHER를 선택하세요 (추가 정보를 조회하는 것이 더 안전합니다).
-
-## ⭐ 엔티티 추출 규칙 (매우 중요)
-extracted_entities.herb_name에는 질문에서 언급된 한약재명을 **반드시** 추출해서 넣으세요.
-- 질문에 약재명이 직접 언급된 경우: 그 이름을 그대로 넣으세요.
-- 질문에 약재명이 없지만 **이전 대화 기록에서 특정 약재를 논의 중인 경우**: 해당 약재명을 넣으세요.
-- 약재명이 전혀 파악 불가능한 경우에만 null을 넣으세요.
-- 여러 약재가 언급된 경우: 가장 핵심적인 약재명 1개를 넣으세요.
-
-## 출력 형식
-반드시 다음 JSON 형식만 출력하세요 (다른 텍스트 없이):
-{"route": "DIRECT_ANSWER 또는 CYPHER", "reason": "판단 이유", "extracted_entities": {"herb_name": "한약재명 또는 null"}}
-
-## 예시
-질문: "감초 재고 알려줘" → {"route": "CYPHER", "reason": "재고 조회 필요", "extracted_entities": {"herb_name": "감초"}}
-질문: "그 약재 가격은?" (이전 대화에서 '대추' 논의 중) → {"route": "CYPHER", "reason": "가격 조회 필요", "extracted_entities": {"herb_name": "대추"}}
-질문: "안녕하세요" → {"route": "DIRECT_ANSWER", "reason": "단순 인사", "extracted_entities": {"herb_name": null}}
+[추출 규칙]
+- 노드의 종류(node_type)와 이름(node_name)을 추출하세요.
 """
 
-STAGE1_ROUTER_USER_TEMPLATE = """[이전 대화]
+STAGE1_ROUTER_USER_TEMPLATE = """[이전 대화 맥락]
 {chat_history}
+
+[현재까지 수집된 Graph Context]
+{graph_context}
+
+[사용자 질문]
+{question}"""
+
+STAGE1_ROUTER_USER_TEMPLATE = """[이전 대화 맥락]
+{chat_history}
+
+[현재까지 수집된 Graph Context]
+{graph_context}
 
 [사용자 질문]
 {question}"""

@@ -21,7 +21,6 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            padding: 0;
             background-color: var(--bg);
             display: flex;
             justify-content: center;
@@ -101,6 +100,36 @@
 
         .login-screen button:hover {
             background: var(--primary-dark);
+        }
+
+        .login-screen .btn-secondary {
+            width: 100%;
+            margin-top: 12px;
+            padding: 14px;
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-screen .btn-secondary:hover {
+            background: #f0f7ff;
+        }
+
+        .login-screen .btn-secondary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .login-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 16px;
+            line-height: 1.4;
+            text-align: center;
         }
 
         .login-error {
@@ -327,8 +356,10 @@
             <h1>Palantiny</h1>
             <p style="color: var(--text-muted); margin-bottom: 20px;">한약재 B2B 챗봇 테스트 패널</p>
             <input type="text" id="serverAddress" placeholder="서버 주소 (예: 192.168.0.10:8000)" value="">
-            <input type="text" id="partnerToken" placeholder="Partner Token" value="partner_demo_token_001">
+            <input type="text" id="partnerToken" placeholder="Partner Token (정식 로그인 시)" value="">
             <button id="loginBtn">연결하기</button>
+            <button type="button" id="skipLoginBtn" class="btn-secondary">인증 없이 채팅 테스트</button>
+            <p class="login-hint">로컬 HTML로만 확인할 때 사용. auth/verify 호출 없음 · 세션 <code>dev_local_타임스탬프</code> (백엔드 로직 미변경)</p>
             <div class="login-error" id="loginError"></div>
         </div>
 
@@ -366,6 +397,7 @@
         const serverAddressInput = document.getElementById('serverAddress');
         const partnerTokenInput = document.getElementById('partnerToken');
         const loginBtn = document.getElementById('loginBtn');
+        const skipLoginBtn = document.getElementById('skipLoginBtn');
         const loginError = document.getElementById('loginError');
         const chatBox = document.getElementById('chatBox');
         const messageInput = document.getElementById('messageInput');
@@ -383,6 +415,66 @@
                 serverAddressInput.value = location.hostname + ':8000';
             }
         })();
+
+        function getServerBaseAndApiUrl() {
+            const serverAddr = serverAddressInput.value.trim();
+            if (!serverAddr) {
+                throw new Error("서버 주소를 입력하세요.");
+            }
+            const base = serverAddr.startsWith('http') ? serverAddr : `http://${serverAddr}`;
+            return { base, apiUrl: `${base}/api/v1` };
+        }
+
+        /** 로컬 HTML 전용: 인증 생략 (서버 API·파이프라인 코드 변경 없음) */
+        async function enterChatWithoutAuth() {
+            loginError.textContent = "";
+            let base, apiUrl;
+            try {
+                ({ base, apiUrl } = getServerBaseAndApiUrl());
+            } catch (e) {
+                loginError.textContent = e.message;
+                return;
+            }
+            API_URL = apiUrl;
+            localStorage.setItem('palantiny_server', serverAddressInput.value.trim());
+
+            skipLoginBtn.disabled = true;
+            skipLoginBtn.textContent = "서버 확인 중...";
+
+            try {
+                const healthRes = await fetch(`${base}/health`, { method: "GET" });
+                if (!healthRes.ok) {
+                    throw new Error(`서버 응답 오류 (${healthRes.status}). 주소와 Docker 실행 여부를 확인하세요.`);
+                }
+            } catch (e) {
+                skipLoginBtn.disabled = false;
+                skipLoginBtn.textContent = "인증 없이 채팅 테스트";
+                loginError.textContent =
+                    (e && e.message) ||
+                    "서버에 연결할 수 없습니다. 주소(예: localhost:8000), CORS(ALLOWED_ORIGINS), Docker를 확인하세요.";
+                return;
+            }
+
+            const devUserId = "dev_local";
+            currentUser = devUserId;
+            currentSessionId = `${devUserId}_${Date.now()}`;
+            loginScreen.classList.add("hidden");
+            addMessage("assistant", "로컬 테스트 모드입니다. (인증 생략) 한약재 질문을 입력해 보세요.");
+            connectSSE();
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+            skipLoginBtn.disabled = false;
+            skipLoginBtn.textContent = "인증 없이 채팅 테스트";
+        }
+
+        skipLoginBtn.addEventListener("click", () => enterChatWithoutAuth());
+
+        if (new URLSearchParams(location.search).get("dev") === "1") {
+            window.addEventListener("load", () => {
+                setTimeout(() => enterChatWithoutAuth(), 200);
+            });
+        }
 
         // Login Logic
         loginBtn.addEventListener('click', async () => {
