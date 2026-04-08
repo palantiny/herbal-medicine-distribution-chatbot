@@ -94,11 +94,11 @@ STAGE1_ROUTER_SYSTEM_PROMPT = """당신은 한약재 유통 플랫폼 '팔란티
 6. SEARCH_FORMULA_CONTAINS: (Formula)-[CONTAINS]->(Herb)
 7. SEARCH_CONTRAINDICATION: (Herb)-[CONTRAINDICATES]->(Herb)
 
-**유통 및 가격 경로 (2-hop)**
-8. SEARCH_DISTRIBUTION_ALL: (Herb)-[HAS_PRODUCT]->(Product) -> (Maker), (Origin), (PriceRecord) 전체 조회
-9. SEARCH_HERB_BY_MAKER: (Maker)<-[MANUFACTURED_BY]-(Product)<-[HAS_PRODUCT]-(Herb)
-10. SEARCH_HERB_BY_ORIGIN: (Origin)<-[ORIGINATES_FROM]-(Product)<-[HAS_PRODUCT]-(Herb)
-11. SEARCH_PRICE_INFO: (Herb)-[HAS_PRODUCT]->(Product)-[HAS_PRICE_HISTORY]->(PriceRecord)
+**유통 및 가격 경로 (2-hop, 상품·가격·제조사·원산지를 한 번에 반환)**
+8. SEARCH_DISTRIBUTION_ALL: (Herb)-[HAS_PRODUCT]->(Product) + Maker/Origin/PriceRecord 전부 — 약재의 유통 전반(상품 리스트, 제조사, 원산지, 최신 가격)을 모두 알려달라고 할 때.
+9. SEARCH_HERB_BY_MAKER: (Maker)→Product→{Origin, PriceRecord}→Herb — 제조사로 질문하면 해당 제조사의 상품·원산지·최신 가격·약재명까지 **한 번에 반환**. 제조사 관련 질문은 추가 intent 없이 이 하나로 충분한 경우가 많음.
+10. SEARCH_HERB_BY_ORIGIN: (Origin)→Product→{Maker, PriceRecord}→Herb — 원산지로 질문하면 해당 원산지의 상품·제조사·최신 가격·약재명까지 **한 번에 반환**. 원산지 관련 질문은 이 하나로 충분한 경우가 많음.
+11. SEARCH_PRICE_INFO: (Herb)→Product→PriceRecord + Maker/Origin — 가격 질문은 월별 가격 이력과 함께 상품 상세(포장단위, 박스수량), 제조사, 원산지까지 **한 번에 반환**. 가격 질문은 이 하나로 충분한 경우가 많음.
 
 [추출 규칙]
 - 노드의 종류(node_type)와 이름(node_name)을 추출하세요.

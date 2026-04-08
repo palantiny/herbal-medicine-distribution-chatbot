@@ -66,6 +66,25 @@ def _all_herb_names(nodes: list[ExtractedNode]) -> list[str]:
     return [n.node_name.strip() for n in nodes if n.node_type == "Herb" and n.node_name.strip()]
 
 
+def _format_herb_list(header: str, label: str, herb_rows: list[Any] | None) -> str:
+    """
+    1-hop 역방향 브랜치 공통 포맷터.
+    herb_rows: [{name: "감초", pids: ["P001", "P002"]}, ...]
+    → 각 약재마다 '[연결된 product_id: ...]' 태그를 붙여 bullet 리스트로 출력.
+    """
+    rows = [x for x in (herb_rows or []) if x and x.get("name")]
+    if not rows:
+        return f"{header}\n{label}: 없음"
+    # 이름순 정렬 (동일 속성 쿼리에서 결정적 순서 보장)
+    rows = sorted(rows, key=lambda r: r["name"])
+    lines = [header, f"{label}:"]
+    for r in rows:
+        valid_pids = [pid for pid in (r.get("pids") or []) if pid]
+        tag = f" [연결된 product_id: {', '.join(valid_pids)}]" if valid_pids else ""
+        lines.append(f"  - {r['name']}{tag}")
+    return "\n".join(lines)
+
+
 # ── 템플릿별 실행 (세션은 호출자가 열지 않음 — 코루틴마다 독립 session) ──
 
 
@@ -97,15 +116,17 @@ async def _tpl_search_temp(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:HAS_TEMP]->(t:NatureTemp)
                 WHERE t.name = $tname
-                RETURN collect(DISTINCT h.name) AS herbs, t.name AS temp
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                WITH t, h, collect(DISTINCT p.product_id) AS pids
+                RETURN t.name AS temp,
+                       collect({name: h.name, pids: pids}) AS herbs
                 """,
                 tname=nt,
             )
             rec = await result.single()
             if not rec or not rec["temp"]:
                 return f"성질 '{nt}'에 해당하는 약재를 찾지 못했습니다."
-            herbs = [x for x in (rec["herbs"] or []) if x]
-            return f"성질: {rec['temp']}\n해당 약재: {', '.join(herbs) if herbs else '없음'}"
+            return _format_herb_list(f"성질: {rec['temp']}", "해당 약재", rec["herbs"])
         return "SEARCH_TEMP: Herb 또는 NatureTemp 노드가 필요합니다."
 
 
@@ -137,15 +158,17 @@ async def _tpl_search_taste(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:HAS_TASTE]->(t:NatureTaste)
                 WHERE t.name = $tname
-                RETURN collect(DISTINCT h.name) AS herbs, t.name AS taste
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                WITH t, h, collect(DISTINCT p.product_id) AS pids
+                RETURN t.name AS taste,
+                       collect({name: h.name, pids: pids}) AS herbs
                 """,
                 tname=taste,
             )
             rec = await result.single()
             if not rec or not rec["taste"]:
                 return f"맛 '{taste}'에 해당하는 약재를 찾지 못했습니다."
-            herbs = [x for x in (rec["herbs"] or []) if x]
-            return f"맛: {rec['taste']}\n해당 약재: {', '.join(herbs) if herbs else '없음'}"
+            return _format_herb_list(f"맛: {rec['taste']}", "해당 약재", rec["herbs"])
         return "SEARCH_TASTE: Herb 또는 NatureTaste 노드가 필요합니다."
 
 
@@ -177,15 +200,17 @@ async def _tpl_search_meridian(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:ACTS_ON]->(m:Meridian)
                 WHERE m.name = $mname
-                RETURN collect(DISTINCT h.name) AS herbs, m.name AS meridian
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                WITH m, h, collect(DISTINCT p.product_id) AS pids
+                RETURN m.name AS meridian,
+                       collect({name: h.name, pids: pids}) AS herbs
                 """,
                 mname=mer,
             )
             rec = await result.single()
             if not rec or not rec["meridian"]:
                 return f"귀경 '{mer}'에 작용하는 약재를 찾지 못했습니다."
-            herbs = [x for x in (rec["herbs"] or []) if x]
-            return f"귀경: {rec['meridian']}\n해당 약재: {', '.join(herbs) if herbs else '없음'}"
+            return _format_herb_list(f"귀경: {rec['meridian']}", "해당 약재", rec["herbs"])
         return "SEARCH_MERIDIAN: Herb 또는 Meridian 노드가 필요합니다."
 
 
@@ -217,15 +242,17 @@ async def _tpl_search_efficacy(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:HAS_EFFICACY]->(e:Efficacy)
                 WHERE e.name = $ename
-                RETURN collect(DISTINCT h.name) AS herbs, e.name AS efficacy
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                WITH e, h, collect(DISTINCT p.product_id) AS pids
+                RETURN e.name AS efficacy,
+                       collect({name: h.name, pids: pids}) AS herbs
                 """,
                 ename=eff,
             )
             rec = await result.single()
             if not rec or not rec["efficacy"]:
                 return f"효능 '{eff}'에 해당하는 약재를 찾지 못했습니다."
-            herbs = [x for x in (rec["herbs"] or []) if x]
-            return f"효능: {rec['efficacy']}\n해당 약재: {', '.join(herbs) if herbs else '없음'}"
+            return _format_herb_list(f"효능: {rec['efficacy']}", "해당 약재", rec["herbs"])
         return "SEARCH_EFFICACY: Herb 또는 Efficacy 노드가 필요합니다."
 
 
@@ -257,15 +284,17 @@ async def _tpl_search_symptom(driver: Any, nodes: list[ExtractedNode]) -> str:
                 """
                 MATCH (h:Herb)-[:TREATS]->(s:Symptom)
                 WHERE s.name = $sname
-                RETURN collect(DISTINCT h.name) AS herbs, s.name AS symptom
+                OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
+                WITH s, h, collect(DISTINCT p.product_id) AS pids
+                RETURN s.name AS symptom,
+                       collect({name: h.name, pids: pids}) AS herbs
                 """,
                 sname=sym,
             )
             rec = await result.single()
             if not rec or not rec["symptom"]:
                 return f"증상 '{sym}'에 쓰이는 약재를 찾지 못했습니다."
-            herbs = [x for x in (rec["herbs"] or []) if x]
-            return f"증상: {rec['symptom']}\n해당 약재: {', '.join(herbs) if herbs else '없음'}"
+            return _format_herb_list(f"증상: {rec['symptom']}", "해당 약재", rec["herbs"])
         return "SEARCH_SYMPTOM: Herb 또는 Symptom 노드가 필요합니다."
 
 
@@ -327,22 +356,27 @@ async def _tpl_search_contraindication(driver: Any, nodes: list[ExtractedNode]) 
     async with driver.session(database=settings.NEO4J_DATABASE) as session:
         result = await session.run(
             """
-            MATCH (h:Herb)-[:CONTRAINDICATES]->(c:Herb)
+            MATCH (h:Herb)
             WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
-            OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(p:Product)
-            RETURN h.name AS herb,
-                   collect(DISTINCT c.name) AS contra,
-                   collect(DISTINCT p.product_id) AS product_ids
+            OPTIONAL MATCH (h)-[:HAS_PRODUCT]->(ph:Product)
+            WITH h, collect(DISTINCT ph.product_id) AS h_pids
+            OPTIONAL MATCH (h)-[:CONTRAINDICATES]->(c:Herb)
+            OPTIONAL MATCH (c)-[:HAS_PRODUCT]->(pc:Product)
+            WITH h, h_pids, c, collect(DISTINCT pc.product_id) AS c_pids
+            WITH h, h_pids,
+                 collect(CASE WHEN c IS NULL THEN NULL
+                              ELSE {name: c.name, pids: c_pids} END) AS contras
+            RETURN h.name AS herb, h_pids AS product_ids, contras
             """,
             name=hname,
         )
         rec = await result.single()
         if not rec or not rec["herb"]:
             return f"약재 '{hname}'에 대한 상극/금기 정보가 없습니다."
-        cs = [x for x in (rec["contra"] or []) if x]
         pids = [x for x in (rec["product_ids"] or []) if x]
         pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
-        return f"약재: {rec['herb']}{pid_tag}\n상극/금기 약재: {', '.join(cs) if cs else '없음'}"
+        header = f"약재: {rec['herb']}{pid_tag}"
+        return _format_herb_list(header, "상극/금기 약재", rec["contras"])
 
 
 async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) -> str:
@@ -364,9 +398,12 @@ async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) 
             name=herb,
         )
         rows = [r async for r in result]
-        lines = [f"[유통 요약] 약재: {herb}"]
         if not rows:
             return f"약재 '{herb}'에 연결된 Product가 없습니다."
+        all_pids = sorted({r["product_id"] for r in rows if r["product_id"]})
+        pid_tag = f" [연결된 product_id: {', '.join(all_pids)}]" if all_pids else ""
+        herb_name = rows[0]["herb"] or herb
+        lines = [f"[유통 요약] 약재: {herb_name}{pid_tag}"]
         for r in rows:
             parts = [f"  [product_id={r['product_id']}]", f"유형={r['type']}"]
             if r["maker"]:
@@ -409,6 +446,10 @@ async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) 
 
 
 async def _tpl_search_herb_by_maker(driver: Any, nodes: list[ExtractedNode]) -> str:
+    """
+    2-hop 확장 템플릿: Maker → Product → {Origin, PriceRecord} → Herb
+    사용자가 제조사로 질문하면 상품·원산지·최신 가격·약재명을 한 번에 반환.
+    """
     maker = _first_name(nodes, "Maker")
     if not maker:
         return "SEARCH_HERB_BY_MAKER: Maker 노드가 필요합니다."
@@ -419,7 +460,20 @@ async def _tpl_search_herb_by_maker(driver: Any, nodes: list[ExtractedNode]) -> 
                 """
                 MATCH (mk:Maker)<-[:MANUFACTURED_BY]-(p:Product)<-[:HAS_PRODUCT]-(h:Herb)
                 WHERE mk.name = $mname AND (h.name = $hname OR $hname IN coalesce(h.synonyms, []))
-                RETURN DISTINCT h.name AS herb, p.product_id AS product_id
+                OPTIONAL MATCH (p)-[:ORIGINATES_FROM]->(o:Origin)
+                OPTIONAL MATCH (p)-[:HAS_PRICE_HISTORY]->(pr:PriceRecord)
+                WITH h, p, o, pr ORDER BY pr.month DESC
+                WITH h, p, o, collect(pr)[0] AS latest
+                RETURN h.name AS herb,
+                       p.product_id AS product_id,
+                       p.type AS type,
+                       p.pack_unit AS pack_unit,
+                       p.box_qty AS box_qty,
+                       p.pack_price AS pack_price,
+                       o.name AS origin,
+                       latest.month AS price_month,
+                       latest.price_per_geun AS price_per_geun,
+                       latest.status AS price_status
                 ORDER BY h.name, product_id
                 """,
                 mname=maker,
@@ -430,7 +484,20 @@ async def _tpl_search_herb_by_maker(driver: Any, nodes: list[ExtractedNode]) -> 
                 """
                 MATCH (mk:Maker)<-[:MANUFACTURED_BY]-(p:Product)<-[:HAS_PRODUCT]-(h:Herb)
                 WHERE mk.name = $mname
-                RETURN DISTINCT h.name AS herb, p.product_id AS product_id
+                OPTIONAL MATCH (p)-[:ORIGINATES_FROM]->(o:Origin)
+                OPTIONAL MATCH (p)-[:HAS_PRICE_HISTORY]->(pr:PriceRecord)
+                WITH h, p, o, pr ORDER BY pr.month DESC
+                WITH h, p, o, collect(pr)[0] AS latest
+                RETURN h.name AS herb,
+                       p.product_id AS product_id,
+                       p.type AS type,
+                       p.pack_unit AS pack_unit,
+                       p.box_qty AS box_qty,
+                       p.pack_price AS pack_price,
+                       o.name AS origin,
+                       latest.month AS price_month,
+                       latest.price_per_geun AS price_per_geun,
+                       latest.status AS price_status
                 ORDER BY h.name, product_id
                 LIMIT 80
                 """,
@@ -439,11 +506,44 @@ async def _tpl_search_herb_by_maker(driver: Any, nodes: list[ExtractedNode]) -> 
         rows = [r async for r in result]
         if not rows:
             return f"제조사 '{maker}'에 해당하는 약재/상품을 찾지 못했습니다."
-        herbs = sorted({r["herb"] for r in rows if r["herb"]})
-        return f"제조사: {maker}\n관련 약재: {', '.join(herbs)}"
+        by_herb: dict[str, list[Any]] = {}
+        for r in rows:
+            if r["herb"]:
+                by_herb.setdefault(r["herb"], []).append(r)
+        lines = [f"제조사: {maker}", "[연결된 약재 및 상품]"]
+        for herb_name in sorted(by_herb.keys()):
+            items = by_herb[herb_name]
+            pids = [r["product_id"] for r in items if r["product_id"]]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            lines.append(f"- {herb_name}{pid_tag}")
+            for r in items:
+                if not r["product_id"]:
+                    continue
+                parts = [f"  · [product_id={r['product_id']}]"]
+                if r["type"]:
+                    parts.append(f"유형={r['type']}")
+                if r["origin"]:
+                    parts.append(f"원산지={r['origin']}")
+                if r["pack_unit"]:
+                    parts.append(f"포장단위={r['pack_unit']}")
+                if r["box_qty"]:
+                    parts.append(f"박스수량={r['box_qty']}")
+                if r["pack_price"]:
+                    parts.append(f"포장단가={r['pack_price']}원")
+                if r["price_per_geun"] is not None:
+                    month = r["price_month"] or "-"
+                    status = r["price_status"] or ""
+                    status_tag = f"({status})" if status else ""
+                    parts.append(f"근당가격={r['price_per_geun']}원@{month}{status_tag}")
+                lines.append(", ".join(parts))
+        return "\n".join(lines)
 
 
 async def _tpl_search_herb_by_origin(driver: Any, nodes: list[ExtractedNode]) -> str:
+    """
+    2-hop 확장 템플릿: Origin → Product → {Maker, PriceRecord} → Herb
+    사용자가 원산지로 질문하면 상품·제조사·최신 가격·약재명을 한 번에 반환.
+    """
     origin = _first_name(nodes, "Origin")
     if not origin:
         return "SEARCH_HERB_BY_ORIGIN: Origin 노드가 필요합니다."
@@ -454,7 +554,20 @@ async def _tpl_search_herb_by_origin(driver: Any, nodes: list[ExtractedNode]) ->
                 """
                 MATCH (o:Origin)<-[:ORIGINATES_FROM]-(p:Product)<-[:HAS_PRODUCT]-(h:Herb)
                 WHERE o.name = $oname AND (h.name = $hname OR $hname IN coalesce(h.synonyms, []))
-                RETURN DISTINCT h.name AS herb, p.product_id AS product_id
+                OPTIONAL MATCH (p)-[:MANUFACTURED_BY]->(mk:Maker)
+                OPTIONAL MATCH (p)-[:HAS_PRICE_HISTORY]->(pr:PriceRecord)
+                WITH h, p, mk, pr ORDER BY pr.month DESC
+                WITH h, p, mk, collect(pr)[0] AS latest
+                RETURN h.name AS herb,
+                       p.product_id AS product_id,
+                       p.type AS type,
+                       p.pack_unit AS pack_unit,
+                       p.box_qty AS box_qty,
+                       p.pack_price AS pack_price,
+                       mk.name AS maker,
+                       latest.month AS price_month,
+                       latest.price_per_geun AS price_per_geun,
+                       latest.status AS price_status
                 ORDER BY h.name, product_id
                 """,
                 oname=origin,
@@ -465,7 +578,20 @@ async def _tpl_search_herb_by_origin(driver: Any, nodes: list[ExtractedNode]) ->
                 """
                 MATCH (o:Origin)<-[:ORIGINATES_FROM]-(p:Product)<-[:HAS_PRODUCT]-(h:Herb)
                 WHERE o.name = $oname
-                RETURN DISTINCT h.name AS herb, p.product_id AS product_id
+                OPTIONAL MATCH (p)-[:MANUFACTURED_BY]->(mk:Maker)
+                OPTIONAL MATCH (p)-[:HAS_PRICE_HISTORY]->(pr:PriceRecord)
+                WITH h, p, mk, pr ORDER BY pr.month DESC
+                WITH h, p, mk, collect(pr)[0] AS latest
+                RETURN h.name AS herb,
+                       p.product_id AS product_id,
+                       p.type AS type,
+                       p.pack_unit AS pack_unit,
+                       p.box_qty AS box_qty,
+                       p.pack_price AS pack_price,
+                       mk.name AS maker,
+                       latest.month AS price_month,
+                       latest.price_per_geun AS price_per_geun,
+                       latest.status AS price_status
                 ORDER BY h.name, product_id
                 LIMIT 80
                 """,
@@ -474,11 +600,44 @@ async def _tpl_search_herb_by_origin(driver: Any, nodes: list[ExtractedNode]) ->
         rows = [r async for r in result]
         if not rows:
             return f"원산지 '{origin}'에 해당하는 약재/상품을 찾지 못했습니다."
-        herbs = sorted({r["herb"] for r in rows if r["herb"]})
-        return f"원산지: {origin}\n관련 약재: {', '.join(herbs)}"
+        by_herb: dict[str, list[Any]] = {}
+        for r in rows:
+            if r["herb"]:
+                by_herb.setdefault(r["herb"], []).append(r)
+        lines = [f"원산지: {origin}", "[연결된 약재 및 상품]"]
+        for herb_name in sorted(by_herb.keys()):
+            items = by_herb[herb_name]
+            pids = [r["product_id"] for r in items if r["product_id"]]
+            pid_tag = f" [연결된 product_id: {', '.join(pids)}]" if pids else ""
+            lines.append(f"- {herb_name}{pid_tag}")
+            for r in items:
+                if not r["product_id"]:
+                    continue
+                parts = [f"  · [product_id={r['product_id']}]"]
+                if r["type"]:
+                    parts.append(f"유형={r['type']}")
+                if r["maker"]:
+                    parts.append(f"제조사={r['maker']}")
+                if r["pack_unit"]:
+                    parts.append(f"포장단위={r['pack_unit']}")
+                if r["box_qty"]:
+                    parts.append(f"박스수량={r['box_qty']}")
+                if r["pack_price"]:
+                    parts.append(f"포장단가={r['pack_price']}원")
+                if r["price_per_geun"] is not None:
+                    month = r["price_month"] or "-"
+                    status = r["price_status"] or ""
+                    status_tag = f"({status})" if status else ""
+                    parts.append(f"근당가격={r['price_per_geun']}원@{month}{status_tag}")
+                lines.append(", ".join(parts))
+        return "\n".join(lines)
 
 
 async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str:
+    """
+    2-hop 확장 템플릿: Herb → Product → PriceRecord → {Maker, Origin}
+    가격 질문에는 상품 상세(포장단위/박스수량/유형)와 제조사·원산지까지 함께 반환.
+    """
     herb = _first_name(nodes, "Herb")
     if not herb:
         return "SEARCH_PRICE_INFO: Herb 노드가 필요합니다."
@@ -488,10 +647,18 @@ async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str
             MATCH (h:Herb)-[:HAS_PRODUCT]->(p:Product)-[:HAS_PRICE_HISTORY]->(pr:PriceRecord)
             WHERE h.name = $name OR $name IN coalesce(h.synonyms, [])
             OPTIONAL MATCH (p)-[:MANUFACTURED_BY]->(mk:Maker)
-            RETURN p.product_id AS product_id, p.type AS type,
-                   p.pack_unit AS pack_unit, p.box_qty AS box_qty,
-                   pr.month AS month, pr.price_per_geun AS price_per_geun, pr.status AS status,
-                   mk.name AS maker
+            OPTIONAL MATCH (p)-[:ORIGINATES_FROM]->(o:Origin)
+            RETURN h.name AS herb,
+                   p.product_id AS product_id,
+                   p.type AS type,
+                   p.pack_unit AS pack_unit,
+                   p.box_qty AS box_qty,
+                   p.pack_price AS pack_price,
+                   pr.month AS month,
+                   pr.price_per_geun AS price_per_geun,
+                   pr.status AS status,
+                   mk.name AS maker,
+                   o.name AS origin
             ORDER BY p.product_id, pr.month DESC
             LIMIT 120
             """,
@@ -500,18 +667,32 @@ async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str
         rows = [r async for r in result]
         if not rows:
             return f"약재 '{herb}'의 가격 이력(PriceRecord)이 없습니다."
-        lines = [f"[가격 이력] 약재: {herb}"]
+        # 전체 product_id 목록을 약재명 링크용으로 집계
+        all_pids = sorted({r["product_id"] for r in rows if r["product_id"]})
+        pid_tag = f" [연결된 product_id: {', '.join(all_pids)}]" if all_pids else ""
+        herb_name = rows[0]["herb"] or herb
+        lines = [f"약재: {herb_name}{pid_tag}", "[가격 이력]"]
         for r in rows:
             if r["price_per_geun"] is None:
                 continue
-            m = r["maker"] or ""
-            pack = f" 포장단위={r['pack_unit']}" if r["pack_unit"] else ""
-            box = f" 박스수량={r['box_qty']}" if r["box_qty"] else ""
-            lines.append(
-                f"  [product_id={r['product_id']}] ({r['type']}): {r['month']} 근당 {r['price_per_geun']}원 "
-                f"({r['status']}) 제조사={m}{pack}{box}"
-            )
-        return "\n".join(lines) if len(lines) > 1 else lines[0]
+            parts = [f"  [product_id={r['product_id']}]"]
+            if r["type"]:
+                parts.append(f"유형={r['type']}")
+            parts.append(f"{r['month']} 근당 {r['price_per_geun']}원")
+            if r["status"]:
+                parts.append(f"상태={r['status']}")
+            if r["maker"]:
+                parts.append(f"제조사={r['maker']}")
+            if r["origin"]:
+                parts.append(f"원산지={r['origin']}")
+            if r["pack_unit"]:
+                parts.append(f"포장단위={r['pack_unit']}")
+            if r["box_qty"]:
+                parts.append(f"박스수량={r['box_qty']}")
+            if r["pack_price"]:
+                parts.append(f"포장단가={r['pack_price']}원")
+            lines.append(", ".join(parts))
+        return "\n".join(lines) if len(lines) > 2 else f"약재: {herb_name}{pid_tag}\n(가격 이력 없음)"
 
 
 async def _dispatch_intent(intent: GraphIntent, nodes: list[ExtractedNode]) -> str:
