@@ -9,6 +9,7 @@ Stage 1: LLM1 — 구조화 라우터(RouterOutput) + Neo4j 고정 템플릿 병
 
 Stage 3: LLM3 — 최종 합성 (Graph + 선택적 SQL 컨텍스트)
 """
+import asyncio
 import json
 import logging
 import re
@@ -84,46 +85,62 @@ async def _call_llm_text(system_prompt: str, user_content: str) -> str:
         return ""
 
 
-async def _call_llm_thinking(question: str, graph_context: str, sql_context: str) -> str:
-    """답변 전 thinking 생성 (non-streaming). 사용자에게 사고 과정을 보여주기 위한 용도."""
+# ── 단계별 사고 과정 프롬프트 ─────────────────────────
+_THINKING_ROUTER_SYSTEM = (
+    "당신은 한약재 유통 챗봇 팔란티니입니다. "
+    "사용자 질문을 분석한 내부 사고 과정을 자연스러운 독백으로 2~3문장, 한국어로 작성하세요. "
+    "어떤 정보가 필요하고 왜 그 방식을 선택했는지 설명하세요. "
+    "답변 자체는 쓰지 말고 분석과 계획만 서술하세요."
+)
+_THINKING_GRAPH_SYSTEM = (
+    "당신은 한약재 유통 챗봇 팔란티니입니다. "
+    "지식 그래프에서 어떤 데이터를 탐색할지 내부 사고 과정을 자연스러운 독백으로 2~3문장, 한국어로 작성하세요."
+)
+_THINKING_SQL_SYSTEM = (
+    "당신은 한약재 유통 챗봇 팔란티니입니다. "
+    "데이터베이스에서 어떤 정보를 조회할지 내부 사고 과정을 자연스러운 독백으로 2~3문장, 한국어로 작성하세요."
+)
+_THINKING_SYNTHESIS_SYSTEM = (
+    "당신은 한약재 유통 챗봇 팔란티니입니다. "
+    "수집된 데이터를 바탕으로 답변을 어떻게 구성할지 내부 사고 과정을 자연스러운 독백으로 2~3문장, 한국어로 작성하세요. "
+    "답변 자체는 쓰지 말고 답변 전략만 서술하세요."
+)
+
+
+async def _stream_thinking(
+    system_prompt: str,
+    user_content: str,
+    redis: Redis,
+    channel: str,
+    max_tokens: int = 200,
+) -> None:
+    """사고 과정을 thinking_token SSE 이벤트로 스트리밍. gpt-4o-mini 사용."""
     try:
         from openai import AsyncOpenAI
 
-        context_parts = []
-        if graph_context and graph_context.strip() and graph_context.strip() != "(없음)":
-            context_parts.append(f"[Graph DB 조회 결과]\n{graph_context[:800]}")
-        if sql_context and sql_context.strip() and sql_context.strip() != "(SQL/RDB 조회 없음)":
-            context_parts.append(f"[DB 조회 결과]\n{sql_context[:400]}")
-        context_str = "\n\n".join(context_parts) if context_parts else "(조회된 데이터 없음)"
-
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-        response = await client.chat.completions.create(
-            model="gpt-4o",
+        stream = await client.chat.completions.create(
+            model="gpt-4o-mini",
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "당신은 한약재 유통 챗봇입니다. "
-                        "사용자 질문과 수집된 데이터를 보고, 어떻게 답변할지 간략히 생각하세요. "
-                        "3~5문장으로 간결하게 한국어로 작성하세요. "
-                        "답변 자체를 쓰지 말고, 분석 과정과 답변 전략만 작성하세요."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": (
-                        f"[사용자 질문]\n{question}\n\n"
-                        f"[수집된 데이터 요약]\n{context_str}"
-                    ),
-                },
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content},
             ],
-            temperature=0.3,
-            max_tokens=200,
+            stream=True,
+            temperature=0.4,
+            max_tokens=max_tokens,
         )
-        return (response.choices[0].message.content or "").strip()
+        async for chunk in stream:
+            if chunk.choices and chunk.choices[0].delta.content:
+                token = chunk.choices[0].delta.content
+                payload = json.dumps({"type": "thinking_token", "content": token}, ensure_ascii=False)
+                await redis.publish(channel, payload)
     except Exception as e:
-        logger.warning("Thinking LLM error: %s", e)
-        return ""
+        logger.warning("Thinking stream error: %s", e)
+    # 단계 구분용 빈 줄 추가
+    await redis.publish(
+        channel,
+        json.dumps({"type": "thinking_token", "content": "\n\n"}, ensure_ascii=False),
+    )
 
 
 async def _call_stage1_router_llm(
@@ -301,8 +318,6 @@ def _router_fallback(reason: str) -> RouterOutput:
 
 async def stage1_router(state: PipelineState) -> PipelineState:
     """Stage 1: 1차 라우팅 — 직접 답변 vs Cypher(Graph DB) 조회 결정."""
-    await _publish_status(state, "질문을 이해하고 있어요...")
-
     parsed = await _call_stage1_router_llm(
         state["chat_history"],
         state["graph_context"],
@@ -326,6 +341,17 @@ async def stage1_router(state: PipelineState) -> PipelineState:
     state["last_router_output"] = parsed.model_dump()
     state["stage1_route"] = parsed.route  # type: ignore[assignment]
     _sync_extracted_entities_from_router(state)
+
+    # 라우팅 결정에 대한 사고 과정 스트리밍
+    intents_str = ', '.join(parsed.target_intents) if parsed.target_intents else '없음'
+    await _stream_thinking(
+        _THINKING_ROUTER_SYSTEM,
+        f"사용자 질문: {state['question']}\n"
+        f"라우팅 결정: {parsed.route}\n"
+        f"조회 유형: {intents_str}\n"
+        f"근거: {parsed.reason or '없음'}",
+        state["redis"], state["channel"],
+    )
     return state
 
 
@@ -335,16 +361,17 @@ def stage1_router_branch(state: PipelineState) -> Stage1Branch:
 
 async def stage1_direct_from_router(state: PipelineState) -> PipelineState:
     """DIRECT_ANSWER: direct_response 우선, 없으면 기존 Stage1 직접 답변 스트림."""
-    await _publish_status(state, "바로 답변 생성 중...")
     dr = (state.get("last_router_output") or {}).get("direct_response") or ""
     redis: Redis = state["redis"]
     channel = state["channel"]
 
-    # thinking 발행
-    thinking = await _call_llm_thinking(state["question"], "", "")
-    if thinking:
-        payload = json.dumps({"type": "thinking", "content": thinking}, ensure_ascii=False)
-        await redis.publish(channel, payload)
+    # 직접 답변 전략 사고 과정 스트리밍
+    await _stream_thinking(
+        _THINKING_SYNTHESIS_SYSTEM,
+        f"사용자 질문: {state['question']}\n"
+        f"준비된 답변: {dr[:200] if dr else '없음 (즉석 생성)'}",
+        redis, channel,
+    )
 
     if dr.strip():
         for ch in dr:
@@ -368,8 +395,7 @@ async def stage1_direct_from_router(state: PipelineState) -> PipelineState:
 
 
 async def stage1_graph_tool(state: PipelineState) -> PipelineState:
-    """SEARCH_GRAPH: 병렬 템플릿 실행 후 graph_context 누적."""
-    await _publish_status(state, "한약재 지식 그래프 탐색 중...")
+    """SEARCH_GRAPH: 병렬 템플릿 실행 후 graph_context 누적. thinking과 병렬 실행."""
     raw = state.get("last_router_output")
     if not raw:
         state["graph_context"] += "\n[내부 오류] 라우터 출력이 없습니다.\n"
@@ -380,7 +406,22 @@ async def stage1_graph_tool(state: PipelineState) -> PipelineState:
         logger.warning("last_router_output 검증 실패: %s", e)
         state["graph_context"] += f"\n[내부 오류] 라우터 출력 형식 오류: {e}\n"
         return state
-    chunk = await execute_router_graph_search(router)
+
+    intents_str = ', '.join(router.target_intents) if router.target_intents else '없음'
+    nodes_str = ', '.join(
+        f"{n.node_type}:{n.node_name}" for n in router.extracted_nodes if n.node_name
+    ) or '없음'
+
+    # 그래프 탐색과 thinking 스트리밍을 병렬 실행 (탐색 대기 시간 중 thinking 표시)
+    _, chunk = await asyncio.gather(
+        _stream_thinking(
+            _THINKING_GRAPH_SYSTEM,
+            f"탐색 유형: {intents_str}\n대상 노드: {nodes_str}\n사용자 질문: {state['question']}",
+            state["redis"], state["channel"],
+        ),
+        execute_router_graph_search(router),
+    )
+
     state["graph_context"] = (state["graph_context"] or "") + chunk
     state["stage1_iteration"] = state["stage1_iteration"] + 1
     _sync_extracted_entities_from_router(state)
@@ -395,17 +436,11 @@ def stage1_after_graph_branch(state: PipelineState) -> AfterGraphBranch:
 
 async def stage1_skip_to_synthesizer(state: PipelineState) -> PipelineState:
     """그래프 라운드 상한 도달 시 Stage3로 직행."""
-    await _publish_status(
-        state,
-        "그래프 탐색 한도에 도달하여 수집된 데이터로 최종 답변을 생성합니다...",
-    )
     return state
 
 
 async def stage2_execute_sql(state: PipelineState) -> PipelineState:
     """CALL_LLM2_SQL: Redis 캐시 우선 → Text-to-SQL."""
-    await _publish_status(state, "데이터 조회 중 (캐시 → DB 순서)...")
-
     redis: Redis = state["redis"]
     question = state["question"]
     herb_name = (state["extracted_entities"] or {}).get("herb_name")
@@ -415,6 +450,13 @@ async def stage2_execute_sql(state: PipelineState) -> PipelineState:
         if herb_name:
             state["extracted_entities"] = state.get("extracted_entities") or {}
             state["extracted_entities"]["herb_name"] = herb_name
+
+    # DB 조회 전 사고 과정 스트리밍
+    await _stream_thinking(
+        _THINKING_SQL_SYSTEM,
+        f"사용자 질문: {question}\n약재명: {herb_name or '미상'}",
+        redis, state["channel"],
+    )
 
     if herb_name:
         try:
@@ -503,21 +545,17 @@ async def _execute_sql_via_redis(message: str, redis: Redis) -> str:
 
 
 async def stage3_synthesizer(state: PipelineState) -> PipelineState:
-    await _publish_status(state, "수집한 정보를 종합해 답변을 작성하고 있어요...")
-
     sql_ctx = state.get("sql_redis_context") or ""
     if not sql_ctx.strip():
         sql_ctx = "(SQL/RDB 조회 없음)"
 
-    # thinking 발행 (답변 스트리밍 시작 전)
-    thinking = await _call_llm_thinking(
-        state["question"],
-        state["graph_context"] or "",
-        sql_ctx,
+    # 답변 합성 전 사고 과정 스트리밍
+    ctx_preview = (state["graph_context"] or "")[:400]
+    await _stream_thinking(
+        _THINKING_SYNTHESIS_SYSTEM,
+        f"사용자 질문: {state['question']}\n수집된 데이터: {ctx_preview}",
+        state["redis"], state["channel"],
     )
-    if thinking:
-        payload = json.dumps({"type": "thinking", "content": thinking}, ensure_ascii=False)
-        await state["redis"].publish(state["channel"], payload)
 
     user_content = STAGE3_SYNTHESIZER_USER_TEMPLATE.format(
         graph_context=state["graph_context"] or "(없음)",
