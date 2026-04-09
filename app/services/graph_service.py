@@ -12,6 +12,11 @@ from neo4j import AsyncGraphDatabase
 
 from app.core.config import get_settings
 from app.schemas.stage1_router import ExtractedNode, GraphIntent, RouterOutput
+from app.services.cache_service import (
+    GRAPH_CACHE_PREFIX,
+    get_graph_cache,
+    set_graph_cache,
+)
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -753,39 +758,71 @@ async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str
         return "\n".join(lines) if len(lines) > 2 else f"약재: {herb_name}{pid_tag}\n(가격 이력 없음)"
 
 
+def _make_graph_cache_key(intent: str, nodes: list[ExtractedNode]) -> str:
+    """(intent, 노드 목록) 조합으로 결정론적 캐시 키 생성. 노드가 없으면 빈 문자열 반환."""
+    parts = sorted(
+        f"{n.node_type}:{n.node_name}"
+        for n in nodes
+        if n.node_name
+    )
+    if not parts:
+        return ""
+    return f"{GRAPH_CACHE_PREFIX}{intent}:{':'.join(parts)}"
+
+
+_GRAPH_CACHE_SKIP = ("Neo4j가 설정되지 않았습니다", "노드가 필요합니다", "조회 오류:")
+
+
 async def _dispatch_intent(intent: GraphIntent, nodes: list[ExtractedNode]) -> str:
+    # ── 캐시 확인 ────────────────────────────────────
+    cache_key = _make_graph_cache_key(str(intent), nodes)
+    if cache_key:
+        cached = await get_graph_cache(cache_key)
+        if cached is not None:
+            logger.info("Graph cache HIT: %s", cache_key)
+            return cached
+
+    # ── Neo4j 쿼리 ───────────────────────────────────
     driver = await get_neo4j_driver()
     if not driver:
         return "Neo4j가 설정되지 않았습니다."
     try:
         if intent == "SEARCH_TEMP":
-            return await _tpl_search_temp(driver, nodes)
-        if intent == "SEARCH_TASTE":
-            return await _tpl_search_taste(driver, nodes)
-        if intent == "SEARCH_MERIDIAN":
-            return await _tpl_search_meridian(driver, nodes)
-        if intent == "SEARCH_EFFICACY":
-            return await _tpl_search_efficacy(driver, nodes)
-        if intent == "SEARCH_SYMPTOM":
-            return await _tpl_search_symptom(driver, nodes)
-        if intent == "SEARCH_FORMULA_CONTAINS":
-            return await _tpl_search_formula_contains(driver, nodes)
-        if intent == "SEARCH_CONTRAINDICATION":
-            return await _tpl_search_contraindication(driver, nodes)
-        if intent == "SEARCH_DOSAGE_FORM":
-            return await _tpl_search_dosage_form(driver, nodes)
-        if intent == "SEARCH_DISTRIBUTION_ALL":
-            return await _tpl_search_distribution_all(driver, nodes)
-        if intent == "SEARCH_HERB_BY_MAKER":
-            return await _tpl_search_herb_by_maker(driver, nodes)
-        if intent == "SEARCH_HERB_BY_ORIGIN":
-            return await _tpl_search_herb_by_origin(driver, nodes)
-        if intent == "SEARCH_PRICE_INFO":
-            return await _tpl_search_price_info(driver, nodes)
-        return f"알 수 없는 intent: {intent}"
+            result = await _tpl_search_temp(driver, nodes)
+        elif intent == "SEARCH_TASTE":
+            result = await _tpl_search_taste(driver, nodes)
+        elif intent == "SEARCH_MERIDIAN":
+            result = await _tpl_search_meridian(driver, nodes)
+        elif intent == "SEARCH_EFFICACY":
+            result = await _tpl_search_efficacy(driver, nodes)
+        elif intent == "SEARCH_SYMPTOM":
+            result = await _tpl_search_symptom(driver, nodes)
+        elif intent == "SEARCH_FORMULA_CONTAINS":
+            result = await _tpl_search_formula_contains(driver, nodes)
+        elif intent == "SEARCH_CONTRAINDICATION":
+            result = await _tpl_search_contraindication(driver, nodes)
+        elif intent == "SEARCH_DOSAGE_FORM":
+            result = await _tpl_search_dosage_form(driver, nodes)
+        elif intent == "SEARCH_DISTRIBUTION_ALL":
+            result = await _tpl_search_distribution_all(driver, nodes)
+        elif intent == "SEARCH_HERB_BY_MAKER":
+            result = await _tpl_search_herb_by_maker(driver, nodes)
+        elif intent == "SEARCH_HERB_BY_ORIGIN":
+            result = await _tpl_search_herb_by_origin(driver, nodes)
+        elif intent == "SEARCH_PRICE_INFO":
+            result = await _tpl_search_price_info(driver, nodes)
+        else:
+            return f"알 수 없는 intent: {intent}"
     except Exception as e:
         logger.exception("Neo4j 템플릿 실패 intent=%s: %s", intent, e)
         return f"조회 오류: {e}"
+
+    # ── 캐시 저장 (오류·설정 누락 결과는 제외) ────────
+    if cache_key and result and not any(s in result for s in _GRAPH_CACHE_SKIP):
+        await set_graph_cache(cache_key, result)
+        logger.info("Graph cache SET: %s", cache_key)
+
+    return result
 
 
 async def execute_router_graph_search(router: RouterOutput) -> str:

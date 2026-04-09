@@ -22,6 +22,9 @@ DYNAMIC_TTL = 3600  # 동적 캐시 TTL: 1시간
 ACCESS_COUNT_TTL = 86400  # 접근 카운터 TTL: 24시간
 CACHE_THRESHOLD = 2  # 이 횟수 이상 접근 시 캐시 적재
 
+GRAPH_CACHE_PREFIX = "graph:cache:"
+GRAPH_TTL = 3600  # 그래프 결과 캐시 TTL: 1시간
+
 
 # ── 내부 유틸 ─────────────────────────────────────────
 def _cache_key(herb_name: str) -> str:
@@ -110,7 +113,23 @@ async def get_herbs_bulk(herb_names: list[str]) -> dict[str, dict | None]:
     return result
 
 
-# ── 2) Cache Invalidation ────────────────────────────
+# ── 2) Graph Cache (Neo4j 쿼리 결과) ─────────────────
+async def get_graph_cache(key: str) -> str | None:
+    """그래프 캐시 조회. Hit 시 문자열 반환, Miss 시 None."""
+    redis = await get_redis()
+    raw = await redis.get(key)
+    if raw is None:
+        return None
+    return raw.decode() if isinstance(raw, bytes) else raw
+
+
+async def set_graph_cache(key: str, data: str, ttl: int = GRAPH_TTL) -> None:
+    """그래프 캐시 저장."""
+    redis = await get_redis()
+    await redis.set(key, data, ex=ttl)
+
+
+# ── 3) Cache Invalidation ────────────────────────────
 async def invalidate_herb_cache(herb_name: str) -> bool:
     """캐시 + 접근 카운터 삭제."""
     redis = await get_redis()
