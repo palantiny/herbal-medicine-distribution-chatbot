@@ -120,7 +120,7 @@ async def _stream_thinking(
 
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         stream = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
