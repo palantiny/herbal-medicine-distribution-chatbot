@@ -11,6 +11,7 @@ Stage 3: LLM3 — 최종 합성 (Graph + 선택적 SQL 컨텍스트)
 """
 import json
 import logging
+import re
 from typing import Any, Literal, TypedDict
 from uuid import uuid4
 
@@ -222,6 +223,52 @@ async def _fallback_extract_herb_name(question: str, redis: Redis) -> str | None
     except Exception as e:
         logger.warning("Fallback herb name extraction 오류: %s", e)
     return None
+
+
+def _extract_herb_product_mapping(graph_context: str) -> dict[str, str]:
+    """
+    graph_context에서 '약재명 → 첫 번째 product_id' 매핑을 추출.
+    지원 패턴:
+      1) "약재: 이름 [연결된 product_id: PID1, PID2]"
+      2) "  - 이름 [연결된 product_id: PID1, PID2]"  (bullet list)
+    """
+    mapping: dict[str, str] = {}
+    pattern = re.compile(r'(?:약재:\s*|[-·]\s+)(\S+?)\s+\[연결된 product_id:\s*([^\]]+)\]')
+    for m in pattern.finditer(graph_context):
+        name = m.group(1).strip()
+        first_pid = m.group(2).split(',')[0].strip()
+        if name and first_pid:
+            mapping.setdefault(name, first_pid)
+    return mapping
+
+
+def _apply_product_links(text: str, herb_product_map: dict[str, str]) -> str:
+    """
+    LLM 출력에서 graph_context에 product_id가 확인된 약재명에만 링크 추가.
+    이미 마크다운 링크([text](url))로 작성된 부분은 건드리지 않음.
+    """
+    if not herb_product_map:
+        return text
+
+    # 기존 마크다운 링크를 임시 플레이스홀더로 보호
+    placeholders: list[str] = []
+
+    def _protect(m: re.Match) -> str:
+        placeholders.append(m.group(0))
+        return f"\x00L{len(placeholders) - 1}\x00"
+
+    protected = re.sub(r'\[[^\]]*\]\([^)]+\)', _protect, text)
+
+    # 긴 이름 먼저 처리해서 부분 문자열 치환 방지
+    for herb_name in sorted(herb_product_map, key=len, reverse=True):
+        pid = herb_product_map[herb_name]
+        protected = protected.replace(herb_name, f"[{herb_name}](/product/{pid})")
+
+    # 플레이스홀더 복원
+    for i, original in enumerate(placeholders):
+        protected = protected.replace(f"\x00L{i}\x00", original)
+
+    return protected
 
 
 async def _publish_status(state: PipelineState, message: str) -> None:
@@ -484,7 +531,15 @@ async def stage3_synthesizer(state: PipelineState) -> PipelineState:
         state["redis"],
         state["channel"],
     )
-    state["final_answer"] = answer
+
+    # 후처리: graph_context의 product_id 기반으로 누락된 약재명 링크 보완
+    herb_map = _extract_herb_product_mapping(state.get("graph_context") or "")
+    corrected = _apply_product_links(answer, herb_map)
+    if corrected != answer:
+        payload = json.dumps({"type": "correction", "content": corrected}, ensure_ascii=False)
+        await state["redis"].publish(state["channel"], payload)
+
+    state["final_answer"] = corrected
     return state
 
 

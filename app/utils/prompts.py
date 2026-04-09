@@ -22,7 +22,7 @@ FORMAT_DIRECTIVE = """
 약재명을 표시할 때 **product_id가 Graph DB 결과에 있으면 반드시 링크로** 작성하세요: `[약재명](/product/{product_id})`
 - product_id는 [Graph DB 조회 결과]의 다음 두 가지 형식 중 어느 쪽에서든 가져올 수 있습니다:
   1. `[product_id=XXX]` — 유통·가격 템플릿(SEARCH_DISTRIBUTION_ALL, SEARCH_PRICE_INFO) 결과에 상품 단위로 표기됨
-  2. `[연결된 product_id: XXX, YYY, ...]` — 1-hop 지식 템플릿(SEARCH_TEMP, SEARCH_TASTE, SEARCH_MERIDIAN, SEARCH_EFFICACY, SEARCH_SYMPTOM, SEARCH_CONTRAINDICATION, SEARCH_FORMULA_CONTAINS) 결과에 약재별로 함께 표기됨. 여러 개일 때는 **첫 번째 product_id를 대표값으로** 사용해 링크하세요.
+  2. `[연결된 product_id: XXX, YYY, ...]` — 1-hop 지식 템플릿(SEARCH_TEMP, SEARCH_TASTE, SEARCH_MERIDIAN, SEARCH_EFFICACY, SEARCH_SYMPTOM, SEARCH_CONTRAINDICATION, SEARCH_FORMULA_CONTAINS) 결과에 약재별로 함께 표기됨.
 - 단일 약재든 목록이든 product_id가 확인된 모든 약재에 링크를 적용하세요.
 - 같은 약재에 대해 서로 다른 Intent 결과에 동일한 product_id가 나타나면, 그 약재는 반드시 링크로 표시하세요.
 - product_id를 알 수 없는 경우에만 링크 없이 텍스트로 작성하세요.
