@@ -496,7 +496,7 @@ async def _tpl_search_distribution_all(driver: Any, nodes: list[ExtractedNode]) 
                 )
             else:
                 lines.append(
-                    f"  [product_id={r['product_id']}]: 근당 {r['price_per_geun']}원{month_tag}{extra}"
+                    f"  [product_id={r['product_id']}]: 근당가격={r['price_per_geun']}{month_tag}{extra}"
                 )
         if not any_p:
             lines.append("  (가격 이력 없음)")
@@ -594,7 +594,7 @@ async def _tpl_search_herb_by_maker(driver: Any, nodes: list[ExtractedNode]) -> 
                 if r["price_per_geun"] is None:
                     parts.append(f"근당가격=가격정보없음@{month}{status_tag}")
                 else:
-                    parts.append(f"근당가격={r['price_per_geun']}원@{month}{status_tag}")
+                    parts.append(f"근당가격={r['price_per_geun']}@{month}{status_tag}")
                 lines.append(", ".join(parts))
         return "\n".join(lines)
 
@@ -690,7 +690,7 @@ async def _tpl_search_herb_by_origin(driver: Any, nodes: list[ExtractedNode]) ->
                 if r["price_per_geun"] is None:
                     parts.append(f"근당가격=가격정보없음@{month}{status_tag}")
                 else:
-                    parts.append(f"근당가격={r['price_per_geun']}원@{month}{status_tag}")
+                    parts.append(f"근당가격={r['price_per_geun']}@{month}{status_tag}")
                 lines.append(", ".join(parts))
         return "\n".join(lines)
 
@@ -741,7 +741,7 @@ async def _tpl_search_price_info(driver: Any, nodes: list[ExtractedNode]) -> str
             if r["price_per_geun"] is None:
                 parts.append(f"{r['month']} 근당가격=가격정보없음")
             else:
-                parts.append(f"{r['month']} 근당 {r['price_per_geun']}원")
+                parts.append(f"{r['month']} 근당가격={r['price_per_geun']}")
             if r["status"]:
                 parts.append(f"상태={r['status']}")
             if r["maker"]:
