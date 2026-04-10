@@ -196,7 +196,7 @@ async def _call_llm_stream(
                 {"role": "user", "content": user_content},
             ],
             stream=True,
-            temperature=0.7,
+            temperature=0.2,
         )
         async for chunk in stream:
             if chunk.choices and chunk.choices[0].delta.content:
