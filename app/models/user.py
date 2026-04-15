@@ -22,6 +22,8 @@ class User(Base):
         default=lambda: str(uuid4()),
     )
     partner_token: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    # DJMEDI 업체코드 — membermedicine API 호출 시 사용 (예: "dj", "hs", "ch")
+    cfcode: Mapped[str | None] = mapped_column(String(10), nullable=True)
     role: Mapped[str] = mapped_column(String(50), default="user")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

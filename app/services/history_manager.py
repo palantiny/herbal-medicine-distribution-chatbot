@@ -10,6 +10,9 @@ from app.core.config import get_settings
 logger = logging.getLogger(__name__)
 settings = get_settings()
 
+# 히스토리가 없을 때 반환하는 플레이스홀더 — 다른 모듈에서 이 상수를 import해서 비교하세요.
+NO_HISTORY_PLACEHOLDER = "(이전 대화 없음)"
+
 SUMMARY_PROMPT = """다음 대화 내용을 3-5문장으로 요약해 주세요. 핵심 주제와 결론만 포함하세요.
 대화:
 {text}
@@ -62,7 +65,7 @@ async def get_context_within_limit(
     rows = await chat_repo.get_recent(user_id, session_id, limit=limit)
 
     if not rows:
-        return "(이전 대화 없음)"
+        return NO_HISTORY_PLACEHOLDER
 
     lines = [f"{r['role']}: {r['content']}" for r in rows]
     history_str = "\n".join(lines)

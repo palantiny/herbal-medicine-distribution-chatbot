@@ -1,6 +1,7 @@
 """
 인증 API: POST /api/v1/auth/verify
-파트너사 partner_token 검증 후 session_id 및 최근 대화 기록(MongoDB) 반환.
+파트너사 partner_token 검증 후 session_id, cfcode 및 최근 대화 기록(DynamoDB) 반환.
+클라이언트는 응답의 cfcode를 저장해 이후 chat 요청 body에 포함해야 함.
 """
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,6 +27,7 @@ class VerifyResponse(BaseModel):
 
     session_id: str
     user_id: str
+    cfcode: str | None
     recent_history: list[dict]
 
 
@@ -38,13 +40,12 @@ async def verify_partner(
     """
     partner_token 검증 및 세션 초기화.
     1. 토큰으로 User 조회 (PostgreSQL)
-    2. ChatHistory에서 최근 대화 로드 (MongoDB)
-    3. 새 session_id 생성 반환
+    2. ChatHistory에서 최근 대화 로드 (DynamoDB)
+    3. 새 session_id + cfcode 반환
     """
     if not verify_partner_token_format(body.partner_token):
         raise HTTPException(status_code=401, detail="Invalid partner_token")
 
-    # User 조회 (PostgreSQL)
     result = await db.execute(
         select(User).where(User.partner_token == body.partner_token.strip())
     )
@@ -52,7 +53,6 @@ async def verify_partner(
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
 
-    # 최근 대화 기록 조회 (MongoDB)
     chat_repo = getattr(request.app.state, "chat_repo", None)
     if chat_repo:
         recent_history = await chat_repo.get_recent(
@@ -68,5 +68,6 @@ async def verify_partner(
     return VerifyResponse(
         session_id=session_id,
         user_id=str(user.user_id),
+        cfcode=user.cfcode,
         recent_history=recent_history,
     )
