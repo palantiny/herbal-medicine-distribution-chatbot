@@ -34,7 +34,7 @@ async def _summarize_with_llm(text: str) -> str:
 
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-5.4-mini",
             messages=[
                 {"role": "user", "content": SUMMARY_PROMPT.format(text=text[:8000])},
             ],

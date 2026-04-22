@@ -72,7 +72,7 @@ async def _call_llm_text(system_prompt: str, user_content: str) -> str:
 
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         response = await client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5.4-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
@@ -114,13 +114,13 @@ async def _stream_thinking(
     channel: str,
     max_tokens: int = 200,
 ) -> None:
-    """사고 과정을 thinking_token SSE 이벤트로 스트리밍. gpt-4o-mini 사용."""
+    """사고 과정을 thinking_token SSE 이벤트로 스트리밍. gpt-5.4-mini 사용."""
     try:
         from openai import AsyncOpenAI
 
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         stream = await client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5.4-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
@@ -159,7 +159,7 @@ async def _call_stage1_router_llm(
             question=question,
         )
         response = await client.beta.chat.completions.parse(
-            model="gpt-4o",
+            model="gpt-5.4-mini",
             messages=[
                 {"role": "system", "content": STAGE1_ROUTER_SYSTEM_PROMPT},
                 {"role": "user", "content": user_content},
@@ -190,7 +190,7 @@ async def _call_llm_stream(
 
         client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         stream = await client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5.4-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
