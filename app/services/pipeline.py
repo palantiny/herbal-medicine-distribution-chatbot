@@ -127,7 +127,7 @@ async def _stream_thinking(
             ],
             stream=True,
             temperature=0.4,
-            max_tokens=max_tokens,
+            max_completion_tokens=max_tokens,
         )
         async for chunk in stream:
             if chunk.choices and chunk.choices[0].delta.content:
