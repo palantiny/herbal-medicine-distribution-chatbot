@@ -200,6 +200,87 @@ async def find_md_medi_by_herb_name(herb_name: str) -> list[str]:
     return list(md_medi_set)
 
 
+# ── cfcode별 약재 집계 (server1과 동일 패턴) ──────────────────────────────────
+import time as _time
+
+_USER_HERBS_TTL = 1800
+_USER_HERBS_CACHE: dict[str, tuple[float, list[dict]]] = {}
+_MEMBER_CONCURRENCY = 50
+
+
+async def list_user_medicines(cfcode: str) -> list[dict]:
+    """cfcode 사용자가 등록한 약재 목록.
+
+    1. 모든 unique md_medi 코드 수집 (herbmaker → herbmedicine 집계)
+    2. 각 md_medi에 대해 membermedicine 병렬 호출 (Semaphore-bounded 50)
+    3. 비어있지 않은 결과 합치기, md_code dedup
+    4. cfcode별 결과 30분 in-process 캐시
+    """
+    if not cfcode:
+        return []
+
+    cached = _USER_HERBS_CACHE.get(cfcode)
+    if cached:
+        expires_at, data = cached
+        if _time.monotonic() <= expires_at:
+            return data
+        _USER_HERBS_CACHE.pop(cfcode, None)
+
+    try:
+        makers = await get_maker_list()
+    except Exception:
+        logger.exception("list_user_medicines: get_maker_list 실패")
+        return []
+
+    mk_codes = [m["mk_code"] for m in makers if m.get("mk_code")]
+    medicines_per_maker = await asyncio.gather(
+        *(get_medicine_by_maker(c) for c in mk_codes),
+        return_exceptions=True,
+    )
+
+    md_medi_set: set[str] = set()
+    for meds in medicines_per_maker:
+        if isinstance(meds, Exception) or not meds:
+            continue
+        for m in meds:
+            md_medi = m.get("md_medi")
+            if md_medi:
+                md_medi_set.add(md_medi)
+
+    if not md_medi_set:
+        logger.warning("list_user_medicines: unique md_medi 0건 (cfcode=%s)", cfcode)
+        return []
+
+    sem = asyncio.Semaphore(_MEMBER_CONCURRENCY)
+
+    async def fetch(md_medi: str) -> list[dict]:
+        async with sem:
+            return await get_member_medicine(cfcode, md_medi)
+
+    member_results = await asyncio.gather(
+        *(fetch(mm) for mm in md_medi_set),
+        return_exceptions=True,
+    )
+
+    user_meds: list[dict] = []
+    seen_md: set[str] = set()
+    for r in member_results:
+        if isinstance(r, Exception) or not r:
+            continue
+        for item in r:
+            if item.get("_type") == "notice":
+                continue
+            md_code = item.get("md_code") or ""
+            if not md_code or md_code in seen_md:
+                continue
+            seen_md.add(md_code)
+            user_meds.append(item)
+
+    _USER_HERBS_CACHE[cfcode] = (_time.monotonic() + _USER_HERBS_TTL, user_meds)
+    logger.info("list_user_medicines: cfcode=%s → %d items (cached %ds)", cfcode, len(user_meds), _USER_HERBS_TTL)
+    return user_meds
+
+
 # ── 스마트 검색 오케스트레이터 ────────────────────────────────────────────────
 
 async def smart_search(
@@ -303,6 +384,16 @@ async def smart_search(
         if origin:
             items = [i for i in items if origin in i.get("mm_origin", "")]
 
+        return "membermedicine", items
+
+    # ── 5. 사용자 보유 전체 약재 (origin 필터 가능) ─────────────────────────
+    if intent == "get_my_full_inventory":
+        if not cfcode:
+            logger.warning("get_my_full_inventory: cfcode 없음")
+            return "membermedicine", []
+        items = await list_user_medicines(cfcode)
+        if origin:
+            items = [i for i in items if origin in (i.get("mm_origin") or "")]
         return "membermedicine", items
 
     logger.warning("알 수 없는 intent: %s", intent)
