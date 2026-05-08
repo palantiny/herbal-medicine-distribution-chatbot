@@ -56,6 +56,7 @@ class DjmediQuerySpec(BaseModel):
         "get_herb_by_maker",
         "get_herb_by_name",
         "get_my_medicines",
+        "get_my_full_inventory",
     ] = Field(description="조회 의도")
     maker_name: str | None = Field(default=None, description="정규화된 제조사명")
     herb_name: str | None = Field(default=None, description="정규화된 약재명")
