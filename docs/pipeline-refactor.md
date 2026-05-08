@@ -125,3 +125,58 @@ smart_search(intent, maker_name, herb_name, origin, cfcode)
 - 법인 표기 정규화: `씨케이(주)` / `씨케이주식회사` → 핵심 상호 `씨케이` 로 비교 매칭
 - False positive 방지: 4자 미만 한국어는 bigram 토큰화 생략 (`중국산` → `국산` 오매칭 방지)
 - BM25 threshold: 0.5
+
+---
+
+## KNOWLEDGE_FIRST 도입 (2026-05-08)
+
+### 라우팅 카테고리 변경
+
+| 이전 | 현재 |
+|------|------|
+| `DIRECT_ANSWER` / `SQL` / `DJMEDI_API` | `KNOWLEDGE_FIRST` / `DB_FIRST` / `SQL` |
+
+- **KNOWLEDGE_FIRST**: 일반 지식·모노그래프로 답변 가능. 답변 종료 후 멘션된 약재를
+  gpt-4o-mini로 추출 → DJMEDI에서 조회 → `herb_card` SSE 이벤트로 sidecar 부착.
+- **DB_FIRST**: 데이터 조회가 답변에 필수. 기존 `DJMEDI_API` 흐름과 동일.
+- **SQL**: 로컬 users 테이블 조회 (현재 거의 미사용).
+
+### 흐름
+
+```
+LLM1 → BM25 → LLM2
+  ├─ KNOWLEDGE_FIRST
+  │   ├─ monograph prefetch (BM25 정규화 herb_name → JSON lookup)
+  │   ├─ LLM3 스트리밍 (모노그래프 가드: 충돌 시 모노그래프 우선)
+  │   └─ post_cards: gpt-4o-mini가 답변에서 약재 추출 → DJMEDI 조회 → herb_card SSE
+  └─ DB_FIRST / SQL
+      ├─ smart_search() / SQL 워커
+      └─ LLM3 스트리밍 (DJMEDI 결과 + (있으면) 모노그래프)
+```
+
+### SSE 이벤트 순서
+
+```
+status → token (다수) → herb_card (KNOWLEDGE_FIRST에서 0..N건) → end
+```
+
+### 데이터 자산
+
+| 파일 | 산출 방식 |
+|------|----------|
+| `app/data/herb_monographs.json` | `scripts/build_monographs.py`로 `monograph/*.txt` 70종 → gpt-4o-mini로 정제 |
+| `app/data/scheme_aliases.json` (makers) | `scripts/verify_djmedi_api.py`로 herbmaker API 호출 → 실제 응답 기준 보강 |
+| `scripts/output/djmedi_verify_report.json` | DJMEDI API 응답 스펙 검증 리포트 |
+
+### 신규 / 수정 파일
+
+| 파일 | 역할 |
+|------|------|
+| `scripts/verify_djmedi_api.py` | DJMEDI API 응답 검증 (1회성) |
+| `scripts/build_monographs.py` | 모노그래프 빌더 (1회성) |
+| `app/data/herb_monographs.json` | 모노그래프 정제 산출물 |
+| `app/services/monograph_service.py` | lookup + 프롬프트 블록 포맷팅 |
+| `app/services/herb_mention_extractor.py` | 답변에서 약재명 추출 (gpt-4o-mini) |
+| `tests/` | pytest 단위 테스트 |
+| `app/services/pipeline.py` | mode 변경, prefetch_monograph / post_cards 추가 |
+| `app/utils/prompts.py` | LLM2 2축 라우팅 + LLM3 모노그래프 가드 |
