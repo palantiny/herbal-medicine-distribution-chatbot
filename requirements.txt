@@ -39,3 +39,5 @@ rank-bm25>=0.2.2
 
 # PDF 텍스트 추출 (모노그래프 전처리)
 pypdf>=4.0.0
+pytest>=8.0
+pytest-asyncio>=0.23
