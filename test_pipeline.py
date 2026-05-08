@@ -89,14 +89,14 @@ async def test_llm2(extraction, hint):
     print(f"  reason : {parsed.reason}")
     if parsed.mode == "SQL":
         print(f"  sql    : {parsed.sql}")
-    if parsed.mode == "DJMEDI_API" and parsed.djmedi_query:
+    if parsed.mode == "DB_FIRST" and parsed.djmedi_query:
         q = parsed.djmedi_query
         print(f"  intent      : {q.intent}")
         print(f"  maker_name  : {q.maker_name}")
         print(f"  herb_name   : {q.herb_name}")
         print(f"  origin      : {q.origin}")
-    if parsed.mode == "DIRECT_ANSWER":
-        print(f"  answer : {(parsed.direct_answer or '')[:200]}")
+    if parsed.mode == "KNOWLEDGE_FIRST":
+        print("  KNOWLEDGE_FIRST: LLM3가 답변 생성")
 
     return parsed
 
@@ -105,10 +105,10 @@ async def test_llm2(extraction, hint):
 # Step 4 — DJMEDI API 실행
 # ──────────────────────────────────────────────────────────
 async def test_djmedi(parsed):
-    if parsed.mode != "DJMEDI_API" or not parsed.djmedi_query:
+    if parsed.mode != "DB_FIRST" or not parsed.djmedi_query:
         print(f"\n{'━'*60}")
-        print("STEP 4 │ DJMEDI API (건너뜀 — mode가 DJMEDI_API 아님)")
-        return "(DJMEDI_API 분기 아님)"
+        print("STEP 4 │ DJMEDI API (건너뜀 — mode가 DB_FIRST 아님)")
+        return "(DB_FIRST 분기 아님)"
 
     from app.services.djmedi_service import smart_search, format_djmedi_result
 
@@ -150,6 +150,7 @@ async def test_llm3(data_result: str):
         data_result=data_result,
         chat_history="(이전 대화 없음)",
         question=QUESTION,
+        monograph_block="(없음)",
     )
 
     response = await _get_client().chat.completions.create(
