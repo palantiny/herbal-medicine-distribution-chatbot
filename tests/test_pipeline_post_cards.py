@@ -27,7 +27,8 @@ async def test_db_first_emits_one_card_per_item():
 
 
 @pytest.mark.asyncio
-async def test_db_first_skips_notice_items():
+async def test_db_first_emits_card_even_with_empty_answer_text():
+    """DB_FIRST는 answer_text와 무관하게 db_first_items로 카드 발행."""
     from app.services.pipeline import Llm2Output, _step_post_cards
 
     parsed = Llm2Output(mode="DB_FIRST", reason="test")
@@ -83,6 +84,30 @@ async def test_knowledge_first_falls_back_to_get_herb_by_name_without_cfcode():
 
     assert smart_search_mock.await_count == 1
     assert smart_search_mock.await_args.kwargs["intent"] == "get_herb_by_name"
+
+
+@pytest.mark.asyncio
+async def test_knowledge_first_skips_notice_items():
+    """KNOWLEDGE_FIRST는 smart_search 결과에서 _type=='notice' item을 카드로 발행하지 않음."""
+    from app.services.pipeline import Llm2Output, _step_post_cards
+
+    parsed = Llm2Output(mode="KNOWLEDGE_FIRST", reason="test")
+    redis = MagicMock()
+    redis.publish = AsyncMock()
+
+    smart_search_mock = AsyncMock(return_value=("herbmedicine", [
+        {"_type": "notice", "_notice": "안내문"},
+        {"md_code": "M1", "md_name": "감초"},
+    ]))
+
+    with patch("app.services.pipeline.extract_mentioned_herbs", AsyncMock(return_value=["감초"])):
+        with patch("app.services.pipeline.smart_search", smart_search_mock):
+            await _step_post_cards(parsed, "감초", [], None, redis, "ch")
+
+    # notice는 제외, 정상 1건만 발행
+    assert redis.publish.await_count == 1
+    payload = json.loads(redis.publish.await_args_list[0].args[1])
+    assert payload["data"].get("md_code") == "M1"
 
 
 @pytest.mark.asyncio
