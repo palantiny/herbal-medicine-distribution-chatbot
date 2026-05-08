@@ -165,15 +165,20 @@ async def _step_llm2(question: str, chat_history: str, extraction, hint: SqlHint
     return parsed
 
 
-async def _step_execute(parsed: Llm2Output, cfcode: str | None, redis: Redis, channel: str) -> str:
-    """DB_FIRST/SQL 모드에서만 호출. KNOWLEDGE_FIRST는 호출하지 않는다."""
+async def _step_execute(
+    parsed: Llm2Output, cfcode: str | None, redis: Redis, channel: str
+) -> tuple[str, list[dict]]:
+    """DB_FIRST/SQL 모드에서만 호출. KNOWLEDGE_FIRST는 호출하지 않는다.
+    Returns: (formatted_text, raw_items). raw_items는 DB_FIRST의 카드 발행에 사용.
+    """
     if parsed.mode == "SQL":
         if not parsed.sql:
             logger.warning("LLM2: mode=SQL이지만 sql=None")
-            return ""
+            return "", []
         await _publish_status(redis, channel, "DB 조회 중...")
         sql = parsed.sql.replace("{cfcode}", cfcode or "").replace("{{cfcode}}", cfcode or "")
-        return await _execute_sql_via_redis(sql, redis)
+        text = await _execute_sql_via_redis(sql, redis)
+        return text, []
 
     if parsed.mode == "DB_FIRST":
         await _publish_status(redis, channel, "약재 데이터 조회 중...")
@@ -186,12 +191,14 @@ async def _step_execute(parsed: Llm2Output, cfcode: str | None, redis: Redis, ch
                 origin=spec.origin,
                 cfcode=cfcode,
             )
-            return format_djmedi_result(api_code, items)
+            text = format_djmedi_result(api_code, items)
+            real_items = [i for i in items if i.get("_type") != "notice"]
+            return text, real_items
         except Exception as e:
             logger.exception("DJMEDI execute error: %s", e)
-            return "외부 약재 데이터 조회에 실패했습니다."
+            return "외부 약재 데이터 조회에 실패했습니다.", []
 
-    return ""
+    return "", []
 
 
 def _step_prefetch_monograph(parsed: Llm2Output, hint: SqlHint) -> str:
@@ -229,38 +236,59 @@ async def _step_llm3(
 async def _step_post_cards(
     parsed: Llm2Output,
     answer_text: str,
+    db_first_items: list[dict],
     cfcode: str | None,
     redis: Redis,
     channel: str,
 ) -> None:
-    """KNOWLEDGE_FIRST에서 답변 종료 후 멘션된 약재를 DJMEDI에서 조회해 herb_card 이벤트 발행."""
-    if parsed.mode != "KNOWLEDGE_FIRST":
+    """답변 종료 후 herb_card SSE 이벤트 발행.
+
+    KNOWLEDGE_FIRST: 답변 텍스트에서 약재명 추출 → DJMEDI에서 조회 → 카드 발행
+    DB_FIRST: _step_execute가 보존한 raw items를 그대로 카드로 발행
+    SQL: 카드 발행 안 함
+    """
+    if parsed.mode == "DB_FIRST":
+        for item in db_first_items:
+            herb_name = item.get("md_name") or item.get("mm_name") or ""
+            await _emit_card_event(redis, channel, herb_name, item)
         return
-    if not answer_text or not answer_text.strip():
-        return
-    herbs = await extract_mentioned_herbs(answer_text)
-    if not herbs:
-        return
-    for herb_name in herbs:
-        try:
-            api_code, items = await smart_search(
-                intent="get_herb_by_name",
-                herb_name=herb_name,
-                cfcode=cfcode,
-            )
-            real_items = [i for i in items if i.get("_type") != "notice"]
-            if not real_items:
-                continue
-            for it in real_items:
-                await redis.publish(
-                    channel,
-                    json.dumps(
-                        {"type": "herb_card", "herb_name": herb_name, "data": it},
-                        ensure_ascii=False,
-                    ),
-                )
-        except Exception as e:
-            logger.warning("herb_card 조회 실패 (herb=%s): %s", herb_name, e)
+
+    if parsed.mode == "KNOWLEDGE_FIRST":
+        if not answer_text or not answer_text.strip():
+            return
+        herbs = await extract_mentioned_herbs(answer_text)
+        if not herbs:
+            return
+        for herb_name in herbs:
+            try:
+                if cfcode:
+                    api_code, items = await smart_search(
+                        intent="get_my_medicines",
+                        herb_name=herb_name,
+                        cfcode=cfcode,
+                    )
+                else:
+                    api_code, items = await smart_search(
+                        intent="get_herb_by_name",
+                        herb_name=herb_name,
+                        cfcode=cfcode,
+                    )
+                real_items = [i for i in items if i.get("_type") != "notice"]
+                for item in real_items:
+                    await _emit_card_event(redis, channel, herb_name, item)
+            except Exception as e:
+                logger.warning("herb_card 조회 실패 (herb=%s): %s", herb_name, e)
+
+
+async def _emit_card_event(redis: Redis, channel: str, herb_name: str, data: dict) -> None:
+    """herb_card SSE 이벤트 1건 발행."""
+    await redis.publish(
+        channel,
+        json.dumps(
+            {"type": "herb_card", "herb_name": herb_name, "data": data},
+            ensure_ascii=False,
+        ),
+    )
 
 
 # ── 진입점 ────────────────────────────────────────────────────────────────────
@@ -277,9 +305,9 @@ async def run_pipeline(
     parsed = await _step_llm2(question, chat_history, extraction, hint, cfcode)
 
     monograph_block = _step_prefetch_monograph(parsed, hint)
-    data_result = await _step_execute(parsed, cfcode, redis, channel)
+    data_result, db_first_items = await _step_execute(parsed, cfcode, redis, channel)
 
     answer = await _step_llm3(parsed, data_result, monograph_block, question, chat_history, redis, channel)
 
-    await _step_post_cards(parsed, answer, cfcode, redis, channel)
+    await _step_post_cards(parsed, answer, db_first_items, cfcode, redis, channel)
     return answer
