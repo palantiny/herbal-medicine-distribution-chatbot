@@ -191,7 +191,7 @@ async def find_md_medi_by_herb_name(herb_name: str) -> list[str]:
     for result in results:
         if isinstance(result, list):
             for item in result:
-                if herb_name in item.get("md_name", ""):
+                if herb_name in (item.get("md_name") or ""):
                     md_medi = item.get("md_medi", "")
                     if md_medi:
                         md_medi_set.add(md_medi)
