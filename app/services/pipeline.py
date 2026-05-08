@@ -61,10 +61,11 @@ class DjmediQuerySpec(BaseModel):
 
 
 class Llm2Output(BaseModel):
-    mode: Literal["DIRECT_ANSWER", "SQL", "DJMEDI_API"] = Field(description="처리 방식")
+    mode: Literal["KNOWLEDGE_FIRST", "DB_FIRST", "SQL"] = Field(description="처리 방식")
     sql: str | None = Field(default=None, description="mode=SQL일 때 SELECT 쿼리")
-    direct_answer: str | None = Field(default=None, description="mode=DIRECT_ANSWER일 때 답변")
-    djmedi_query: DjmediQuerySpec | None = Field(default=None, description="mode=DJMEDI_API일 때 조회 스펙")
+    djmedi_query: DjmediQuerySpec | None = Field(
+        default=None, description="mode=DB_FIRST일 때 DJMEDI 조회 스펙"
+    )
     reason: str = Field(description="mode 선택 이유 (내부 로깅용)")
 
 
@@ -155,16 +156,8 @@ async def _step_llm2(question: str, chat_history: str, extraction, hint: SqlHint
         parsed = None
 
     if parsed is None:
-        herb = next((e.surface for e in (extraction.entities if extraction else []) if e.slot == "herb_name"), None)
-        if herb and cfcode:
-            logger.warning("LLM2 파싱 실패 → DJMEDI fallback (herb=%s)", herb)
-            return Llm2Output(
-                mode="DJMEDI_API",
-                djmedi_query=DjmediQuerySpec(intent="get_my_medicines", herb_name=herb),
-                reason="LLM2 파싱 실패 fallback",
-            )
-        logger.warning("LLM2 파싱 실패 → DIRECT_ANSWER fallback")
-        return Llm2Output(mode="DIRECT_ANSWER", reason="LLM2 파싱 실패 fallback")
+        logger.warning("LLM2 파싱 실패 → KNOWLEDGE_FIRST fallback")
+        return Llm2Output(mode="KNOWLEDGE_FIRST", reason="LLM2 파싱 실패 fallback")
 
     logger.info("LLM2: mode=%s reason=%.100s", parsed.mode, parsed.reason or "")
     return parsed
