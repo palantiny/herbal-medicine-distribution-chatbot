@@ -35,5 +35,6 @@ async def process_message(
         cfcode=cfcode,
     )
 
+    # run_pipeline 내부에서 token / herb_card 이벤트가 모두 발행된 뒤 end 발행
     await redis.publish(channel, json.dumps({"type": "end", "content": ""}, ensure_ascii=False))
     await chat_repo.save(session_id, user_id, "assistant", final_answer)
