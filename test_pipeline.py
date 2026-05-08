@@ -166,6 +166,39 @@ async def test_llm3(data_result: str):
 
 
 # ──────────────────────────────────────────────────────────
+# KNOWLEDGE_FIRST 시나리오 — 모노그래프 + 사후 카드
+# ──────────────────────────────────────────────────────────
+async def test_knowledge_first():
+    from redis.asyncio import Redis
+    from app.services.pipeline import run_pipeline
+
+    print(f"\n{'━'*60}")
+    print("KNOWLEDGE_FIRST │ 모노그래프 + 사후 카드 부착")
+    print(SEP)
+    print(f"  질문: {QUESTION}")
+
+    redis = Redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379/0"), decode_responses=True)
+    channel = "smoke:knowledge_first"
+
+    pubsub = redis.pubsub()
+    await pubsub.subscribe(channel)
+
+    async def consume():
+        async for msg in pubsub.listen():
+            if msg.get("type") == "message":
+                print(f"  ← {msg['data'][:200]}")
+
+    consume_task = asyncio.create_task(consume())
+    try:
+        answer = await run_pipeline(redis, channel, "(이전 대화 없음)", QUESTION, CFCODE)
+        print(f"\n  최종 답변: {answer[:300]}...")
+    finally:
+        consume_task.cancel()
+        await pubsub.unsubscribe(channel)
+        await redis.close()
+
+
+# ──────────────────────────────────────────────────────────
 # Main
 # ──────────────────────────────────────────────────────────
 async def main():
@@ -174,6 +207,10 @@ async def main():
     print(f"  질문  : {QUESTION}")
     print(f"  cfcode: {CFCODE}")
     print(f"{'━'*60}")
+
+    if len(sys.argv) > 3 and sys.argv[3] == "knowledge":
+        await test_knowledge_first()
+        return
 
     extraction  = await test_llm1()
     hint        = test_bm25(extraction)
