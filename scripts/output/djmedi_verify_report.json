@@ -1,0 +1,1060 @@
+{
+  "base_url": "https://devapi.djmedi.net/djherb/",
+  "results": {
+    "herbmaker": {
+      "resultCode": "200",
+      "field_check": {
+        "sample_count": 247,
+        "first_item_keys": [
+          "mk_code",
+          "mk_name"
+        ],
+        "missing": [],
+        "extra": []
+      },
+      "makers": [
+        {
+          "mk_code": "0544",
+          "mk_name": "(주)비봉허브"
+        },
+        {
+          "mk_code": "0606",
+          "mk_name": "(주)신흥제약"
+        },
+        {
+          "mk_code": "0607",
+          "mk_name": "대영제약(주)"
+        },
+        {
+          "mk_code": "0608",
+          "mk_name": "(주)세화당"
+        },
+        {
+          "mk_code": "0609",
+          "mk_name": "농업회사법인(주)광덕"
+        },
+        {
+          "mk_code": "0610",
+          "mk_name": "한약인주식회사"
+        },
+        {
+          "mk_code": "0611",
+          "mk_name": "산들초제약 주식회사"
+        },
+        {
+          "mk_code": "0612",
+          "mk_name": "주식회사 올본"
+        },
+        {
+          "mk_code": "0613",
+          "mk_name": "(주)옥천당"
+        },
+        {
+          "mk_code": "0614",
+          "mk_name": "(주)보양제약"
+        },
+        {
+          "mk_code": "0615",
+          "mk_name": "천일신약"
+        },
+        {
+          "mk_code": "0616",
+          "mk_name": "(주)농림생약"
+        },
+        {
+          "mk_code": "0617",
+          "mk_name": "선일생약 주식회사"
+        },
+        {
+          "mk_code": "0618",
+          "mk_name": "농협경제지주(주) 한국인삼검사소"
+        },
+        {
+          "mk_code": "0619",
+          "mk_name": "씨케이주식회사"
+        },
+        {
+          "mk_code": "0620",
+          "mk_name": "아쎈코리아(주)"
+        },
+        {
+          "mk_code": "0621",
+          "mk_name": "(주)한국국일당"
+        },
+        {
+          "mk_code": "0622",
+          "mk_name": "주식회사 퓨어마인드 농업회사법인"
+        },
+        {
+          "mk_code": "0623",
+          "mk_name": "(주)한퓨어"
+        },
+        {
+          "mk_code": "0624",
+          "mk_name": "주식회사휴먼허브"
+        },
+        {
+          "mk_code": "0625",
+          "mk_name": "청웅제약"
+        },
+        {
+          "mk_code": "0626",
+          "mk_name": "주식회사 엔탭허브"
+        },
+        {
+          "mk_code": "0627",
+          "mk_name": "대명제약 주식회사"
+        },
+        {
+          "mk_code": "0628",
+          "mk_name": "(유)대효제약"
+        },
+        {
+          "mk_code": "0629",
+          "mk_name": "경동무약"
+        },
+        {
+          "mk_code": "0630",
+          "mk_name": "한국지엠피 주식회사"
+        },
+        {
+          "mk_code": "0631",
+          "mk_name": "주식회사 바른한방제약"
+        },
+        {
+          "mk_code": "0632",
+          "mk_name": "주식회사 자담생약"
+        },
+        {
+          "mk_code": "0633",
+          "mk_name": "농업회사법인다온허브주식회사"
+        },
+        {
+          "mk_code": "0634",
+          "mk_name": "송산제약(주)"
+        },
+        {
+          "mk_code": "0635",
+          "mk_name": "주식회사 삼인제약"
+        },
+        {
+          "mk_code": "0637",
+          "mk_name": "(주)삼원제약"
+        },
+        {
+          "mk_code": "0638",
+          "mk_name": "(주)태극인"
+        },
+        {
+          "mk_code": "0639",
+          "mk_name": "송학약초영농조합법인"
+        },
+        {
+          "mk_code": "0640",
+          "mk_name": "(주)광명생약"
+        },
+        {
+          "mk_code": "0641",
+          "mk_name": "주식회사 광명당제약"
+        },
+        {
+          "mk_code": "0642",
+          "mk_name": "해동한방제약(주)"
+        },
+        {
+          "mk_code": "0643",
+          "mk_name": "대한한약 협동조합"
+        },
+        {
+          "mk_code": "0644",
+          "mk_name": "(주)참들제약"
+        },
+        {
+          "mk_code": "0645",
+          "mk_name": "주식회사 나음"
+        },
+        {
+          "mk_code": "0646",
+          "mk_name": "(주)광덕생약"
+        },
+        {
+          "mk_code": "0647",
+          "mk_name": "형율제약 주식회사"
+        },
+        {
+          "mk_code": "0648",
+          "mk_name": "(주)현진제약"
+        },
+        {
+          "mk_code": "0649",
+          "mk_name": "칠보농협옹동제약"
+        },
+        {
+          "mk_code": "0650",
+          "mk_name": "원창제약"
+        },
+        {
+          "mk_code": "0651",
+          "mk_name": "영천약초도매시장주식회사"
+        },
+        {
+          "mk_code": "0652",
+          "mk_name": "주식회사 씨와이"
+        },
+        {
+          "mk_code": "0654",
+          "mk_name": "부야주식회사"
+        },
+        {
+          "mk_code": "0655",
+          "mk_name": "덕인제약주식회사"
+        },
+        {
+          "mk_code": "0656",
+          "mk_name": "새롬제약(주)"
+        },
+        {
+          "mk_code": "0657",
+          "mk_name": "한스약품 주식회사"
+        },
+        {
+          "mk_code": "0659",
+          "mk_name": "한솔제약(주)"
+        },
+        {
+          "mk_code": "0660",
+          "mk_name": "주식회사 이풀잎제약"
+        },
+        {
+          "mk_code": "0661",
+          "mk_name": "(주)화림제약"
+        },
+        {
+          "mk_code": "0662",
+          "mk_name": "한도제약"
+        },
+        {
+          "mk_code": "0663",
+          "mk_name": "동우당제약주식회사"
+        },
+        {
+          "mk_code": "0664",
+          "mk_name": "주식회사 그린명품제약"
+        },
+        {
+          "mk_code": "0665",
+          "mk_name": "(주)허브팜"
+        },
+        {
+          "mk_code": "0666",
+          "mk_name": "대연제약"
+        },
+        {
+          "mk_code": "0667",
+          "mk_name": "보국약품(주)"
+        },
+        {
+          "mk_code": "0668",
+          "mk_name": "농업회사법인 주식회사 월드허브"
+        },
+        {
+          "mk_code": "0669",
+          "mk_name": "대한생약제품(주)"
+        },
+        {
+          "mk_code": "0670",
+          "mk_name": "삼의제약"
+        },
+        {
+          "mk_code": "0671",
+          "mk_name": "(주)산야초로"
+        },
+        {
+          "mk_code": "0672",
+          "mk_name": "(주)동양허브"
+        },
+        {
+          "mk_code": "0673",
+          "mk_name": "고강제약"
+        },
+        {
+          "mk_code": "0674",
+          "mk_name": "참조은제약"
+        },
+        {
+          "mk_code": "0676",
+          "mk_name": "녹원제약(주)"
+        },
+        {
+          "mk_code": "0677",
+          "mk_name": "농업회사법인주식회사디앤허브"
+        },
+        {
+          "mk_code": "0678",
+          "mk_name": "(주)남이제약"
+        },
+        {
+          "mk_code": "0679",
+          "mk_name": "농업회사법인 풍산주식회사"
+        },
+        {
+          "mk_code": "0680",
+          "mk_name": "학교법인 경희학원(경희한약)"
+        },
+        {
+          "mk_code": "0681",
+          "mk_name": "대구약령제약주식회사"
+        },
+        {
+          "mk_code": "0682",
+          "mk_name": "계림제약"
+        },
+        {
+          "mk_code": "0683",
+          "mk_name": "모닝제약"
+        },
+        {
+          "mk_code": "0687",
+          "mk_name": "(주)푸른무약"
+        },
+        {
+          "mk_code": "0690",
+          "mk_name": "(주)한동허브"
+        },
+        {
+          "mk_code": "6999",
+          "mk_name": "전업소"
+        },
+        {
+          "mk_code": "8000",
+          "mk_name": "본사"
+        },
+        {
+          "mk_code": "8001",
+          "mk_name": "지오허브"
+        },
+        {
+          "mk_code": "8002",
+          "mk_name": "청담허브"
+        },
+        {
+          "mk_code": "8003",
+          "mk_name": "한국한약유통협회"
+        },
+        {
+          "mk_code": "8004",
+          "mk_name": "신상물산"
+        },
+        {
+          "mk_code": "8005",
+          "mk_name": "미륭생약"
+        },
+        {
+          "mk_code": "8009",
+          "mk_name": "홍익"
+        },
+        {
+          "mk_code": "8012",
+          "mk_name": "대흥농산"
+        },
+        {
+          "mk_code": "8013",
+          "mk_name": "일등라이스"
+        },
+        {
+          "mk_code": "8015",
+          "mk_name": "한뜻약초"
+        },
+        {
+          "mk_code": "8017",
+          "mk_name": "서울약령시협회"
+        },
+        {
+          "mk_code": "8018",
+          "mk_name": "국보홍삼제조창"
+        },
+        {
+          "mk_code": "8019",
+          "mk_name": "정농인삼영농조합"
+        },
+        {
+          "mk_code": "8020",
+          "mk_name": "한일금박"
+        },
+        {
+          "mk_code": "8021",
+          "mk_name": "(주)명가녹용"
+        },
+        {
+          "mk_code": "8022",
+          "mk_name": "(주)한국수출입"
+        },
+        {
+          "mk_code": "8023",
+          "mk_name": "한국GMP"
+        },
+        {
+          "mk_code": "8024",
+          "mk_name": "태봉제약"
+        },
+        {
+          "mk_code": "8025",
+          "mk_name": "해동홍삼가공소"
+        },
+        {
+          "mk_code": "0684",
+          "mk_name": "(주)동양한방제약"
+        },
+        {
+          "mk_code": "0675",
+          "mk_name": "(주)자연세상"
+        },
+        {
+          "mk_code": "0700",
+          "mk_name": "주식회사조화제약"
+        },
+        {
+          "mk_code": "0693",
+          "mk_name": "(주)청솔생약"
+        },
+        {
+          "mk_code": "0708",
+          "mk_name": "태창제약주식회사"
+        },
+        {
+          "mk_code": "0701",
+          "mk_name": "(주)케이앤씨디어트레이드"
+        },
+        {
+          "mk_code": "0698",
+          "mk_name": "다원제약(주)"
+        },
+        {
+          "mk_code": "0653",
+          "mk_name": "남영제약영농조합"
+        },
+        {
+          "mk_code": "0710",
+          "mk_name": "삼보제약"
+        },
+        {
+          "mk_code": "0703",
+          "mk_name": "상녹제약(주)"
+        },
+        {
+          "mk_code": "0686",
+          "mk_name": "주신제약(주)"
+        },
+        {
+          "mk_code": "0702",
+          "mk_name": "케이진바이오제약(주)"
+        },
+        {
+          "mk_code": "0696",
+          "mk_name": "(주)온누리바이오생약"
+        },
+        {
+          "mk_code": "0709",
+          "mk_name": "(주)용보제약"
+        },
+        {
+          "mk_code": "0636",
+          "mk_name": "동화무약 주식회사"
+        },
+        {
+          "mk_code": "0705",
+          "mk_name": "주식회사 원용제약"
+        },
+        {
+          "mk_code": "0692",
+          "mk_name": "충남제약(주)"
+        },
+        {
+          "mk_code": "0688",
+          "mk_name": "화용제약(주)"
+        },
+        {
+          "mk_code": "0691",
+          "mk_name": "우성제약(주)"
+        },
+        {
+          "mk_code": "0707",
+          "mk_name": "주식회사 자은생약"
+        },
+        {
+          "mk_code": "0699",
+          "mk_name": "백년제약"
+        },
+        {
+          "mk_code": "8027",
+          "mk_name": "네이버"
+        },
+        {
+          "mk_code": "8028",
+          "mk_name": "선일제약"
+        },
+        {
+          "mk_code": "8029",
+          "mk_name": "오뚜기"
+        },
+        {
+          "mk_code": "8030",
+          "mk_name": "내몸에닿"
+        },
+        {
+          "mk_code": "8031",
+          "mk_name": "설악산밀봉원"
+        },
+        {
+          "mk_code": "8032",
+          "mk_name": "본초원"
+        },
+        {
+          "mk_code": "8033",
+          "mk_name": "왕비천하늘"
+        },
+        {
+          "mk_code": "8034",
+          "mk_name": "산동.동아"
+        },
+        {
+          "mk_code": "8035",
+          "mk_name": "쿠팡"
+        },
+        {
+          "mk_code": "8036",
+          "mk_name": "백화수복"
+        },
+        {
+          "mk_code": "8037",
+          "mk_name": "옴니허브"
+        },
+        {
+          "mk_code": "8038",
+          "mk_name": "바른한약제약"
+        },
+        {
+          "mk_code": "8039",
+          "mk_name": "나눔제약"
+        },
+        {
+          "mk_code": "8040",
+          "mk_name": "대한바이오팜"
+        },
+        {
+          "mk_code": "8041",
+          "mk_name": "안상규벌꿀"
+        },
+        {
+          "mk_code": "8042",
+          "mk_name": "대광약초"
+        },
+        {
+          "mk_code": "8043",
+          "mk_name": "제일생약"
+        },
+        {
+          "mk_code": "8044",
+          "mk_name": "자연닮음"
+        },
+        {
+          "mk_code": "8045",
+          "mk_name": "형제약초"
+        },
+        {
+          "mk_code": "8046",
+          "mk_name": "우소법제"
+        },
+        {
+          "mk_code": "8047",
+          "mk_name": "힐링허브"
+        },
+        {
+          "mk_code": "8048",
+          "mk_name": "우소"
+        },
+        {
+          "mk_code": "8049",
+          "mk_name": "영창건재약업사"
+        },
+        {
+          "mk_code": "8050",
+          "mk_name": "채움생"
+        },
+        {
+          "mk_code": "8051",
+          "mk_name": "동덕제약"
+        },
+        {
+          "mk_code": "8052",
+          "mk_name": "흥일허브"
+        },
+        {
+          "mk_code": "8053",
+          "mk_name": "침향농장"
+        },
+        {
+          "mk_code": "8054",
+          "mk_name": "김수흔봉개꿀"
+        },
+        {
+          "mk_code": "8055",
+          "mk_name": "백설"
+        },
+        {
+          "mk_code": "8056",
+          "mk_name": "거농상사"
+        },
+        {
+          "mk_code": "8057",
+          "mk_name": "서울탁주제조협회"
+        },
+        {
+          "mk_code": "8058",
+          "mk_name": "(주)새롬바이오"
+        },
+        {
+          "mk_code": "8059",
+          "mk_name": "한의랑"
+        },
+        {
+          "mk_code": "8060",
+          "mk_name": "경남제약"
+        },
+        {
+          "mk_code": "0685",
+          "mk_name": "이담제약주식회사"
+        },
+        {
+          "mk_code": "0726",
+          "mk_name": "(주)녹원유통사업단"
+        },
+        {
+          "mk_code": "0717",
+          "mk_name": "우성생약주식회사"
+        },
+        {
+          "mk_code": "0715",
+          "mk_name": "주식회사 이룡제약"
+        },
+        {
+          "mk_code": "0716",
+          "mk_name": "한사랑제약"
+        },
+        {
+          "mk_code": "0719",
+          "mk_name": "신보성제약"
+        },
+        {
+          "mk_code": "0714",
+          "mk_name": "주연"
+        },
+        {
+          "mk_code": "0722",
+          "mk_name": "중경제약"
+        },
+        {
+          "mk_code": "0729",
+          "mk_name": "주식회사시원생약"
+        },
+        {
+          "mk_code": "0721",
+          "mk_name": "고려수제약"
+        },
+        {
+          "mk_code": "0713",
+          "mk_name": "주식회사 가온제약"
+        },
+        {
+          "mk_code": "0704",
+          "mk_name": "주식회사 진수녹용"
+        },
+        {
+          "mk_code": "0727",
+          "mk_name": "안동농협 한약재유통센터"
+        },
+        {
+          "mk_code": "0711",
+          "mk_name": "명보제약 주식회사"
+        },
+        {
+          "mk_code": "0723",
+          "mk_name": "(주)디에이치지글로벌"
+        },
+        {
+          "mk_code": "0725",
+          "mk_name": "유진통상"
+        },
+        {
+          "mk_code": "0712",
+          "mk_name": "주식회사 이룸제약법인"
+        },
+        {
+          "mk_code": "0728",
+          "mk_name": "오도제약 주식회사"
+        },
+        {
+          "mk_code": "8061",
+          "mk_name": "임제당"
+        },
+        {
+          "mk_code": "0706",
+          "mk_name": "태봉제약"
+        },
+        {
+          "mk_code": "8062",
+          "mk_name": "삼양사"
+        },
+        {
+          "mk_code": "8063",
+          "mk_name": "대상"
+        },
+        {
+          "mk_code": "8064",
+          "mk_name": "엔아이에프"
+        },
+        {
+          "mk_code": "8065",
+          "mk_name": "케이비바이오텍"
+        },
+        {
+          "mk_code": "8066",
+          "mk_name": "보락(제일약품)"
+        },
+        {
+          "mk_code": "8067",
+          "mk_name": "유니메드"
+        },
+        {
+          "mk_code": "8068",
+          "mk_name": "주식회사우리생약"
+        },
+        {
+          "mk_code": "8069",
+          "mk_name": "한의사랑"
+        },
+        {
+          "mk_code": "8070",
+          "mk_name": "마한물산(주)"
+        },
+        {
+          "mk_code": "8071",
+          "mk_name": "추천처방"
+        },
+        {
+          "mk_code": "0739",
+          "mk_name": "(주)옴니허브"
+        },
+        {
+          "mk_code": "0735",
+          "mk_name": "태안약업(주)"
+        },
+        {
+          "mk_code": "0718",
+          "mk_name": "주식회사 대원알디티"
+        },
+        {
+          "mk_code": "8072",
+          "mk_name": "영월양봉원"
+        },
+        {
+          "mk_code": "8073",
+          "mk_name": "㈜롯데칠성음료"
+        },
+        {
+          "mk_code": "8074",
+          "mk_name": "한국인"
+        },
+        {
+          "mk_code": "8076",
+          "mk_name": "도솔한방병원"
+        },
+        {
+          "mk_code": "8077",
+          "mk_name": "한상복(식품)"
+        },
+        {
+          "mk_code": "8078",
+          "mk_name": "부산대 한방병원"
+        },
+        {
+          "mk_code": "8079",
+          "mk_name": "황골조청"
+        },
+        {
+          "mk_code": "8080",
+          "mk_name": "한의원"
+        },
+        {
+          "mk_code": "0740",
+          "mk_name": "정원제약"
+        },
+        {
+          "mk_code": "8081",
+          "mk_name": "온원외탕전실"
+        },
+        {
+          "mk_code": "8082",
+          "mk_name": "바이오닷"
+        },
+        {
+          "mk_code": "8083",
+          "mk_name": "그린바이오"
+        },
+        {
+          "mk_code": "8084",
+          "mk_name": "축령산양봉"
+        },
+        {
+          "mk_code": "8085",
+          "mk_name": "청연원외탕전"
+        },
+        {
+          "mk_code": "8086",
+          "mk_name": "청정원"
+        },
+        {
+          "mk_code": "8087",
+          "mk_name": "제일한방"
+        },
+        {
+          "mk_code": "8088",
+          "mk_name": "현대약품"
+        },
+        {
+          "mk_code": "8089",
+          "mk_name": "한약사랑"
+        },
+        {
+          "mk_code": "8090",
+          "mk_name": "M바이오"
+        },
+        {
+          "mk_code": "8091",
+          "mk_name": "동양금박"
+        },
+        {
+          "mk_code": "8092",
+          "mk_name": "바른본초원"
+        },
+        {
+          "mk_code": "8093",
+          "mk_name": "팜스마켓"
+        },
+        {
+          "mk_code": "8094",
+          "mk_name": "여주농협"
+        },
+        {
+          "mk_code": "8095",
+          "mk_name": "좋은쌀 좋은사람"
+        },
+        {
+          "mk_code": "8096",
+          "mk_name": "KGC예본"
+        },
+        {
+          "mk_code": "8097",
+          "mk_name": "해태"
+        },
+        {
+          "mk_code": "8098",
+          "mk_name": "박연봉"
+        },
+        {
+          "mk_code": "8099",
+          "mk_name": "서울우유"
+        },
+        {
+          "mk_code": "8100",
+          "mk_name": "축령산양봉"
+        },
+        {
+          "mk_code": "8101",
+          "mk_name": "현대약품"
+        },
+        {
+          "mk_code": "8102",
+          "mk_name": "진로"
+        },
+        {
+          "mk_code": "8121",
+          "mk_name": "청연법제"
+        },
+        {
+          "mk_code": "9001",
+          "mk_name": "디제이메디"
+        },
+        {
+          "mk_code": "8104",
+          "mk_name": "동서한약"
+        },
+        {
+          "mk_code": "8103",
+          "mk_name": "예봉엔씨피"
+        },
+        {
+          "mk_code": "8106",
+          "mk_name": "으뜸생약"
+        },
+        {
+          "mk_code": "8107",
+          "mk_name": "골드코리아"
+        },
+        {
+          "mk_code": "8109",
+          "mk_name": "보성녹용"
+        },
+        {
+          "mk_code": "9002",
+          "mk_name": "디제이허브"
+        },
+        {
+          "mk_code": "8111",
+          "mk_name": "청림농원"
+        },
+        {
+          "mk_code": "8112",
+          "mk_name": "진영제약"
+        },
+        {
+          "mk_code": "8113",
+          "mk_name": "고이아사"
+        },
+        {
+          "mk_code": "8114",
+          "mk_name": "부영약업사"
+        },
+        {
+          "mk_code": "8115",
+          "mk_name": "약령향"
+        },
+        {
+          "mk_code": "8116",
+          "mk_name": "홍삼백작소"
+        },
+        {
+          "mk_code": "0755",
+          "mk_name": "우향제약"
+        },
+        {
+          "mk_code": "0767",
+          "mk_name": "파이토지노믹스주식회사"
+        },
+        {
+          "mk_code": "0720",
+          "mk_name": "보성제약"
+        },
+        {
+          "mk_code": "8117",
+          "mk_name": "CJ제일제당"
+        },
+        {
+          "mk_code": "0770",
+          "mk_name": "건향제약주식회사"
+        },
+        {
+          "mk_code": "8118",
+          "mk_name": "멀티페이스코리아"
+        },
+        {
+          "mk_code": "8119",
+          "mk_name": "임제당"
+        },
+        {
+          "mk_code": "9999",
+          "mk_name": "전업소"
+        },
+        {
+          "mk_code": "0781",
+          "mk_name": "대한쎌팜 주식회사"
+        },
+        {
+          "mk_code": "0774",
+          "mk_name": "(주)대한녹용수출입법인"
+        },
+        {
+          "mk_code": "8120",
+          "mk_name": "제중약업사"
+        },
+        {
+          "mk_code": "0783",
+          "mk_name": "대호제약 주식회사"
+        },
+        {
+          "mk_code": "0787",
+          "mk_name": "(주)보제원"
+        },
+        {
+          "mk_code": "0785",
+          "mk_name": "명가녹용주식회사"
+        },
+        {
+          "mk_code": "0788",
+          "mk_name": "주식회사 우성허브"
+        },
+        {
+          "mk_code": "0794",
+          "mk_name": "(주) 인티그레이션 전북지점"
+        },
+        {
+          "mk_code": "0801",
+          "mk_name": "(주)으뜸생약"
+        }
+      ]
+    },
+    "herbmedicine": {
+      "sample_mk_code": "0544",
+      "resultCode": "200",
+      "field_check": {
+        "sample_count": 2,
+        "first_item_keys": [
+          "md_code",
+          "md_medi",
+          "md_name",
+          "mk_code",
+          "mk_name"
+        ],
+        "missing": [],
+        "extra": []
+      },
+      "first_item": {
+        "md_code": "HD10337_31",
+        "md_medi": "3094H1AHM",
+        "md_name": "비봉허브녹용",
+        "mk_code": "0544",
+        "mk_name": "(주)비봉허브"
+      }
+    },
+    "membermedicine": {
+      "sample_md_medi": "3094H1AHM",
+      "sample_cfcode": "dj",
+      "resultCode": "200",
+      "field_check": {
+        "sample_count": 8,
+        "first_item_keys": [
+          "md_code",
+          "md_medi",
+          "md_name",
+          "mk_code",
+          "mk_name",
+          "mm_medicine",
+          "mm_name",
+          "mm_origin"
+        ],
+        "missing": [],
+        "extra": []
+      },
+      "first_item": {
+        "md_code": "HD10337_67",
+        "md_medi": "3094H1AHM",
+        "md_name": "녹용",
+        "mm_medicine": "HD10337_67KR",
+        "mm_name": "녹용틴크앰플",
+        "mm_origin": "한국",
+        "mk_code": "8066",
+        "mk_name": "보락(제일약품)"
+      }
+    }
+  }
+}
