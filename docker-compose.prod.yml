@@ -44,9 +44,6 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       REDIS_URL: redis://redis:6379/0
-      NEO4J_URI: ${NEO4J_URI}
-      NEO4J_USERNAME: ${NEO4J_USERNAME}
-      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       APP_ENV: production
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
@@ -54,6 +51,8 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
       DYNAMODB_TABLE_CHAT: ${DYNAMODB_TABLE_CHAT:-palantiny-chat-history}
+      DJMEDI_API_BASE_URL: ${DJMEDI_API_BASE_URL:-https://devapi.djmedi.net/djherb/}
+      DJMEDI_AUTH_KEY: ${DJMEDI_AUTH_KEY:-HERBfHShheT88iuYgNaDvDwgF9X5kBrJ}
     ports:
       - "8000:8000"
     restart: unless-stopped
@@ -69,15 +68,14 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       REDIS_URL: redis://redis:6379/0
-      NEO4J_URI: ${NEO4J_URI}
-      NEO4J_USERNAME: ${NEO4J_USERNAME}
-      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       APP_ENV: production
       AWS_REGION_NAME: ${AWS_REGION_NAME:-ap-northeast-2}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
       DYNAMODB_TABLE_CHAT: ${DYNAMODB_TABLE_CHAT:-palantiny-chat-history}
+      DJMEDI_API_BASE_URL: ${DJMEDI_API_BASE_URL:-https://devapi.djmedi.net/djherb/}
+      DJMEDI_AUTH_KEY: ${DJMEDI_AUTH_KEY:-HERBfHShheT88iuYgNaDvDwgF9X5kBrJ}
     restart: unless-stopped
     command: python -m app.workers.chat_main
     deploy:
