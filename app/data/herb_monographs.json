@@ -1,0 +1,1374 @@
+{
+  "_comment": "약재 모노그래프 사전. 키는 정규화된 약재명. scripts/build_monographs.py로 생성.",
+  "감초": {
+    "name_kr": "감초",
+    "name_latin": "Glycyrrhizae Radix et Rhizoma",
+    "sungmi": "甘平",
+    "guigyeong": [
+      "심",
+      "폐",
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "보비익기",
+      "윤폐",
+      "조화제약",
+      "해독",
+      "화중완급"
+    ],
+    "juchi": "비위허약증, 소화성궤양, 식물중독, 약독, 옹저창양, 인후종통",
+    "yongryang": "2~12g, 대량은 15~30g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "갈근": {
+    "name_kr": "갈근",
+    "name_latin": "Glycyrrhizae Radix et Rhizoma",
+    "sungmi": "甘辛平",
+    "guigyeong": [
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "해표약",
+      "발산풍열약",
+      "생진",
+      "승양지사",
+      "투진",
+      "해기퇴열"
+    ],
+    "juchi": "고혈압경항강통, 구갈, 마진불투, 설사, 소갈, 열리, 외감발열두통, 항배강통",
+    "yongryang": "6~12g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "강활": {
+    "name_kr": "강활",
+    "name_latin": "Radix et Rhizoma Notopterygii",
+    "sungmi": "辛苦溫",
+    "guigyeong": [
+      "膀",
+      "胱",
+      "肝",
+      "腎"
+    ],
+    "hyoneung": [
+      "解表藥",
+      "發散風寒藥"
+    ],
+    "juchi": "견배산통, 풍습비통, 풍한감모두통",
+    "yongryang": "3~15g",
+    "geumgi": "정기가 허한 경우에는 사용하지 말아야 한다.",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "강황": {
+    "name_kr": "강황",
+    "name_latin": "Curcuma longa",
+    "sungmi": "辛苦溫",
+    "guigyeong": [
+      "간",
+      "비"
+    ],
+    "hyoneung": [
+      "活血祛瘀藥"
+    ],
+    "juchi": "경폐(經閉), 미하(癓瘕), 심복비만창통(心腹痞滿脹痛), 질박종통(跌撲腫痛), 풍습견비동통(風濕肩臂疼痛)",
+    "yongryang": "4~12g, 외용시는 적당량을 쓴다.",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "건강": {
+    "name_kr": "건강",
+    "name_latin": "Zingiberis Rhizoma",
+    "sungmi": "辛熱",
+    "guigyeong": [
+      "비",
+      "위",
+      "폐"
+    ],
+    "hyoneung": [
+      "온중축한",
+      "회양통맥"
+    ],
+    "juchi": "심복냉통, 양허토뉵, 지랭맥미, 토사, 풍한습비, 하혈, 한음천해",
+    "yongryang": "2~6g",
+    "geumgi": "음허내열, 다한증에는 사용 금지",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "계지": {
+    "name_kr": "계지",
+    "name_latin": "Cinnamomi Ramulus",
+    "sungmi": "辛甘溫",
+    "guigyeong": [
+      "심",
+      "폐",
+      "방"
+    ],
+    "hyoneung": [
+      "발한해기",
+      "해표약"
+    ],
+    "juchi": "관절비통, 담음, 분돈, 수종, 심계, 완복냉통, 풍한감모, 혈한경폐",
+    "yongryang": "1.5~9g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "구기자": {
+    "name_kr": "구기자",
+    "name_latin": "Lycii Fructus",
+    "sungmi": "甘平",
+    "guigyeong": [
+      "간",
+      "신"
+    ],
+    "hyoneung": [
+      "보익약",
+      "보음약"
+    ],
+    "juchi": "간신음휴증(肝腎陰虧證), 견정(遣精), 두훈(頭暈), 목현(目眩), 목혼다루(目昏多淚), 소갈(消渴), 요칠산연(腰漆酸軟), 허로해수(虛勞咳嗽)",
+    "yongryang": "3~15g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "길경": {
+    "name_kr": "길경",
+    "name_latin": "Platycodonis Radix",
+    "sungmi": "苦辛平",
+    "guigyeong": [
+      "폐"
+    ],
+    "hyoneung": [
+      "화담지해",
+      "청화열담"
+    ],
+    "juchi": "담다(痰多), 인통음아(咽痛音啞), 창양농성불궤(瘡瘍膿成不潰), 폐옹토농(肺癰吐膿), 해수(咳嗽), 해수담다(咳嗽痰多), 흉민부창(胸悶不暢)",
+    "yongryang": "3~12g",
+    "geumgi": "기타 약제와의 배합 금기",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "녹용": {
+    "name_kr": "녹용",
+    "name_latin": "Cervi Parvum Cornu",
+    "sungmi": "甘鹹溫",
+    "guigyeong": [
+      "신",
+      "간"
+    ],
+    "hyoneung": [
+      "보익",
+      "강근골",
+      "보신양",
+      "익정혈",
+      "조충임",
+      "탁창독"
+    ],
+    "juchi": "근골위연, 불잉궁랭, 붕루대하, 신피, 양위활정, 외한, 요척냉통, 음저불렴, 이수, 현훈이명이롱",
+    "yongryang": "1~2g, 3~6g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": "코로 냄새를 맡아보면 안 된다."
+  },
+  "당귀": {
+    "name_kr": "당귀",
+    "name_latin": "Angelicae Gigantis Radix",
+    "sungmi": "甘辛温",
+    "guigyeong": [
+      "심",
+      "간",
+      "비"
+    ],
+    "hyoneung": [
+      "보혈화혈",
+      "윤조활장",
+      "조경지통"
+    ],
+    "juchi": "경폐복통(經閉腹痛), 붕루(崩漏), 옹저창양(癰疽瘡瘍), 월경부조(月經不調), 위비(痿痺), 장조변난(腸燥便難), 질타손상(跌打損傷), 징하결취(癥瘕結聚), 현훈(眩暈), 혈허두통(血虛頭痛)",
+    "yongryang": "3~24g, 대량은 60~120g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "대추": {
+    "name_kr": "대추",
+    "name_latin": "Ziziphi Jujubae Fructus",
+    "sungmi": "甘温",
+    "guigyeong": [
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "보비화위",
+      "익기생진",
+      "조영위",
+      "해약독"
+    ],
+    "juchi": "기혈생진부족, 부인장조, 비약변당, 심계, 심계정충, 영위불화, 위허식소, 정충",
+    "yongryang": "2~12g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "대황": {
+    "name_kr": "대황",
+    "name_latin": "Rheum palmatum",
+    "sungmi": "苦寒",
+    "guigyeong": [
+      "비",
+      "위",
+      "대장",
+      "간",
+      "심"
+    ],
+    "hyoneung": [
+      "사열통장",
+      "양혈해독",
+      "축어통경"
+    ],
+    "juchi": "목적(目赤), 사리불상(瀉痢不爽), 상소화도출혈(上消化道出血), 수화탕상(水火燙傷), 습열황달(濕熱黃疸), 실열변비(實熱便秘), 어혈경폐(瘀血經閉), 옹종정창(癰腫疔瘡), 인종(咽腫), 장옹복통(腸癰腹痛), 적체복통(積滯腹痛), 질타손상(跌打損傷), 혈열토뉵(血熱吐衄)",
+    "yongryang": "3~15g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": "사하(瀉下) 목적으로 사용할 때에는 오래 달이지 않아야 한다. 외용시는 적당량을 가루내어 환부에 붙인다."
+  },
+  "독활": {
+    "name_kr": "독활",
+    "name_latin": "Radix Angelicae Gigantis",
+    "sungmi": "辛苦温",
+    "guigyeong": [
+      "신",
+      "방"
+    ],
+    "hyoneung": [
+      "祛風濕藥",
+      "祛風濕止痺痛藥"
+    ],
+    "juchi": "관절굴신불리(關節屈伸不利), 두통신통(頭痛身痛), 오한발열(惡寒發熱), 요슬동통(腰膝疼痛), 지체침중(肢體沈重), 풍한습비(風寒濕痺)",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "두충": {
+    "name_kr": "두충",
+    "name_latin": "Du Zhong",
+    "sungmi": "甘微辛温",
+    "guigyeong": [
+      "肝",
+      "腎"
+    ],
+    "hyoneung": [
+      "補益藥",
+      "補陽藥"
+    ],
+    "juchi": "고혈압(高血壓), 소변여력(小便餘瀝), 요척산동(腰脊酸疼), 임신루혈(姙娠漏血), 족슬위약(足膝痿弱), 태동불안(胎動不安)",
+    "yongryang": "3~9g, 대량은 15~30g",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "마황": {
+    "name_kr": "마황",
+    "name_latin": "Ephedra sinica",
+    "sungmi": "辛微苦温",
+    "guigyeong": [
+      "폐",
+      "방",
+      "광"
+    ],
+    "hyoneung": [
+      "발한산한",
+      "선폐평천",
+      "윤폐지해",
+      "이수소종"
+    ],
+    "juchi": "기관지효천, 풍수부종, 풍한감모, 흉민천해",
+    "yongryang": "1.5~9g",
+    "geumgi": "과다복용 주의, 여름철 사용 주의",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "맥문동": {
+    "name_kr": "맥문동",
+    "name_latin": "Maidong",
+    "sungmi": "甘微苦微寒",
+    "guigyeong": [
+      "폐",
+      "위",
+      "심"
+    ],
+    "hyoneung": [
+      "양음윤폐",
+      "익위생진",
+      "청심제번"
+    ],
+    "juchi": "각혈(咯血), 변비(便秘), 소갈(消渴), 심번실면(心煩失眠), 열병상진(熱病傷津), 음허노수(陰虛勞嗽), 인건구조(咽乾口燥), 토혈(吐血), 폐옹(肺癰), 폐위(肺痿), 폐조건해(肺燥乾咳), 허로번열(虛勞煩熱)",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "목향": {
+    "name_kr": "목향",
+    "name_latin": "Aucklandia Lappa",
+    "sungmi": "辛苦温",
+    "guigyeong": [
+      "비",
+      "위",
+      "대장",
+      "삼초",
+      "담"
+    ],
+    "hyoneung": [
+      "행기지통",
+      "건비소식"
+    ],
+    "juchi": "불사음식, 사리후중, 식체불소, 흉완창통",
+    "yongryang": "1.5 ~ 9g (한국), 3 ~ 6g (중국), 1.5 ~ 6g (대만)",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "반하": {
+    "name_kr": "반하",
+    "name_latin": "Pinelliae Tuber",
+    "sungmi": "辛温有毒",
+    "guigyeong": [
+      "비",
+      "위",
+      "폐"
+    ],
+    "hyoneung": [
+      "화담지구",
+      "온화한담"
+    ],
+    "juchi": "구토반위, 담궐두통, 담다천해, 담음현계, 매핵기증, 생용옹종담핵, 풍담현훈, 흉완비민",
+    "yongryang": "4~12g, 대량은 15~30g",
+    "geumgi": "삼소 및 혈허자, 목구멍이 마르고 아픈 사람, 장이 말라 대변보기 어려운 사람, 땀이 많이 나는 사람은 모두 쓰면 안 된다.",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "방풍": {
+    "name_kr": "방풍",
+    "name_latin": "Saposhnikovia divaricata",
+    "sungmi": "辛甘温",
+    "guigyeong": [
+      "膀",
+      "肝",
+      "脾"
+    ],
+    "hyoneung": [
+      "解表藥",
+      "發散風寒藥"
+    ],
+    "juchi": "감모두통, 골절산통, 사지련급, 파상풍, 풍습비통, 풍진소양",
+    "yongryang": "2~12g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "백부자": {
+    "name_kr": "백부자",
+    "name_latin": "Bai Fu Zi",
+    "sungmi": "辛温有毒",
+    "guigyeong": [
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "化痰止咳平喘藥",
+      "温化寒痰藥"
+    ],
+    "juchi": "중풍담옹, 구안와사, 언어건삽, 담궐두통, 편정두통, 후비인통, 외치라력담핵, 독사교상",
+    "yongryang": "3~8g, 일반적으로 포제한 뒤에 사용하며, 외용시는 생품을 적당량 짓찧어서 고약처럼 졸이거나 가루내어 술에 개어 환부에 붙인다.",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "백지": {
+    "name_kr": "백지",
+    "name_latin": "Angelicae Dahuricae Radix",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "폐",
+      "위",
+      "대장"
+    ],
+    "hyoneung": [
+      "거풍제습",
+      "소종배농",
+      "조습지대",
+      "통규지통"
+    ],
+    "juchi": "독사교상, 두목혼통, 미릉골통, 비색, 비연, 비연유체, 아통, 옹저창양, 풍습비통, 피부소양, 한습대하",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "백출": {
+    "name_kr": "백출",
+    "name_latin": "Atractylodis Macrocephalae Rhizoma",
+    "sungmi": "苦甘温",
+    "guigyeong": [
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "건비익기",
+      "조습이수",
+      "지한안태"
+    ],
+    "juchi": "담음현훈, 복창설사, 비허식소, 수종, 자한, 태동불안",
+    "yongryang": "3~15g, 대량은 30~60g",
+    "geumgi": "자한(自汗)",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "복령": {
+    "name_kr": "복령",
+    "name_latin": "Poria",
+    "sungmi": "甘淡平",
+    "guigyeong": [
+      "심",
+      "폐",
+      "비",
+      "신"
+    ],
+    "hyoneung": [
+      "이수삼습",
+      "건비녕심"
+    ],
+    "juchi": "경계실면, 담음현계, 변당설사, 비허식소, 수종뇨소, 심신불안",
+    "yongryang": "10~20g",
+    "geumgi": "음허자에게 금기",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "복분자": {
+    "name_kr": "복분자",
+    "name_latin": "Rubus coreanus",
+    "sungmi": "甘酸溫",
+    "guigyeong": [
+      "신",
+      "방"
+    ],
+    "hyoneung": [
+      "고정",
+      "익신",
+      "축뇨"
+    ],
+    "juchi": "소변빈삭, 신허유뇨, 양위조설, 유정활정",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "빈랑자": {
+    "name_kr": "빈랑자",
+    "name_latin": "Arecae Semen",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "위",
+      "대장"
+    ],
+    "hyoneung": [
+      "구충약",
+      "강기",
+      "행수",
+      "절학"
+    ],
+    "juchi": "비대흡병, 충적복통, 적체사리, 이급후종, 수종각기",
+    "yongryang": "30~60g, 구충약으로는 40~100g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "사인": {
+    "name_kr": "사인",
+    "name_latin": "Amomi Fructus",
+    "sungmi": "辛溫",
+    "guigyeong": [
+      "비",
+      "위",
+      "신"
+    ],
+    "hyoneung": [
+      "온비지사",
+      "이기안태",
+      "화습개위"
+    ],
+    "juchi": "구토설사(嘔吐泄瀉), 비위허한(脾胃虛寒), 습탁중조(濕濁中阻), 완비불기(脘痞不飢), 임신오조(姙娠惡阻), 태동불안(胎動不安)",
+    "yongryang": "3~8g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "사향": {
+    "name_kr": "사향",
+    "name_latin": "Musk",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "심",
+      "비"
+    ],
+    "hyoneung": [
+      "개규성신",
+      "소종산결",
+      "최산하태",
+      "활혈거어"
+    ],
+    "juchi": "경폐, 기울폭궐, 난산사태, 비통마목, 심복폭통, 열병신혼, 옹종나력, 인후종통, 중악혼미, 중풍담궐, 질박상통, 징하",
+    "yongryang": "0.03 ~ 0.1g, 하루 3번",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "산사": {
+    "name_kr": "산사",
+    "name_latin": "Crataegi Fructus",
+    "sungmi": "酸甘微溫",
+    "guigyeong": [
+      "비",
+      "위",
+      "간"
+    ],
+    "hyoneung": [
+      "소식건위",
+      "행기산어"
+    ],
+    "juchi": "사리복통, 산기동통, 심복자통, 어혈경폐, 위완창만, 육식적체",
+    "yongryang": "4~20g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "산약": {
+    "name_kr": "산약",
+    "name_latin": "Dioscoreae Rhizoma",
+    "sungmi": "甘平",
+    "guigyeong": [
+      "비",
+      "폐",
+      "신"
+    ],
+    "hyoneung": [
+      "보비익기",
+      "청열해독"
+    ],
+    "juchi": "구사부지(久瀉不止), 대하(帶下), 비허식소(脾虛食少), 요빈(尿頻), 유정유정신허증(遺精遺精腎虛證), 폐허천해(肺虛喘咳), 허열소갈(虛熱消渴)",
+    "yongryang": "6~30g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "생강": {
+    "name_kr": "생강",
+    "name_latin": "Zingiberis Rhizoma",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "폐",
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "해표약",
+      "온중지구",
+      "해독",
+      "화담지해"
+    ],
+    "juchi": "반하독, 어해독, 위한구토, 천남성독, 풍한감모, 한담해수",
+    "yongryang": "3~10g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": "우리나라에서는 전주에서만 다량으로 생산된다."
+  },
+  "생지황": {
+    "name_kr": "생지황",
+    "name_latin": "Rehmanniae Radix",
+    "sungmi": "甘寒",
+    "guigyeong": [
+      "심",
+      "간",
+      "신"
+    ],
+    "hyoneung": [
+      "청열생진",
+      "양혈지혈"
+    ],
+    "juchi": "발반발진, 설강번갈, 열병상음, 육혈, 인후종통, 토혈",
+    "yongryang": "3~12g, 대량은 60~90g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": "신선한 것은 성질이 더 서늘하고 말린 것은 성질이 약간 서늘하다."
+  },
+  "세신": {
+    "name_kr": "세신",
+    "name_latin": "Asarum",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "심",
+      "폐",
+      "신"
+    ],
+    "hyoneung": [
+      "해표약",
+      "발산풍한약"
+    ],
+    "juchi": "담음천해, 두통, 비색비윤, 아통, 풍습비통, 풍한감모",
+    "yongryang": "산제(散劑)로 쓸 때에는 1회 0.5~1g씩 복용한다. 외용시는 적당량을 쓴다.",
+    "geumgi": "과다복용 시 숨이 막힐 수 있음.",
+    "chejil": "",
+    "note": ""
+  },
+  "숙지황": {
+    "name_kr": "숙지황",
+    "name_latin": "Rehmanniae Radix",
+    "sungmi": "甘微温",
+    "guigyeong": [
+      "간",
+      "신"
+    ],
+    "hyoneung": [
+      "보혈",
+      "양음생진",
+      "청열양혈"
+    ],
+    "juchi": "간신음허, 골증조열, 내열소갈, 도한유정, 붕루하혈, 수발조백, 심계정중, 요슬산연, 월경부조, 이명, 현훈, 혈허위황",
+    "yongryang": "3~15g",
+    "geumgi": "위기약한자, 담화성한자",
+    "chejil": "少陽人藥",
+    "note": "숙지황은 신을 보하고 혈을 보하는 중요한 약재이다."
+  },
+  "승마": {
+    "name_kr": "승마",
+    "name_latin": "Cimicifugae Rhizoma",
+    "sungmi": "辛微甘微寒",
+    "guigyeong": [
+      "폐",
+      "비",
+      "위",
+      "대장"
+    ],
+    "hyoneung": [
+      "해표약",
+      "발산풍열약"
+    ],
+    "juchi": "구창(口瘡), 마진불투(麻疹不透), 양독발반(陽毒發斑), 인후종통(咽喉腫痛), 자궁탈수(子宮脫垂), 치통(齒痛), 탈항(脫肛), 풍열두통(風熱頭痛)",
+    "yongryang": "1.5~12g",
+    "geumgi": "상부가 실하여 기가 막혔거나 여러 가지 화가 타오르거나 태양표증이 있는 경우에는 모두 쓰지 못한다.",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "시호": {
+    "name_kr": "시호",
+    "name_latin": "Bupleuri Radix",
+    "sungmi": "苦微寒",
+    "guigyeong": [
+      "간",
+      "담"
+    ],
+    "hyoneung": [
+      "소간",
+      "승양",
+      "화해표리"
+    ],
+    "juchi": "감모발열, 월경부조, 자궁탈수, 탈항, 한열왕래, 흉협창통",
+    "yongryang": "2.4~12g",
+    "geumgi": "실열이 없을 때 사용 금지",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "신곡": {
+    "name_kr": "신곡",
+    "name_latin": "神麯",
+    "sungmi": "甘辛溫",
+    "guigyeong": [
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "開胃",
+      "消食",
+      "破結",
+      "下痰氣"
+    ],
+    "juchi": "구토사리, 산후어혈복통, 소아복대견적, 음식정체, 흉비복창",
+    "yongryang": "8~20g",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "애엽": {
+    "name_kr": "애엽",
+    "name_latin": "Artemisiae Herba",
+    "sungmi": "辛苦溫小毒",
+    "guigyeong": [
+      "간",
+      "비",
+      "신"
+    ],
+    "hyoneung": [
+      "온경지혈",
+      "산한지통"
+    ],
+    "juchi": "경한부조, 붕루경다, 소복냉통, 육혈, 임신하혈, 자궁허냉성부임, 토혈, 피부소양",
+    "yongryang": "외용시는 적당량을 뜸으로 뜨거나 훈세(熏洗)한다.",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "연자육": {
+    "name_kr": "연자육",
+    "name_latin": "",
+    "sungmi": "甘澀平",
+    "guigyeong": [
+      "비",
+      "신",
+      "심"
+    ],
+    "hyoneung": [
+      "止瀉",
+      "澁精",
+      "養心氣"
+    ],
+    "juchi": "비허구사, 심계실면, 유정대하",
+    "yongryang": "8~15g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "오가피": {
+    "name_kr": "오가피",
+    "name_latin": "Acanthopanax sessiliflorus",
+    "sungmi": "辛苦溫",
+    "guigyeong": [
+      "간",
+      "신"
+    ],
+    "hyoneung": [
+      "祛風濕藥",
+      "強筋骨藥",
+      "補肝腎"
+    ],
+    "juchi": "각기, 근골위연, 사지구련, 소아행지, 수종, 요슬연약, 체허핍력, 풍습비통",
+    "yongryang": "8~15g",
+    "geumgi": "",
+    "chejil": "太陽人藥",
+    "note": ""
+  },
+  "오미자": {
+    "name_kr": "오미자",
+    "name_latin": "Schisandrae Fructus",
+    "sungmi": "酸甘溫",
+    "guigyeong": [
+      "폐",
+      "심",
+      "신"
+    ],
+    "hyoneung": [
+      "보신녕심",
+      "수렴고삽",
+      "익기생진"
+    ],
+    "juchi": "구건작갈, 구사구리, 노상이수, 도한, 몽유, 자한, 폐허천해, 활정",
+    "yongryang": "7~10粒 정도로서 佐使藥(古方)으로 주로 응용된다.",
+    "geumgi": "감한(感寒)의 초기에 기침이 날 때는 쓰지 말아야 한다.",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "오약": {
+    "name_kr": "오약",
+    "name_latin": "Acorus gramineus",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "비",
+      "폐",
+      "신",
+      "방"
+    ],
+    "hyoneung": [
+      "리기약",
+      "리기약"
+    ],
+    "juchi": "결흉, 담체기조흉비, 대변불통, 비만창통, 사리후중, 위하수, 자궁하수, 적체내정, 탈항",
+    "yongryang": "3~9g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "우슬": {
+    "name_kr": "우슬",
+    "name_latin": "Achyranthes Bidentata",
+    "sungmi": "苦酸平",
+    "guigyeong": [
+      "간",
+      "신"
+    ],
+    "hyoneung": [
+      "활혈거어",
+      "보간신",
+      "강근골",
+      "산어혈",
+      "소옹종"
+    ],
+    "juchi": "경폐(經閉), 난산(難産), 사지구련(四肢拘攣), 산후혈어복통(産後血瘀腹痛), 옹종(癰腫), 요슬골통(腰膝骨痛), 위비(痿痺), 임병뇨혈(淋病尿血), 질타손상(跌打損傷), 징하(癥瘕), 포의불하(胞衣不下), 후비(喉痺)",
+    "yongryang": "6~12g",
+    "geumgi": "쇠고기를 먹지 말아야 한다.",
+    "chejil": "",
+    "note": ""
+  },
+  "우황": {
+    "name_kr": "우황",
+    "name_latin": "Bovis Calculus",
+    "sungmi": "苦凉",
+    "guigyeong": [
+      "심",
+      "간"
+    ],
+    "hyoneung": [
+      "청열해독",
+      "안혼정백"
+    ],
+    "juchi": "경간추휵, 신혼섬어, 아감구창, 열병신혼, 인후종란, 전간발광, 중풍담미, 창양종독",
+    "yongryang": "0.15 ~ 0.35g, 외용시는 적당량을 가루내어 환부에 붙인다.",
+    "geumgi": "임산부는 적게 써야 한다.",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "유향": {
+    "name_kr": "유향",
+    "name_latin": "乳香",
+    "sungmi": "苦辛溫",
+    "guigyeong": [
+      "심",
+      "간",
+      "비"
+    ],
+    "hyoneung": [
+      "活血祛瘀藥"
+    ],
+    "juchi": "경폐통경, 기혈응체, 부타손상, 산후어혈자통, 심복동통, 옹창종독, 장옹, 풍습비통",
+    "yongryang": "3~5g, 탕제나 환산제로 만든다. 외용시는 적당량을 가루내어 환부에 붙인다.",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "육계": {
+    "name_kr": "육계",
+    "name_latin": "Cinnamomi Cortex",
+    "sungmi": "辛甘熱",
+    "guigyeong": [
+      "신",
+      "비",
+      "방광"
+    ],
+    "hyoneung": [
+      "통혈맥",
+      "보원양",
+      "난비위",
+      "제적냉"
+    ],
+    "juchi": "명문화쇠(命門火衰), 망양허탈(亡陽虛脫), 지랭맥미(肢冷脈微), 복통설사(腹痛泄瀉), 음저(陰疽), 허양부월(虛陽浮越), 유주(流注), 상열하한(上熱下寒), 한산분돈(寒疝奔豚), 경폐징하(經閉癥瘕)",
+    "yongryang": "1.5 ~ 8g",
+    "geumgi": "열제(熱劑)와 배합 금기",
+    "chejil": "少陰人藥",
+    "note": "수소음 심경은 독활이 주인이고, 신경은 독활에 육계를 가하는 것이 좋다."
+  },
+  "의이인": {
+    "name_kr": "의이인",
+    "name_latin": "Coix Lacryma-jobi",
+    "sungmi": "甘淡凉",
+    "guigyeong": [
+      "비",
+      "위",
+      "폐"
+    ],
+    "hyoneung": [
+      "利水滲濕藥",
+      "利水退腫藥"
+    ],
+    "juchi": "각기, 비허설사, 소변불리, 수종, 습비구련, 장옹, 편평우, 폐옹",
+    "yongryang": "12~40g",
+    "geumgi": "",
+    "chejil": "太陰人藥",
+    "note": ""
+  },
+  "인삼": {
+    "name_kr": "인삼",
+    "name_latin": "Ginseng",
+    "sungmi": "甘微苦微温",
+    "guigyeong": [
+      "비",
+      "폐",
+      "심"
+    ],
+    "hyoneung": [
+      "보비익기",
+      "청열해독"
+    ],
+    "juchi": "건망(健忘), 경계(驚悸), 구학부복(久瘧不復), 권태(倦怠), 노상허손(勞傷虛損), 대편활설(大便滑泄), 반위토식(反胃吐食), 부녀붕루(婦女崩漏), 빈뇨(頻尿), 소아만경(小兒慢驚), 식소(食少), 양위(陽痿), 일절기혈진액부족(一切氣血津液不足), 자한폭탈(自汗暴脫), 허해천촉(虛咳喘促), 현훈두통(眩暈頭痛)",
+    "yongryang": "1회 2g, 1일 2회, 대량은 9~30g",
+    "geumgi": "혈허나 음허한 사람에게는 사용하지 말 것.",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "자소엽": {
+    "name_kr": "자소엽",
+    "name_latin": "",
+    "sungmi": "辛溫",
+    "guigyeong": [
+      "폐",
+      "비"
+    ],
+    "hyoneung": [
+      "발산풍한",
+      "행기완중",
+      "행기화위"
+    ],
+    "juchi": "풍한감모, 해수구악, 임신구토, 어해중독",
+    "yongryang": "4~12g",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "작약": {
+    "name_kr": "작약",
+    "name_latin": "Paeoniae Radix",
+    "sungmi": "苦酸微寒",
+    "guigyeong": [
+      "간",
+      "비"
+    ],
+    "hyoneung": [
+      "양혈유간",
+      "완중지통",
+      "염음수한"
+    ],
+    "juchi": "대하, 흉복협륵동통, 사리복통, 자한도한, 월경부조, 붕루",
+    "yongryang": "3~5g, 대량은 5~30g",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "정공등": {
+    "name_kr": "정공등",
+    "name_latin": "Dichroa febrifuga",
+    "sungmi": "辛温有毒",
+    "guigyeong": [],
+    "hyoneung": [
+      "해표발한",
+      "구풍습",
+      "소종지통",
+      "제비통"
+    ],
+    "juchi": "풍습비통, 반신불수, 부타종통",
+    "yongryang": "3~6g",
+    "geumgi": "",
+    "chejil": "",
+    "note": "주제(酒劑)로 만들어 내복하거나 외차(外搽)한다."
+  },
+  "지각": {
+    "name_kr": "지각",
+    "name_latin": "Fructus Aurantii",
+    "sungmi": "苦辛凉",
+    "guigyeong": [
+      "폐",
+      "비",
+      "대장"
+    ],
+    "hyoneung": [
+      "리기약",
+      "소적",
+      "이기관중",
+      "행담"
+    ],
+    "juchi": "구역(嘔逆), 식적(食積), 자궁하수(子宮下垂), 탈항(脫肛), 하리후중(下痢後重), 협창(脇脹), 흉격담체(胸膈痰滯), 흉비(胸痞), 희기(噫氣)",
+    "yongryang": "4~12g",
+    "geumgi": "허한 자는 조금만 써야 하는데, 원기를 손상시킬지 모른다.",
+    "chejil": "",
+    "note": ""
+  },
+  "지모": {
+    "name_kr": "지모",
+    "name_latin": "Zhi Mu",
+    "sungmi": "苦甘寒",
+    "guigyeong": [
+      "폐",
+      "위",
+      "신"
+    ],
+    "hyoneung": [
+      "청열사화",
+      "생진윤조"
+    ],
+    "juchi": "고열번갈, 골증조열, 내열소갈, 외감열병, 장조변비, 폐열조해",
+    "yongryang": "1.5~6g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "지실": {
+    "name_kr": "지실",
+    "name_latin": "Fructus Aurantii",
+    "sungmi": "苦辛酸寒",
+    "guigyeong": [
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "리기약",
+      "파기소적",
+      "화담산비"
+    ],
+    "juchi": "결흉, 담체기조흉비, 대변불통, 비만창통, 사리후중, 위하수, 자궁하수, 적체내정, 탈항",
+    "yongryang": "3~9g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "진피": {
+    "name_kr": "진피",
+    "name_latin": "Chenpi",
+    "sungmi": "辛苦温",
+    "guigyeong": [
+      "비",
+      "폐"
+    ],
+    "hyoneung": [
+      "리기약",
+      "조습화담",
+      "이기건비"
+    ],
+    "juchi": "구토홰역(嘔吐噦逆), 담다(痰多), 불사음식(不思飮食), 해수(咳嗽), 해수담다(咳嗽痰多), 흉복창만(胸腹脹滿)",
+    "yongryang": "4~12g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "창출": {
+    "name_kr": "창출",
+    "name_latin": "Atractylodis Rhizoma",
+    "sungmi": "辛苦温",
+    "guigyeong": [
+      "비",
+      "위",
+      "간"
+    ],
+    "hyoneung": [
+      "발한",
+      "제습",
+      "완중"
+    ],
+    "juchi": "각기위벽(脚氣痿躄), 설사(泄瀉), 수종(水腫), 야맹(夜盲), 완복창만(脘腹脹滿), 풍습비통(風濕痺痛), 풍한감모(風寒感冒)",
+    "yongryang": "3~9g",
+    "geumgi": "내열로 음이 허하거나 표가 성기어 땀이 나는 증상에는 복용하지 말아야 한다.",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "천궁": {
+    "name_kr": "천궁",
+    "name_latin": "Chuanxiong Rhizoma",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "간",
+      "담",
+      "심"
+    ],
+    "hyoneung": [
+      "활혈거어",
+      "거풍지통"
+    ],
+    "juchi": "경폐통경, 두통, 미하복통, 월경부조, 질박종통, 풍습비통, 흉협자통",
+    "yongryang": "1.5~15g",
+    "geumgi": "과다복용 시 진기 흩어짐으로 인한 급사 가능성",
+    "chejil": "少陰人藥",
+    "note": "풍한으로 인한 두통에 매우 적합하다."
+  },
+  "천남성": {
+    "name_kr": "천남성",
+    "name_latin": "Zingiberis Rhizoma",
+    "sungmi": "苦辛温有毒",
+    "guigyeong": [
+      "폐",
+      "간",
+      "비"
+    ],
+    "hyoneung": [
+      "화담지해평천약",
+      "온화한한담약"
+    ],
+    "juchi": "간울기체, 경폐통경, 소화불량, 월경부조, 유방창통, 한산복통, 흉완비민, 흉협완복창통",
+    "yongryang": "3~12g, 외용시는 생품을 적당량을 가루내어 식초나 술에 개어 환부에 붙인다. 일반적으로 포제한 뒤 사용함",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "천마": {
+    "name_kr": "천마",
+    "name_latin": "Gastrodiae Rhizoma",
+    "sungmi": "甘平",
+    "guigyeong": [
+      "간"
+    ],
+    "hyoneung": [
+      "平肝藥",
+      "平肝息風藥"
+    ],
+    "juchi": "두통현훈, 소아경풍, 전간추휵, 지체마목, 파상풍증",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "",
+    "note": ""
+  },
+  "청피": {
+    "name_kr": "청피",
+    "name_latin": "",
+    "sungmi": "苦辛微溫",
+    "guigyeong": [
+      "폐",
+      "비",
+      "위"
+    ],
+    "hyoneung": [
+      "리기약",
+      "리기약"
+    ],
+    "juchi": "구학(久瘧), 벽괴(癖塊), 산기(疝氣), 식적(食積), 유종(乳腫), 유핵(乳核), 흉협위완동통(胸脇胃脘疼痛)",
+    "yongryang": "2~12g",
+    "geumgi": "氣短者禁用",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "치자": {
+    "name_kr": "치자",
+    "name_latin": "Gardeniae Fructus",
+    "sungmi": "苦寒",
+    "guigyeong": [
+      "심",
+      "간",
+      "폐",
+      "위",
+      "삼초"
+    ],
+    "hyoneung": [
+      "청열해독",
+      "사화제번",
+      "양혈해독",
+      "청열이뇨"
+    ],
+    "juchi": "목적종통, 삽통, 심흉번열, 열병심번, 조요불영, 혈림삽통, 혈열토뉵, 혈임, 화독창양, 황달요적",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": "외용시는 생품을 적당량 가루내어 환부에 붙인다."
+  },
+  "하수오": {
+    "name_kr": "하수오",
+    "name_latin": "He Shou Wu",
+    "sungmi": "苦甘澁温",
+    "guigyeong": [
+      "간",
+      "심",
+      "신"
+    ],
+    "hyoneung": [
+      "보간",
+      "양혈",
+      "익신"
+    ],
+    "juchi": "간신음휴(肝腎陰虧), 구리(久痢), 구학(久瘧), 근골산통(筋骨痠痛), 나력(瘰癧), 만성간염(慢性肝炎), 붕대(崩帶), 수발조백(鬚髮早白), 옹종(癰腫), 요슬연약(腰膝軟弱), 유정(遺精), 장풍(腸風), 치질(痔疾), 혈허두훈(血虛頭暈)",
+    "yongryang": "3~30g",
+    "geumgi": "생 무, 여러 가지 피로 만든 음식, 상한 피로 만든 음식",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "행인": {
+    "name_kr": "행인",
+    "name_latin": "Prunus Armeniaca",
+    "sungmi": "苦微辛微温小毒",
+    "guigyeong": [
+      "폐",
+      "대장"
+    ],
+    "hyoneung": [
+      "化痰止咳平喘藥",
+      "止咳平喘"
+    ],
+    "juchi": "장조변비(腸燥便秘), 해수기천(咳嗽氣喘), 혈허진고(血虛津枯), 흉만담다(胸滿痰多)",
+    "yongryang": "생품을 탕제에 쓰며 후하(後下)한다. 물에 달여 복용한다.",
+    "geumgi": "원기가 허하여 무너져 내린 경우에는 쓰지 말아야 한다.",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "향부자": {
+    "name_kr": "향부자",
+    "name_latin": "Cyperi Rhizoma",
+    "sungmi": "辛微甘苦平",
+    "guigyeong": [
+      "간",
+      "비",
+      "삼초"
+    ],
+    "hyoneung": [
+      "이기해울",
+      "조경지통"
+    ],
+    "juchi": "간울기체, 경폐통경, 소화불량, 월경부조, 유방창통, 한산복통, 흉완비민, 흉협완복창통",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "현호색": {
+    "name_kr": "현호색",
+    "name_latin": "",
+    "sungmi": "辛苦温",
+    "guigyeong": [
+      "간",
+      "비"
+    ],
+    "hyoneung": [
+      "活血祛瘀藥"
+    ],
+    "juchi": "흉협완복동통, 경폐통경, 산후어조, 부박종통",
+    "yongryang": "4~12g",
+    "geumgi": "",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "형개": {
+    "name_kr": "형개",
+    "name_latin": "Schizonepetae Herba",
+    "sungmi": "辛温",
+    "guigyeong": [
+      "폐",
+      "간"
+    ],
+    "hyoneung": [
+      "해표약",
+      "발산풍한약"
+    ],
+    "juchi": "감모, 두통, 마진투발불창, 창양초기, 풍진",
+    "yongryang": "1~12g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "황금": {
+    "name_kr": "황금",
+    "name_latin": "Scutellariae Radix",
+    "sungmi": "苦寒",
+    "guigyeong": [
+      "폐",
+      "담",
+      "위",
+      "대장",
+      "소장"
+    ],
+    "hyoneung": [
+      "사화해독",
+      "안태",
+      "지혈",
+      "청열조습"
+    ],
+    "juchi": "고열번갈, 붕루, 사리, 서온흉민구악, 습열비만, 습온, 안태부안, 열림, 옹종창독, 폐열해수, 혈열토뉵, 황달",
+    "yongryang": "4~12g",
+    "geumgi": "대장에 화가 없는데 설사가 나는 증상에는 신중하게 써야 한다.",
+    "chejil": "",
+    "note": ""
+  },
+  "황기": {
+    "name_kr": "황기",
+    "name_latin": "Astragali Radix",
+    "sungmi": "甘溫",
+    "guigyeong": [
+      "폐",
+      "비"
+    ],
+    "hyoneung": [
+      "보비익기",
+      "생기",
+      "이수소종",
+      "익위고표",
+      "탁독"
+    ],
+    "juchi": "궤구불렴, 도한, 소종, 옹저불궤, 자한, 혈비",
+    "yongryang": "3~15g, 대량은 30g",
+    "geumgi": "肥白人多汗者, 服之有功. 蒼黑人氣實者, 不可服.",
+    "chejil": "少陰人藥",
+    "note": ""
+  },
+  "황련": {
+    "name_kr": "황련",
+    "name_latin": "Coptidis Rhizoma",
+    "sungmi": "苦寒",
+    "guigyeong": [
+      "심",
+      "비",
+      "위",
+      "간",
+      "담",
+      "대장"
+    ],
+    "hyoneung": [
+      "청열해독",
+      "사심제번",
+      "사화해독",
+      "청열조습"
+    ],
+    "juchi": "고열신혼, 구토탄산, 목적, 사리, 소갈, 습열비만, 습진, 심번불매, 심화항성, 아통, 옹종정창, 이도유농, 혈열토뉵, 황달",
+    "yongryang": "1.5 ~ 6g, 2 ~ 5g, 외용시는 적당량을 쓴다.",
+    "geumgi": "허열에 함부로 사용하지 말 것.",
+    "chejil": "少陽人藥",
+    "note": "황련은 중초의 열을 치료할 때 군약이 된다."
+  },
+  "황백": {
+    "name_kr": "황백",
+    "name_latin": "Phellodendri Cortex",
+    "sungmi": "苦寒",
+    "guigyeong": [
+      "신",
+      "방광",
+      "대장"
+    ],
+    "hyoneung": [
+      "청열해독",
+      "청열조습",
+      "퇴허열"
+    ],
+    "juchi": "각기(脚氣), 골증노열(骨蒸勞熱), 대하(帶下), 도한(盜汗), 설사습열증(泄瀉泄瀉濕熱證), 습진소양(濕疹瘙痒), 열림(熱淋), 위벽(痿躄), 유정(遺精), 창양종독(瘡瘍腫毒), 황달(黃疸)",
+    "yongryang": "3~12g",
+    "geumgi": "",
+    "chejil": "少陽人藥",
+    "note": ""
+  },
+  "후박": {
+    "name_kr": "후박",
+    "name_latin": "Magnoliae Officinalis Cortex",
+    "sungmi": "苦辛温",
+    "guigyeong": [
+      "비",
+      "위",
+      "폐",
+      "대장"
+    ],
+    "hyoneung": [
+      "소담",
+      "하기"
+    ],
+    "juchi": "담음천해, 복창변비, 습체상중, 식적기체, 완비토사",
+    "yongryang": "3~12g",
+    "geumgi": "임산부 금기",
+    "chejil": "少陰人藥",
+    "note": "오래된 냉기, 창만, 장명, 숙식(宿食)이 소화되지 않는 데 주로 쓴다."
+  }
+}

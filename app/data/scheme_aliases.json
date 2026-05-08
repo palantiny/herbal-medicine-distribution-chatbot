@@ -1,0 +1,2594 @@
+{
+  "_comment": "BM25 alias → 정규화된 값 변환 테이블. table='djmedi'는 DJMEDI API 파라미터, table='sql'은 로컬 DB SQL 파라미터.",
+  "makers": [
+    {
+      "aliases": [
+        "씨케이",
+        "CK",
+        "ck",
+        "씨케이제약",
+        "씨케이주",
+        "씨케이(주)",
+        "CK제약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "씨케이(주)"
+    },
+    {
+      "aliases": [
+        "광명당",
+        "광명당한약",
+        "광명당제약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "광명당"
+    },
+    {
+      "aliases": [
+        "대연제약",
+        "대연",
+        "대연약품"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대연제약"
+    },
+    {
+      "aliases": [
+        "바른한방",
+        "바른",
+        "바른한방제약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "바른한방"
+    },
+    {
+      "aliases": [
+        "영천",
+        "영천제약",
+        "영천한약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "영천"
+    },
+    {
+      "aliases": [
+        "허브팜",
+        "허브팜제약",
+        "herbfarm",
+        "herb farm"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "허브팜"
+    },
+    {
+      "aliases": [
+        "디제이허브",
+        "dj허브",
+        "디제이",
+        "DJ",
+        "dj",
+        "DJ허브",
+        "디제이메디",
+        "djmedi"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "디제이허브"
+    },
+    {
+      "aliases": [
+        "휴먼허브",
+        "휴먼",
+        "휴먼주",
+        "(주)휴먼허브",
+        "human herb"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)휴먼허브"
+    },
+    {
+      "aliases": [
+        "채움생",
+        "채움",
+        "채움생약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "채움생"
+    },
+    {
+      "aliases": [
+        "신흥제약",
+        "신흥",
+        "(주)신흥제약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)신흥제약"
+    },
+    {
+      "aliases": [
+        "(주)비봉허브",
+        "비봉허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)비봉허브"
+    },
+    {
+      "aliases": [
+        "대영제약(주)",
+        "대영제약",
+        "대영"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대영제약(주)"
+    },
+    {
+      "aliases": [
+        "(주)세화당",
+        "세화당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)세화당"
+    },
+    {
+      "aliases": [
+        "농업회사법인(주)광덕",
+        "광덕"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "농업회사법인(주)광덕"
+    },
+    {
+      "aliases": [
+        "한약인주식회사",
+        "한약인"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한약인주식회사"
+    },
+    {
+      "aliases": [
+        "산들초제약 주식회사",
+        "산들초제약",
+        "산들초"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "산들초제약 주식회사"
+    },
+    {
+      "aliases": [
+        "주식회사 올본",
+        "올본"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 올본"
+    },
+    {
+      "aliases": [
+        "(주)옥천당",
+        "옥천당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)옥천당"
+    },
+    {
+      "aliases": [
+        "(주)보양제약",
+        "보양제약",
+        "보양"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)보양제약"
+    },
+    {
+      "aliases": [
+        "천일신약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "천일신약"
+    },
+    {
+      "aliases": [
+        "(주)농림생약",
+        "농림생약",
+        "농림"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)농림생약"
+    },
+    {
+      "aliases": [
+        "선일생약 주식회사",
+        "선일생약",
+        "선일"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "선일생약 주식회사"
+    },
+    {
+      "aliases": [
+        "농협경제지주(주) 한국인삼검사소",
+        "농협경제지주 한국인삼검사소"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "농협경제지주(주) 한국인삼검사소"
+    },
+    {
+      "aliases": [
+        "씨케이주식회사",
+        "씨케이"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "씨케이주식회사"
+    },
+    {
+      "aliases": [
+        "아쎈코리아(주)",
+        "아쎈코리아"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "아쎈코리아(주)"
+    },
+    {
+      "aliases": [
+        "(주)한국국일당",
+        "한국국일당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)한국국일당"
+    },
+    {
+      "aliases": [
+        "주식회사 퓨어마인드 농업회사법인",
+        "퓨어마인드"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 퓨어마인드 농업회사법인"
+    },
+    {
+      "aliases": [
+        "(주)한퓨어",
+        "한퓨어"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)한퓨어"
+    },
+    {
+      "aliases": [
+        "주식회사휴먼허브",
+        "휴먼허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사휴먼허브"
+    },
+    {
+      "aliases": [
+        "청웅제약",
+        "청웅"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "청웅제약"
+    },
+    {
+      "aliases": [
+        "주식회사 엔탭허브",
+        "엔탭허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 엔탭허브"
+    },
+    {
+      "aliases": [
+        "대명제약 주식회사",
+        "대명제약",
+        "대명"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대명제약 주식회사"
+    },
+    {
+      "aliases": [
+        "(유)대효제약",
+        "대효제약",
+        "대효"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(유)대효제약"
+    },
+    {
+      "aliases": [
+        "경동무약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "경동무약"
+    },
+    {
+      "aliases": [
+        "한국지엠피 주식회사",
+        "한국지엠피"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한국지엠피 주식회사"
+    },
+    {
+      "aliases": [
+        "주식회사 바른한방제약",
+        "바른한방제약",
+        "바른"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 바른한방제약"
+    },
+    {
+      "aliases": [
+        "주식회사 자담생약",
+        "자담생약",
+        "자담"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 자담생약"
+    },
+    {
+      "aliases": [
+        "농업회사법인다온허브주식회사",
+        "다온허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "농업회사법인다온허브주식회사"
+    },
+    {
+      "aliases": [
+        "송산제약(주)",
+        "송산제약",
+        "송산"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "송산제약(주)"
+    },
+    {
+      "aliases": [
+        "주식회사 삼인제약",
+        "삼인제약",
+        "삼인"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 삼인제약"
+    },
+    {
+      "aliases": [
+        "(주)삼원제약",
+        "삼원제약",
+        "삼원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)삼원제약"
+    },
+    {
+      "aliases": [
+        "(주)태극인",
+        "태극인"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)태극인"
+    },
+    {
+      "aliases": [
+        "송학약초영농조합법인",
+        "송학약초",
+        "송학"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "송학약초영농조합법인"
+    },
+    {
+      "aliases": [
+        "(주)광명생약",
+        "광명생약",
+        "광명"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)광명생약"
+    },
+    {
+      "aliases": [
+        "주식회사 광명당제약",
+        "광명당제약",
+        "광명당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 광명당제약"
+    },
+    {
+      "aliases": [
+        "해동한방제약(주)",
+        "해동한방제약",
+        "해동"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "해동한방제약(주)"
+    },
+    {
+      "aliases": [
+        "대한한약 협동조합",
+        "대한한약",
+        "대한"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대한한약 협동조합"
+    },
+    {
+      "aliases": [
+        "(주)참들제약",
+        "참들제약",
+        "참들"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)참들제약"
+    },
+    {
+      "aliases": [
+        "주식회사 나음",
+        "나음"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 나음"
+    },
+    {
+      "aliases": [
+        "(주)광덕생약",
+        "광덕생약",
+        "광덕"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)광덕생약"
+    },
+    {
+      "aliases": [
+        "형율제약 주식회사",
+        "형율제약",
+        "형율"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "형율제약 주식회사"
+    },
+    {
+      "aliases": [
+        "(주)현진제약",
+        "현진제약",
+        "현진"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)현진제약"
+    },
+    {
+      "aliases": [
+        "칠보농협옹동제약",
+        "칠보농협옹동"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "칠보농협옹동제약"
+    },
+    {
+      "aliases": [
+        "원창제약",
+        "원창"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "원창제약"
+    },
+    {
+      "aliases": [
+        "영천약초도매시장주식회사",
+        "영천약초도매시장",
+        "영천"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "영천약초도매시장주식회사"
+    },
+    {
+      "aliases": [
+        "주식회사 씨와이",
+        "씨와이"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 씨와이"
+    },
+    {
+      "aliases": [
+        "부야주식회사",
+        "부야"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "부야주식회사"
+    },
+    {
+      "aliases": [
+        "덕인제약주식회사",
+        "덕인제약",
+        "덕인"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "덕인제약주식회사"
+    },
+    {
+      "aliases": [
+        "새롬제약(주)",
+        "새롬제약",
+        "새롬"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "새롬제약(주)"
+    },
+    {
+      "aliases": [
+        "한스약품 주식회사",
+        "한스약품"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한스약품 주식회사"
+    },
+    {
+      "aliases": [
+        "한솔제약(주)",
+        "한솔제약",
+        "한솔"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한솔제약(주)"
+    },
+    {
+      "aliases": [
+        "주식회사 이풀잎제약",
+        "이풀잎제약",
+        "이풀잎"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 이풀잎제약"
+    },
+    {
+      "aliases": [
+        "(주)화림제약",
+        "화림제약",
+        "화림"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)화림제약"
+    },
+    {
+      "aliases": [
+        "한도제약",
+        "한도"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한도제약"
+    },
+    {
+      "aliases": [
+        "동우당제약주식회사",
+        "동우당제약",
+        "동우당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "동우당제약주식회사"
+    },
+    {
+      "aliases": [
+        "주식회사 그린명품제약",
+        "그린명품제약",
+        "그린명품"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 그린명품제약"
+    },
+    {
+      "aliases": [
+        "(주)허브팜",
+        "허브팜"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)허브팜"
+    },
+    {
+      "aliases": [
+        "보국약품(주)",
+        "보국약품"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "보국약품(주)"
+    },
+    {
+      "aliases": [
+        "농업회사법인 주식회사 월드허브",
+        "월드허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "농업회사법인 주식회사 월드허브"
+    },
+    {
+      "aliases": [
+        "대한생약제품(주)",
+        "대한생약제품",
+        "대한제품"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대한생약제품(주)"
+    },
+    {
+      "aliases": [
+        "삼의제약",
+        "삼의"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "삼의제약"
+    },
+    {
+      "aliases": [
+        "(주)산야초로",
+        "산야초로"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)산야초로"
+    },
+    {
+      "aliases": [
+        "(주)동양허브",
+        "동양허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)동양허브"
+    },
+    {
+      "aliases": [
+        "고강제약",
+        "고강"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "고강제약"
+    },
+    {
+      "aliases": [
+        "참조은제약",
+        "참조은"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "참조은제약"
+    },
+    {
+      "aliases": [
+        "녹원제약(주)",
+        "녹원제약",
+        "녹원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "녹원제약(주)"
+    },
+    {
+      "aliases": [
+        "농업회사법인주식회사디앤허브",
+        "디앤허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "농업회사법인주식회사디앤허브"
+    },
+    {
+      "aliases": [
+        "(주)남이제약",
+        "남이제약",
+        "남이"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)남이제약"
+    },
+    {
+      "aliases": [
+        "농업회사법인 풍산주식회사",
+        "풍산"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "농업회사법인 풍산주식회사"
+    },
+    {
+      "aliases": [
+        "학교법인 경희학원(경희한약)",
+        "학교법인 경희학원(경희)"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "학교법인 경희학원(경희한약)"
+    },
+    {
+      "aliases": [
+        "대구약령제약주식회사",
+        "대구약령제약",
+        "대구약령"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대구약령제약주식회사"
+    },
+    {
+      "aliases": [
+        "계림제약",
+        "계림"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "계림제약"
+    },
+    {
+      "aliases": [
+        "모닝제약",
+        "모닝"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "모닝제약"
+    },
+    {
+      "aliases": [
+        "(주)푸른무약",
+        "푸른무약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)푸른무약"
+    },
+    {
+      "aliases": [
+        "(주)한동허브",
+        "한동허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)한동허브"
+    },
+    {
+      "aliases": [
+        "전업소"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "전업소"
+    },
+    {
+      "aliases": [
+        "본사"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "본사"
+    },
+    {
+      "aliases": [
+        "지오허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "지오허브"
+    },
+    {
+      "aliases": [
+        "청담허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "청담허브"
+    },
+    {
+      "aliases": [
+        "한국한약유통협회",
+        "한국유통협회"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한국한약유통협회"
+    },
+    {
+      "aliases": [
+        "신상물산"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "신상물산"
+    },
+    {
+      "aliases": [
+        "미륭생약",
+        "미륭"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "미륭생약"
+    },
+    {
+      "aliases": [
+        "홍익"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "홍익"
+    },
+    {
+      "aliases": [
+        "대흥농산",
+        "대흥"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대흥농산"
+    },
+    {
+      "aliases": [
+        "일등라이스"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "일등라이스"
+    },
+    {
+      "aliases": [
+        "한뜻약초",
+        "한뜻"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한뜻약초"
+    },
+    {
+      "aliases": [
+        "서울약령시협회"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "서울약령시협회"
+    },
+    {
+      "aliases": [
+        "국보홍삼제조창"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "국보홍삼제조창"
+    },
+    {
+      "aliases": [
+        "정농인삼영농조합"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "정농인삼영농조합"
+    },
+    {
+      "aliases": [
+        "한일금박"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한일금박"
+    },
+    {
+      "aliases": [
+        "(주)명가녹용",
+        "명가녹용"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)명가녹용"
+    },
+    {
+      "aliases": [
+        "(주)한국수출입",
+        "한국수출입"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)한국수출입"
+    },
+    {
+      "aliases": [
+        "한국GMP"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한국GMP"
+    },
+    {
+      "aliases": [
+        "태봉제약",
+        "태봉"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "태봉제약"
+    },
+    {
+      "aliases": [
+        "해동홍삼가공소"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "해동홍삼가공소"
+    },
+    {
+      "aliases": [
+        "(주)동양한방제약",
+        "동양한방제약",
+        "동양"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)동양한방제약"
+    },
+    {
+      "aliases": [
+        "(주)자연세상",
+        "자연세상"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)자연세상"
+    },
+    {
+      "aliases": [
+        "주식회사조화제약",
+        "조화제약",
+        "조화"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사조화제약"
+    },
+    {
+      "aliases": [
+        "(주)청솔생약",
+        "청솔생약",
+        "청솔"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)청솔생약"
+    },
+    {
+      "aliases": [
+        "태창제약주식회사",
+        "태창제약",
+        "태창"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "태창제약주식회사"
+    },
+    {
+      "aliases": [
+        "(주)케이앤씨디어트레이드",
+        "케이앤씨디어트레이드"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)케이앤씨디어트레이드"
+    },
+    {
+      "aliases": [
+        "다원제약(주)",
+        "다원제약",
+        "다원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "다원제약(주)"
+    },
+    {
+      "aliases": [
+        "남영제약영농조합",
+        "남영영농조합"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "남영제약영농조합"
+    },
+    {
+      "aliases": [
+        "삼보제약",
+        "삼보"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "삼보제약"
+    },
+    {
+      "aliases": [
+        "상녹제약(주)",
+        "상녹제약",
+        "상녹"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "상녹제약(주)"
+    },
+    {
+      "aliases": [
+        "주신제약(주)",
+        "주신제약",
+        "주신"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주신제약(주)"
+    },
+    {
+      "aliases": [
+        "케이진바이오제약(주)",
+        "케이진바이오제약",
+        "케이진"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "케이진바이오제약(주)"
+    },
+    {
+      "aliases": [
+        "(주)온누리바이오생약",
+        "온누리바이오생약",
+        "온누리"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)온누리바이오생약"
+    },
+    {
+      "aliases": [
+        "(주)용보제약",
+        "용보제약",
+        "용보"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)용보제약"
+    },
+    {
+      "aliases": [
+        "동화무약 주식회사",
+        "동화무약"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "동화무약 주식회사"
+    },
+    {
+      "aliases": [
+        "주식회사 원용제약",
+        "원용제약",
+        "원용"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 원용제약"
+    },
+    {
+      "aliases": [
+        "충남제약(주)",
+        "충남제약",
+        "충남"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "충남제약(주)"
+    },
+    {
+      "aliases": [
+        "화용제약(주)",
+        "화용제약",
+        "화용"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "화용제약(주)"
+    },
+    {
+      "aliases": [
+        "우성제약(주)",
+        "우성제약",
+        "우성"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "우성제약(주)"
+    },
+    {
+      "aliases": [
+        "주식회사 자은생약",
+        "자은생약",
+        "자은"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 자은생약"
+    },
+    {
+      "aliases": [
+        "백년제약",
+        "백년"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "백년제약"
+    },
+    {
+      "aliases": [
+        "네이버"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "네이버"
+    },
+    {
+      "aliases": [
+        "선일제약",
+        "선일"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "선일제약"
+    },
+    {
+      "aliases": [
+        "오뚜기"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "오뚜기"
+    },
+    {
+      "aliases": [
+        "내몸에닿"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "내몸에닿"
+    },
+    {
+      "aliases": [
+        "설악산밀봉원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "설악산밀봉원"
+    },
+    {
+      "aliases": [
+        "본초원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "본초원"
+    },
+    {
+      "aliases": [
+        "왕비천하늘"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "왕비천하늘"
+    },
+    {
+      "aliases": [
+        "산동.동아"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "산동.동아"
+    },
+    {
+      "aliases": [
+        "쿠팡"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "쿠팡"
+    },
+    {
+      "aliases": [
+        "백화수복"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "백화수복"
+    },
+    {
+      "aliases": [
+        "옴니허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "옴니허브"
+    },
+    {
+      "aliases": [
+        "바른한약제약",
+        "바른"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "바른한약제약"
+    },
+    {
+      "aliases": [
+        "나눔제약",
+        "나눔"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "나눔제약"
+    },
+    {
+      "aliases": [
+        "대한바이오팜",
+        "대한팜"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대한바이오팜"
+    },
+    {
+      "aliases": [
+        "안상규벌꿀"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "안상규벌꿀"
+    },
+    {
+      "aliases": [
+        "대광약초",
+        "대광"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대광약초"
+    },
+    {
+      "aliases": [
+        "제일생약",
+        "제일"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "제일생약"
+    },
+    {
+      "aliases": [
+        "자연닮음"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "자연닮음"
+    },
+    {
+      "aliases": [
+        "형제약초",
+        "형초"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "형제약초"
+    },
+    {
+      "aliases": [
+        "우소법제"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "우소법제"
+    },
+    {
+      "aliases": [
+        "힐링허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "힐링허브"
+    },
+    {
+      "aliases": [
+        "우소"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "우소"
+    },
+    {
+      "aliases": [
+        "영창건재약업사"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "영창건재약업사"
+    },
+    {
+      "aliases": [
+        "동덕제약",
+        "동덕"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "동덕제약"
+    },
+    {
+      "aliases": [
+        "흥일허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "흥일허브"
+    },
+    {
+      "aliases": [
+        "침향농장"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "침향농장"
+    },
+    {
+      "aliases": [
+        "김수흔봉개꿀"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "김수흔봉개꿀"
+    },
+    {
+      "aliases": [
+        "백설"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "백설"
+    },
+    {
+      "aliases": [
+        "거농상사"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "거농상사"
+    },
+    {
+      "aliases": [
+        "서울탁주제조협회"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "서울탁주제조협회"
+    },
+    {
+      "aliases": [
+        "(주)새롬바이오",
+        "새롬바이오",
+        "새롬"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)새롬바이오"
+    },
+    {
+      "aliases": [
+        "한의랑"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한의랑"
+    },
+    {
+      "aliases": [
+        "경남제약",
+        "경남"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "경남제약"
+    },
+    {
+      "aliases": [
+        "이담제약주식회사",
+        "이담제약",
+        "이담"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "이담제약주식회사"
+    },
+    {
+      "aliases": [
+        "(주)녹원유통사업단",
+        "녹원유통사업단"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)녹원유통사업단"
+    },
+    {
+      "aliases": [
+        "우성생약주식회사",
+        "우성생약",
+        "우성"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "우성생약주식회사"
+    },
+    {
+      "aliases": [
+        "주식회사 이룡제약",
+        "이룡제약",
+        "이룡"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 이룡제약"
+    },
+    {
+      "aliases": [
+        "한사랑제약",
+        "한사랑"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한사랑제약"
+    },
+    {
+      "aliases": [
+        "신보성제약",
+        "신보성"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "신보성제약"
+    },
+    {
+      "aliases": [
+        "주연"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주연"
+    },
+    {
+      "aliases": [
+        "중경제약",
+        "중경"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "중경제약"
+    },
+    {
+      "aliases": [
+        "주식회사시원생약",
+        "시원생약",
+        "시원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사시원생약"
+    },
+    {
+      "aliases": [
+        "고려수제약",
+        "고려수"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "고려수제약"
+    },
+    {
+      "aliases": [
+        "주식회사 가온제약",
+        "가온제약",
+        "가온"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 가온제약"
+    },
+    {
+      "aliases": [
+        "주식회사 진수녹용",
+        "진수녹용"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 진수녹용"
+    },
+    {
+      "aliases": [
+        "안동농협 한약재유통센터",
+        "안동농협 재유통센터"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "안동농협 한약재유통센터"
+    },
+    {
+      "aliases": [
+        "명보제약 주식회사",
+        "명보제약",
+        "명보"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "명보제약 주식회사"
+    },
+    {
+      "aliases": [
+        "(주)디에이치지글로벌",
+        "디에이치지글로벌"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)디에이치지글로벌"
+    },
+    {
+      "aliases": [
+        "유진통상"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "유진통상"
+    },
+    {
+      "aliases": [
+        "주식회사 이룸제약법인",
+        "이룸제약법인",
+        "이룸법인"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 이룸제약법인"
+    },
+    {
+      "aliases": [
+        "오도제약 주식회사",
+        "오도제약",
+        "오도"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "오도제약 주식회사"
+    },
+    {
+      "aliases": [
+        "임제당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "임제당"
+    },
+    {
+      "aliases": [
+        "태봉제약",
+        "태봉"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "태봉제약"
+    },
+    {
+      "aliases": [
+        "삼양사"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "삼양사"
+    },
+    {
+      "aliases": [
+        "대상"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대상"
+    },
+    {
+      "aliases": [
+        "엔아이에프"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "엔아이에프"
+    },
+    {
+      "aliases": [
+        "케이비바이오텍",
+        "케이비텍"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "케이비바이오텍"
+    },
+    {
+      "aliases": [
+        "보락(제일약품)"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "보락(제일약품)"
+    },
+    {
+      "aliases": [
+        "유니메드"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "유니메드"
+    },
+    {
+      "aliases": [
+        "주식회사우리생약",
+        "우리생약",
+        "우리"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사우리생약"
+    },
+    {
+      "aliases": [
+        "한의사랑"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한의사랑"
+    },
+    {
+      "aliases": [
+        "마한물산(주)",
+        "마한물산"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "마한물산(주)"
+    },
+    {
+      "aliases": [
+        "추천처방"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "추천처방"
+    },
+    {
+      "aliases": [
+        "(주)옴니허브",
+        "옴니허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)옴니허브"
+    },
+    {
+      "aliases": [
+        "태안약업(주)",
+        "태안약업"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "태안약업(주)"
+    },
+    {
+      "aliases": [
+        "주식회사 대원알디티",
+        "대원알디티"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 대원알디티"
+    },
+    {
+      "aliases": [
+        "영월양봉원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "영월양봉원"
+    },
+    {
+      "aliases": [
+        "㈜롯데칠성음료"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "㈜롯데칠성음료"
+    },
+    {
+      "aliases": [
+        "한국인"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한국인"
+    },
+    {
+      "aliases": [
+        "도솔한방병원",
+        "도솔병원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "도솔한방병원"
+    },
+    {
+      "aliases": [
+        "한상복(식품)"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한상복(식품)"
+    },
+    {
+      "aliases": [
+        "부산대 한방병원",
+        "부산대 병원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "부산대 한방병원"
+    },
+    {
+      "aliases": [
+        "황골조청"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "황골조청"
+    },
+    {
+      "aliases": [
+        "한의원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한의원"
+    },
+    {
+      "aliases": [
+        "정원제약",
+        "정원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "정원제약"
+    },
+    {
+      "aliases": [
+        "온원외탕전실"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "온원외탕전실"
+    },
+    {
+      "aliases": [
+        "바이오닷"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "바이오닷"
+    },
+    {
+      "aliases": [
+        "그린바이오",
+        "그린"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "그린바이오"
+    },
+    {
+      "aliases": [
+        "축령산양봉"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "축령산양봉"
+    },
+    {
+      "aliases": [
+        "청연원외탕전"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "청연원외탕전"
+    },
+    {
+      "aliases": [
+        "청정원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "청정원"
+    },
+    {
+      "aliases": [
+        "제일한방",
+        "제일"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "제일한방"
+    },
+    {
+      "aliases": [
+        "현대약품"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "현대약품"
+    },
+    {
+      "aliases": [
+        "한약사랑"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "한약사랑"
+    },
+    {
+      "aliases": [
+        "M바이오"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "M바이오"
+    },
+    {
+      "aliases": [
+        "동양금박"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "동양금박"
+    },
+    {
+      "aliases": [
+        "바른본초원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "바른본초원"
+    },
+    {
+      "aliases": [
+        "팜스마켓"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "팜스마켓"
+    },
+    {
+      "aliases": [
+        "여주농협"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "여주농협"
+    },
+    {
+      "aliases": [
+        "좋은쌀 좋은사람"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "좋은쌀 좋은사람"
+    },
+    {
+      "aliases": [
+        "KGC예본"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "KGC예본"
+    },
+    {
+      "aliases": [
+        "해태"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "해태"
+    },
+    {
+      "aliases": [
+        "박연봉"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "박연봉"
+    },
+    {
+      "aliases": [
+        "서울우유"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "서울우유"
+    },
+    {
+      "aliases": [
+        "축령산양봉"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "축령산양봉"
+    },
+    {
+      "aliases": [
+        "현대약품"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "현대약품"
+    },
+    {
+      "aliases": [
+        "진로"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "진로"
+    },
+    {
+      "aliases": [
+        "청연법제"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "청연법제"
+    },
+    {
+      "aliases": [
+        "디제이메디"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "디제이메디"
+    },
+    {
+      "aliases": [
+        "동서한약",
+        "동서"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "동서한약"
+    },
+    {
+      "aliases": [
+        "예봉엔씨피"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "예봉엔씨피"
+    },
+    {
+      "aliases": [
+        "으뜸생약",
+        "으뜸"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "으뜸생약"
+    },
+    {
+      "aliases": [
+        "골드코리아"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "골드코리아"
+    },
+    {
+      "aliases": [
+        "보성녹용"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "보성녹용"
+    },
+    {
+      "aliases": [
+        "청림농원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "청림농원"
+    },
+    {
+      "aliases": [
+        "진영제약",
+        "진영"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "진영제약"
+    },
+    {
+      "aliases": [
+        "고이아사"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "고이아사"
+    },
+    {
+      "aliases": [
+        "부영약업사"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "부영약업사"
+    },
+    {
+      "aliases": [
+        "약령향"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "약령향"
+    },
+    {
+      "aliases": [
+        "홍삼백작소"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "홍삼백작소"
+    },
+    {
+      "aliases": [
+        "우향제약",
+        "우향"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "우향제약"
+    },
+    {
+      "aliases": [
+        "파이토지노믹스주식회사",
+        "파이토지노믹스"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "파이토지노믹스주식회사"
+    },
+    {
+      "aliases": [
+        "보성제약",
+        "보성"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "보성제약"
+    },
+    {
+      "aliases": [
+        "CJ제일제당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "CJ제일제당"
+    },
+    {
+      "aliases": [
+        "건향제약주식회사",
+        "건향제약",
+        "건향"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "건향제약주식회사"
+    },
+    {
+      "aliases": [
+        "멀티페이스코리아"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "멀티페이스코리아"
+    },
+    {
+      "aliases": [
+        "임제당"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "임제당"
+    },
+    {
+      "aliases": [
+        "전업소"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "전업소"
+    },
+    {
+      "aliases": [
+        "대한쎌팜 주식회사",
+        "대한쎌팜"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대한쎌팜 주식회사"
+    },
+    {
+      "aliases": [
+        "(주)대한녹용수출입법인",
+        "대한녹용수출입법인"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)대한녹용수출입법인"
+    },
+    {
+      "aliases": [
+        "제중약업사"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "제중약업사"
+    },
+    {
+      "aliases": [
+        "대호제약 주식회사",
+        "대호제약",
+        "대호"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "대호제약 주식회사"
+    },
+    {
+      "aliases": [
+        "(주)보제원",
+        "보제원"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)보제원"
+    },
+    {
+      "aliases": [
+        "명가녹용주식회사",
+        "명가녹용"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "명가녹용주식회사"
+    },
+    {
+      "aliases": [
+        "주식회사 우성허브",
+        "우성허브"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "주식회사 우성허브"
+    },
+    {
+      "aliases": [
+        "(주) 인티그레이션 전북지점",
+        "인티그레이션 전북지점"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주) 인티그레이션 전북지점"
+    },
+    {
+      "aliases": [
+        "(주)으뜸생약",
+        "으뜸생약",
+        "으뜸"
+      ],
+      "table": "djmedi",
+      "column": "maker_name",
+      "value": "(주)으뜸생약"
+    }
+  ],
+  "origins": [
+    {
+      "aliases": [
+        "국산",
+        "한국산",
+        "국내산",
+        "한국",
+        "코리아",
+        "korea"
+      ],
+      "table": "djmedi",
+      "column": "origin",
+      "value": "한국"
+    },
+    {
+      "aliases": [
+        "중국산",
+        "중국",
+        "차이나",
+        "china",
+        "중국수입"
+      ],
+      "table": "djmedi",
+      "column": "origin",
+      "value": "중국"
+    },
+    {
+      "aliases": [
+        "수입산",
+        "수입",
+        "수입품",
+        "imported",
+        "해외",
+        "해외산"
+      ],
+      "table": "djmedi",
+      "column": "origin",
+      "value": "수입"
+    },
+    {
+      "aliases": [
+        "일본산",
+        "일본",
+        "japan",
+        "재패"
+      ],
+      "table": "djmedi",
+      "column": "origin",
+      "value": "일본"
+    },
+    {
+      "aliases": [
+        "미국산",
+        "미국",
+        "usa"
+      ],
+      "table": "djmedi",
+      "column": "origin",
+      "value": "미국"
+    }
+  ],
+  "herbs": [
+    {
+      "aliases": [
+        "감초",
+        "감초뿌리",
+        "glycyrrhiza",
+        "생감초"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "감초"
+    },
+    {
+      "aliases": [
+        "당귀",
+        "참당귀",
+        "토당귀"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "당귀"
+    },
+    {
+      "aliases": [
+        "황기",
+        "단너삼",
+        "북기"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "황기"
+    },
+    {
+      "aliases": [
+        "인삼",
+        "고려인삼",
+        "조선인삼"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "인삼"
+    },
+    {
+      "aliases": [
+        "백출",
+        "삽주뿌리"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "백출"
+    },
+    {
+      "aliases": [
+        "복령",
+        "복신",
+        "茯苓"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "복령"
+    },
+    {
+      "aliases": [
+        "작약",
+        "적작약",
+        "백작약"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "작약"
+    },
+    {
+      "aliases": [
+        "천궁",
+        "궁궁이",
+        "일천궁"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "천궁"
+    },
+    {
+      "aliases": [
+        "지황",
+        "숙지황",
+        "생지황",
+        "건지황"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "지황"
+    },
+    {
+      "aliases": [
+        "대추",
+        "대조",
+        "붉은대추"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "대추"
+    },
+    {
+      "aliases": [
+        "산수유",
+        "산수유나무열매"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "산수유"
+    },
+    {
+      "aliases": [
+        "구기자",
+        "구기자나무열매",
+        "枸杞子"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "구기자"
+    },
+    {
+      "aliases": [
+        "황련",
+        "황련뿌리줄기"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "황련"
+    },
+    {
+      "aliases": [
+        "황백",
+        "황벽나무껍질"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "황백"
+    },
+    {
+      "aliases": [
+        "길경",
+        "도라지",
+        "桔梗"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "길경"
+    },
+    {
+      "aliases": [
+        "박하",
+        "민트",
+        "薄荷"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "박하"
+    },
+    {
+      "aliases": [
+        "두충",
+        "두충나무껍질",
+        "杜仲"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "두충"
+    },
+    {
+      "aliases": [
+        "산약",
+        "마",
+        "참마"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "산약"
+    },
+    {
+      "aliases": [
+        "독활",
+        "땅두릅"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "독활"
+    },
+    {
+      "aliases": [
+        "강활",
+        "羌活"
+      ],
+      "table": "djmedi",
+      "column": "herb_name",
+      "value": "강활"
+    }
+  ],
+  "packaging_units": [
+    {
+      "aliases": [
+        "한근",
+        "600g",
+        "600그램",
+        "1근",
+        "일근",
+        "근"
+      ],
+      "table": "djmedi",
+      "column": "packaging_unit_g",
+      "value": "600"
+    },
+    {
+      "aliases": [
+        "반근",
+        "300g",
+        "300그램",
+        "0.5근"
+      ],
+      "table": "djmedi",
+      "column": "packaging_unit_g",
+      "value": "300"
+    },
+    {
+      "aliases": [
+        "3근",
+        "삼근",
+        "1800g",
+        "1800그램"
+      ],
+      "table": "djmedi",
+      "column": "packaging_unit_g",
+      "value": "1800"
+    },
+    {
+      "aliases": [
+        "5근",
+        "오근",
+        "3000g",
+        "3000그램"
+      ],
+      "table": "djmedi",
+      "column": "packaging_unit_g",
+      "value": "3000"
+    },
+    {
+      "aliases": [
+        "10근",
+        "십근",
+        "6000g",
+        "6kg"
+      ],
+      "table": "djmedi",
+      "column": "packaging_unit_g",
+      "value": "6000"
+    }
+  ]
+}

@@ -9,7 +9,6 @@ import aioboto3
 from app.core.database import close_db, close_redis, get_redis, init_db
 from app.repositories.chat_history_repository import DynamoDBChatHistoryRepository
 from app.services.chat_worker import run_chat_worker
-from app.services.graph_service import close_neo4j
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,7 +27,6 @@ async def main():
     except Exception as e:
         logger.exception(f"Chat Worker crashed: {e}")
     finally:
-        await close_neo4j()
         await close_redis()
         await close_db()
         logger.info("Chat Worker shutdown sequentially complete.")

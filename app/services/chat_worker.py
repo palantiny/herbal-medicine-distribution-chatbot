@@ -36,10 +36,11 @@ async def run_chat_worker(redis: Redis, chat_repo: Any) -> None:
             session_id = payload["session_id"]
             user_id = payload["user_id"]
             message = payload["message"]
+            cfcode: str | None = payload.get("cfcode")
 
             logger.info(
-                "Chat Worker processing: session_id=%s, user_id=%s, message=%s",
-                session_id, user_id, message,
+                "Chat Worker processing: session_id=%s, user_id=%s, cfcode=%s",
+                session_id, user_id, cfcode,
             )
 
             try:
@@ -49,6 +50,7 @@ async def run_chat_worker(redis: Redis, chat_repo: Any) -> None:
                     session_id=session_id,
                     user_id=user_id,
                     message=message,
+                    cfcode=cfcode,
                 )
             except Exception as e:
                 logger.exception("Chat Worker process_message error: %s", e)

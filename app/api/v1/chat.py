@@ -2,14 +2,16 @@
 Chat API — MQ + Pub/Sub 아키텍처
 POST /{session_id}/message: 메시지를 Redis Queue에 넣고 즉시 200 OK 반환.
 GET  /{session_id}/stream:  Redis Pub/Sub 구독으로 SSE 스트리밍.
+DELETE /{session_id}/history: 채팅 기록 삭제.
 """
 import asyncio
 import json
 import logging
+import re
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from app.core.config import get_settings
 from app.core.database import get_redis
@@ -25,6 +27,15 @@ class ChatMessageRequest(BaseModel):
 
     message: str = Field(..., min_length=1, description="사용자 질문 내용")
     user_id: str | None = Field(None, description="인증된 user_id (session_id에서 파싱 가능 시 생략)")
+    cfcode: str | None = Field(None, description="DJMEDI 업체코드 (auth/verify 응답에서 수신)")
+
+    # Fix #1: cfcode SQL Injection 방지 — 영문+숫자 1~10자만 허용
+    @field_validator("cfcode")
+    @classmethod
+    def validate_cfcode(cls, v: str | None) -> str | None:
+        if v is not None and not re.fullmatch(r"[a-zA-Z0-9]{1,10}", v):
+            raise ValueError("cfcode는 영문·숫자 1~10자만 허용됩니다.")
+        return v
 
 
 def _sse_format(data: dict) -> str:
@@ -45,7 +56,7 @@ async def post_chat_message(session_id: str, body: ChatMessageRequest, request: 
     """
     POST /api/v1/chat/{session_id}/message
     1. user_id 파싱
-    2. MongoDB에 user message 즉시 저장
+    2. DynamoDB에 user message 즉시 저장
     3. Redis LPUSH chat_task_queue
     4. 즉시 200 OK 반환
     """
@@ -59,7 +70,7 @@ async def post_chat_message(session_id: str, body: ChatMessageRequest, request: 
 
     redis = await get_redis()
 
-    # user message를 MongoDB에 즉시 저장 (워커 처리 전 영속화)
+    # user message를 DynamoDB에 즉시 저장 (워커 처리 전 영속화)
     await chat_repo.save(session_id, user_id, "user", body.message)
 
     # Redis Queue에 작업 추가
@@ -68,6 +79,7 @@ async def post_chat_message(session_id: str, body: ChatMessageRequest, request: 
             "session_id": session_id,
             "user_id": user_id,
             "message": body.message,
+            "cfcode": body.cfcode,
         },
         ensure_ascii=False,
     )
