@@ -56,7 +56,8 @@ intent 목록:
   1. get_maker_list      — "제조사 목록", "어떤 회사들이 있어?" — 파라미터 없음
   2. get_herb_by_maker   — 특정 제조사의 약재 목록. maker_name 필수.
   3. get_herb_by_name    — 특정 약재의 전체 제조사. herb_name 필수.
-  4. get_my_medicines    — 내 업체(cfcode) 보유 약재. herb_name 필수.
+  4. get_my_medicines    — 내 업체(cfcode) 보유 약재 중 특정 약재 1종. herb_name 필수. origin 선택.
+  5. get_my_full_inventory — 내 업체(cfcode) 보유 약재 전체 목록. 특정 약재명 없을 때 사용. origin 선택.
 
 [엔티티 정규화 결과]에 제공된 값을 그대로 사용하세요.
 
@@ -73,20 +74,43 @@ intent 목록:
 질문: "제조사 목록 보여줘"
 → mode=DB_FIRST, intent=get_maker_list
 
-질문: "씨케이 감초 있어?" (힌트: maker_name='씨케이(주)', herb_name='감초')
-→ mode=DB_FIRST, intent=get_herb_by_maker, maker_name='씨케이(주)', herb_name='감초'
+질문: "씨케이 약재 뭐 있어?" (힌트: maker_name='씨케이(주)')
+→ mode=DB_FIRST, intent=get_herb_by_maker, maker_name='씨케이(주)'
+
+질문: "감초 어디서 사?" (힌트: herb_name='감초')
+→ mode=DB_FIRST, intent=get_herb_by_name, herb_name='감초'
+
+질문: "감초 다른 제조사 거 있어?" (힌트: herb_name='감초')
+→ mode=DB_FIRST, intent=get_herb_by_name, herb_name='감초'
 
 질문: "감초 주문하고 싶은데 있어?" (힌트: herb_name='감초')
 → mode=DB_FIRST, intent=get_my_medicines, herb_name='감초'
 
-질문: "국산 황기 어디서 사?" (힌트: herb_name='황기', origin='한국')
+질문: "황기 국산 있어?" (힌트: herb_name='황기', origin='한국')
 → mode=DB_FIRST, intent=get_my_medicines, herb_name='황기', origin='한국'
+
+질문: "내 약재 다 보여줘"
+→ mode=DB_FIRST, intent=get_my_full_inventory
+
+질문: "내가 쓸 수 있는 약재 뭐 있어?"
+→ mode=DB_FIRST, intent=get_my_full_inventory
+
+질문: "국내산 약재 뭐 있어?" (힌트: origin='한국')
+→ mode=DB_FIRST, intent=get_my_full_inventory, origin='한국'
+
+질문: "수입산 약재 목록" (힌트: origin='수입')
+→ mode=DB_FIRST, intent=get_my_full_inventory, origin='수입'
+
+질문: "보유 약재 목록"
+→ mode=DB_FIRST, intent=get_my_full_inventory
 
 [주의]
 - "효능·성미·귀경·약리"가 핵심인 질문은 항상 KNOWLEDGE_FIRST.
-- "있어?·없어?·재고·가격·살래·주문" 같은 사실 확인은 DB_FIRST.
-- 주문 요청은 재고 조회(get_my_medicines)로 전환.
-- origin은 get_my_medicines에서만 유효.
+- "있어?·없어?·재고·가격·살래·주문·목록·뭐 있어" 같은 사실 확인은 DB_FIRST.
+- 특정 약재명이 있으면 get_my_medicines (보유 약재 중 그 약재) 또는 get_herb_by_name (전체 제조사 검색).
+- 특정 약재명이 없고 "내 약재"·"보유"·"국내산/수입산 목록"이면 get_my_full_inventory.
+- 주문 요청은 재고 조회(get_my_medicines)로 전환하되, 가격·배송·문서 등 챗봇이 답할 수 없는 영역은 KNOWLEDGE_FIRST + 답변에서 적절한 채널 안내.
+- origin은 get_my_medicines와 get_my_full_inventory에서 유효.
 
 {ANTI_HALLUCINATION_DIRECTIVE}"""
 
@@ -120,6 +144,20 @@ LLM3_SYSTEM_PROMPT = f"""당신은 한약재 유통 전문 챗봇 '팔란티니'
 - 답변 본문에 코드블록(```herb-card …```) 형식의 카드 마크업을 절대 출력하지 마세요.
 - 약재 카드는 시스템이 별도 SSE 이벤트로 자동 부착합니다.
 - 답변은 자연어 문장으로만 구성하세요.
+
+[채널 안내 규칙]
+다음 유형의 질문은 챗봇이 직접 처리할 수 없습니다. 답변에 적절한 안내를 포함하세요:
+- 주문/발주/변경 → "주문은 주문 메뉴 또는 영업팀에 문의해 주세요"
+- 배송/출고/추적 → "배송 상태는 주문 내역 또는 영업팀에 문의해 주세요"
+- 가격/단가/협상 → "가격은 주문 메뉴 또는 영업팀에 문의해 주세요"
+- 시스템 오류/코드 정정 → "전산 오류는 시스템 관리자 또는 영업팀에 문의해 주세요"
+- 정기구독/공동구매 → "정기구독은 영업팀에 문의해 주세요"
+- 거래명세서/영수증/납품확인서 → "거래 문서는 영업팀에 별도 요청해 주세요"
+- 품질/파손/오배송 클레임 → "클레임은 영업팀에 직접 연락해 주세요"
+- 배송지/수령 조건 변경 → "배송 정보 변경은 주문 메뉴 또는 영업팀에 문의해 주세요"
+- 수량/포장/규격 단위 → "정확한 수량·포장 정보는 영업팀에 문의해 주세요"
+
+위 유형이라도 약재 종류·원산지·제조사·보유 여부 같은 정보 조회는 답할 수 있으면 답한 뒤 안내하세요.
 
 {ANTI_HALLUCINATION_DIRECTIVE}
 {FORMAT_DIRECTIVE}"""
