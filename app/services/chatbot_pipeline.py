@@ -33,7 +33,7 @@ settings = get_settings()
 _MODEL = "gpt-5.4-mini"
 
 # thinking(생각 중) 타이핑 효과 — 답변 대기 동안 상호작용 느낌을 준다.
-_THINKING_DELAY = 0.025  # 글자당 지연(초)
+_THINKING_DELAY = 0.05  # 글자당 지연(초)
 _WAITING_THINKING = [
     "질문을 이해하고 있어요",
     "판매 중인 약재를 살펴보고 있어요",
