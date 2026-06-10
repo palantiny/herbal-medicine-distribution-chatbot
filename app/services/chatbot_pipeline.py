@@ -11,6 +11,7 @@ Redis/worker/Neo4j/DynamoDB/DJMEDI 없이 OpenAI 호출만으로 동작.
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import AsyncGenerator, Literal
 
@@ -30,6 +31,14 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 _MODEL = "gpt-5.4-mini"
+
+# thinking(생각 중) 타이핑 효과 — 답변 대기 동안 상호작용 느낌을 준다.
+_THINKING_DELAY = 0.025  # 글자당 지연(초)
+_WAITING_THINKING = [
+    "질문을 이해하고 있어요",
+    "판매 중인 약재를 살펴보고 있어요",
+    "필요한 정보를 확인하고 있어요",
+]
 
 _client: AsyncOpenAI | None = None
 
@@ -115,15 +124,42 @@ def _resolve_cart_items(items: list[CartItem]) -> list[dict]:
     return resolved
 
 
+def _build_context_thinking(route: ChatRoute) -> str:
+    """라우팅 결과로 '지금 무엇을 하는 중인지' 한 문장 생성."""
+    if route.intent == "add_to_cart" and route.cart_items:
+        names = ", ".join(i.herb_name for i in route.cart_items)
+        return f"{names} 장바구니에 담을 준비를 하고 있어요"
+    herbs = route.mentioned_herbs or [i.herb_name for i in route.cart_items]
+    if herbs:
+        return f"{', '.join(herbs)} 정보를 정리하고 있어요"
+    return "답변을 준비하고 있어요"
+
+
 async def run_chatbot(question: str, chat_history: str = "") -> AsyncGenerator[dict, None]:
     """챗봇 한 턴 실행. SSE 이벤트(dict)를 순서대로 yield.
 
     이벤트 타입:
+      {"type": "thinking_token", "content": "..."}  (답변 대기 중 생각 표시)
       {"type": "add_to_cart", "items": [{herb_id, herb_name, price, quantity}]}
       {"type": "token", "content": "..."}
     (end 이벤트는 호출측에서 발행)
     """
-    route = await _route(question, chat_history)
+    # 라우팅을 백그라운드로 시작하고, 대기 시간 동안 thinking을 글자 단위로 타이핑한다.
+    route_task = asyncio.create_task(_route(question, chat_history))
+    for msg in _WAITING_THINKING:
+        if route_task.done():
+            break
+        for ch in msg + "\n":
+            yield {"type": "thinking_token", "content": ch}
+            await asyncio.sleep(_THINKING_DELAY)
+            if route_task.done():
+                break
+    route = await route_task
+
+    # 라우팅 결과 기반 맥락 thinking (무엇을 하는 중인지 자연스럽게 표시)
+    for ch in _build_context_thinking(route):
+        yield {"type": "thinking_token", "content": ch}
+        await asyncio.sleep(_THINKING_DELAY)
 
     # 장바구니 담기 처리
     cart_result = "(없음)"
