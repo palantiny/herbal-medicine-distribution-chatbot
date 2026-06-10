@@ -21,16 +21,24 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_db()
-    await get_redis()
-
-    boto_session = aioboto3.Session()
-    app.state.chat_repo = DynamoDBChatHistoryRepository(boto_session)
+    # 더미데이터 모드: PostgreSQL/Redis/DynamoDB는 선택적 의존성.
+    # 초기화에 실패해도 OpenAI 기반 챗봇(chat 라우터)은 정상 동작한다.
+    app.state.chat_repo = None
+    try:
+        await init_db()
+        await get_redis()
+        boto_session = aioboto3.Session()
+        app.state.chat_repo = DynamoDBChatHistoryRepository(boto_session)
+    except Exception as e:
+        logger.warning("인프라 초기화 일부 실패 — 더미 모드로 계속 진행: %s", e)
     logger.info("Chatbot server started")
     yield
 
-    await close_redis()
-    await close_db()
+    try:
+        await close_redis()
+        await close_db()
+    except Exception:
+        pass
     logger.info("Chatbot server stopped")
 
 
